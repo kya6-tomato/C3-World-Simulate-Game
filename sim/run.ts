@@ -176,22 +176,31 @@ function check(ok: boolean, good: string, bad: string) {
   console.log(ok ? `  [OK] ${good}` : `  [要調整] ${bad}`);
 }
 
+/**
+ * 検証専用の出力先。
+ *
+ * sim/step.ts（本番を1ターンずつ進める道具）が使う out/ とは
+ * 意図的に分けてある。同じ場所に書くと、本番シーズン中にうっかり
+ * このスクリプトを実行しただけで本番の進行状況が消えてしまう。
+ */
+const TEST_OUT = "out_test";
+
 function writeOutputs(world: World, history: World[]) {
-  mkdirSync("out", { recursive: true });
-  writeFileSync("out/map.svg", renderMapSvg(world));
-  writeFileSync("out/state.json", JSON.stringify(world, null, 2));
+  mkdirSync(TEST_OUT, { recursive: true });
+  writeFileSync(`${TEST_OUT}/map.svg`, renderMapSvg(world));
+  writeFileSync(`${TEST_OUT}/state.json`, JSON.stringify(world, null, 2));
   writeFileSync(
-    "out/history.json",
+    `${TEST_OUT}/history.json`,
     JSON.stringify(
       history.map((w) => ({ turn: w.turn, log: w.log })),
       null,
       2,
     ),
   );
-  console.log(`\n出力しました:`);
-  console.log(`  out/map.svg      … 最終ターンの地図（ブラウザで開けます）`);
-  console.log(`  out/state.json   … 世界の状態`);
-  console.log(`  out/history.json … 毎ターンの出来事`);
+  console.log(`\n出力しました（検証用。本番の out/ とは別物）:`);
+  console.log(`  ${TEST_OUT}/map.svg      … 最終ターンの地図（ブラウザで開けます）`);
+  console.log(`  ${TEST_OUT}/state.json   … 世界の状態`);
+  console.log(`  ${TEST_OUT}/history.json … 毎ターンの出来事`);
 
   console.log(`\n--- 最終ターンの出来事 ---`);
   world.log.forEach((l) => console.log(`  ${l}`));

@@ -57,6 +57,20 @@ export function decide(
     }
   }
 
+  // --- 1b. 自分宛ての土地の提案が来ていたら判断する（合意制の交換）---
+  if (kind !== "loner") {
+    const landOffers = w.landOffers.filter(
+      (lo) => lo.status === "proposed" && lo.to === me,
+    );
+    for (const lo of landOffers) {
+      // 払っても手元に十分残るときだけ受け入れる
+      if (p.stock[lo.wantResource] >= lo.wantAmount + 15) {
+        out.push({ type: "acceptLand", player: me, landOfferId: lo.id });
+        break;
+      }
+    }
+  }
+
   const buildable = canAfford(p.stock, nextCost);
 
   // --- 2. 裏切り型: 建設できる状態になったら契約を切る ---
@@ -97,6 +111,31 @@ export function decide(
           takeAmount: 9,
           turns: rng.int(5, 12),
         });
+      }
+    }
+  }
+
+  // --- 4b. 余っている資源のマスを1枚、足りない資源と交換に出す（手番を使わない） ---
+  if (kind !== "loner") {
+    const need = scarcestResource(p.stock);
+    const alreadyOfferingLand = w.landOffers.some(
+      (lo) => lo.status === "proposed" && lo.from === me,
+    );
+    if (!alreadyOfferingLand && p.stock[need] < 15) {
+      const spareTile = findSpareTile(w, me);
+      if (spareTile) {
+        const partner = findPartner(w, me, need, spareTile.kind as Resource);
+        if (partner) {
+          out.push({
+            type: "offerLand",
+            player: me,
+            to: partner,
+            x: spareTile.x,
+            y: spareTile.y,
+            wantResource: need,
+            wantAmount: 30,
+          });
+        }
       }
     }
   }
@@ -180,6 +219,24 @@ function findPartner(
     }
   }
   return best;
+}
+
+/** 同じ資源のマスを4枚以上持っているなら、そのうち1枚（都市以外）を手放してもよいとみなす。 */
+function findSpareTile(
+  w: World,
+  me: string,
+): { x: number; y: number; kind: string } | null {
+  const mine = w.tiles.filter((t) => t.owner === me);
+  const counts: Record<string, number> = {};
+  for (const t of mine) counts[t.kind] = (counts[t.kind] ?? 0) + 1;
+  const isCity = (x: number, y: number) =>
+    Object.values(w.players).some((pl) =>
+      pl.cities.some((c) => c.x === x && c.y === y),
+    );
+  const candidates = mine.filter(
+    (t) => counts[t.kind] >= 4 && !isCity(t.x, t.y),
+  );
+  return candidates.length > 0 ? candidates[0] : null;
 }
 
 /** 自分の領土に隣接していて、信用が低い相手が持っている、奪えそうなマスを探す。 */
