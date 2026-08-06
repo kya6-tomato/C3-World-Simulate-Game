@@ -278,8 +278,9 @@ function doOffer(
   };
   w.contracts.push(contract);
   w.log.push(
-    `${p.id} が ${cmd.to} に提案: ${RESOURCE_JA[cmd.give]}${cmd.giveAmount} ↔ ` +
-      `${RESOURCE_JA[cmd.take]}${cmd.takeAmount}（${cmd.turns}ターン）`,
+    `${p.id} が ${cmd.to} に提案 [${id}]: ` +
+      `${RESOURCE_JA[cmd.give]}${cmd.giveAmount}を渡す代わりに、` +
+      `${RESOURCE_JA[cmd.take]}${cmd.takeAmount}をもらう（毎ターン・${cmd.turns}ターン間）`,
   );
 }
 
@@ -295,7 +296,11 @@ function doAccept(w: World, p: Player, contractId: string) {
     return;
   }
   c.status = "active";
-  w.log.push(`${p.id} が契約 ${c.id} を承諾した。取引が始まる。`);
+  w.log.push(
+    `${p.id} が ${c.from} の契約 [${c.id}] を承諾した。取引が始まる: ` +
+      `${p.id}は${RESOURCE_JA[c.give]}${c.giveAmount}をもらい、` +
+      `${RESOURCE_JA[c.take]}${c.takeAmount}を渡す（毎ターン・${c.turnsLeft}ターン間）。`,
+  );
 }
 
 function doBreak(w: World, p: Player, contractId: string) {
