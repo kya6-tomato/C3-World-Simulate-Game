@@ -1,6 +1,18 @@
 import { RESOURCES } from "../src/types.ts";
 import type { World, Command, Resource } from "../src/types.ts";
 
+/**
+ * JSON.parse の前に呼ぶ。
+ * Windowsのエディタやツールがファイルの先頭に付けがちな「BOM」という
+ * 目に見えない印が残っていると JSON.parse がエラーになるので、先に取り除く。
+ */
+const BOM = String.fromCharCode(0xfeff);
+
+export function parseCommandsJson(text: string): unknown {
+  const stripped = text.startsWith(BOM) ? text.slice(BOM.length) : text;
+  return JSON.parse(stripped);
+}
+
 /** 日本語でも書けるようにするための言い換え表。 */
 export const TYPE_JA: Record<string, string> = {
   建設: "build",

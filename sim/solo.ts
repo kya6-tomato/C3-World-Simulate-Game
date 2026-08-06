@@ -4,7 +4,7 @@ import { resolveTurn } from "../src/rules.ts";
 import { renderMapSvg } from "../src/render.ts";
 import { CONFIG } from "../src/config.ts";
 import { Rng } from "../src/rng.ts";
-import { validateCommands } from "./commandInput.ts";
+import { validateCommands, parseCommandsJson } from "./commandInput.ts";
 import { decide } from "./bots.ts";
 import type { BotKind } from "./bots.ts";
 import type { World, Command } from "../src/types.ts";
@@ -60,7 +60,7 @@ function main() {
   let rawCommands: unknown = [];
   if (existsSync(COMMANDS_PATH)) {
     try {
-      rawCommands = JSON.parse(readFileSync(COMMANDS_PATH, "utf-8"));
+      rawCommands = parseCommandsJson(readFileSync(COMMANDS_PATH, "utf-8"));
     } catch {
       console.log(`\n${COMMANDS_PATH} がJSONとして読めませんでした。`);
       console.log(`世界はまだ進めていません。よくある原因:`);
