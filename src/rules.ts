@@ -233,10 +233,9 @@ function doBuild(w: World, p: Player) {
   }
   const cost = buildCostFor(city.level + 1, p.trust);
   if (!canAfford(p.stock, cost)) {
-    const lacking = RESOURCES.filter((r) => p.stock[r] < cost[r]).map(
-      (r) => RESOURCE_JA[r],
-    );
-    w.log.push(`${p.id} は建設に失敗（${lacking.join("と")}が不足）。`);
+    // 資源が足りず建設できなかっただけなら記録しない。
+    // 常設命令が「建設」の人は資源が貯まるまで毎ターンここに来るので、
+    // 逐一記録すると失敗の羅列で埋め尽くされてしまう。
     return;
   }
   pay(p.stock, cost);
