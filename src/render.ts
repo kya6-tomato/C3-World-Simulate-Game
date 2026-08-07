@@ -146,43 +146,58 @@ export function renderMapSvg(w: World): string {
 
     // 地形の起伏のような、なめらかな濃淡。ベタ塗りではなく、
     // 隣接するマスとゆるやかにつながる明暗にすることで自然に見せる。
+    // 荒地だけは起伏を弱くして、他より生気のない土地に見せる。
     const relief = smoothField(t.x, t.y, 4.5, 3);
-    const fillColor = lerpColor(FILL[t.kind], DEEP[t.kind], 0.15 + relief * 0.55);
+    const reliefRange = t.kind === "waste" ? 0.25 : 0.55;
+    const fillColor = lerpColor(FILL[t.kind], DEEP[t.kind], 0.15 + relief * reliefRange);
 
     parts.push(
       `<rect x="${x - 0.4}" y="${y - 0.4}" width="${TILE + 0.8}" height="${TILE + 0.8}" ` +
         `rx="1.5" fill="${fillColor}"/>`,
     );
 
-    // まばらに資源のアイコンを置く（都市が建つマスは避ける）。
-    if (t.kind !== "waste" && !cityTileAt.has(`${t.x},${t.y}`)) {
+    // 資源ごとに絵のようなアイコンを置いて、ファンタジー地図らしくする
+    // （都市が建つマスは避ける）。
+    if (!cityTileAt.has(`${t.x},${t.y}`)) {
       const cx = x + TILE / 2;
       const cy = y + TILE / 2;
       const r = hash(t.x, t.y, 7);
-      if (t.kind === "river") {
-        if (r < 0.6) {
-          const dx = (hash(t.x, t.y, 8) - 0.5) * 6;
-          parts.push(
-            `<path d="M ${cx - 5 + dx} ${cy} Q ${cx + dx} ${cy - 3} ${cx + 5 + dx} ${cy}" ` +
-              `stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.6" stroke-linecap="round"/>`,
-          );
-        }
-      } else if (r < 0.22) {
-        const jx = cx + (hash(t.x, t.y, 9) - 0.5) * 8;
-        const jy = cy + (hash(t.x, t.y, 10) - 0.5) * 8;
-        if (t.kind === "food") {
-          parts.push(`<circle cx="${jx}" cy="${jy}" r="1.3" fill="${DEEP.food}" opacity="0.6"/>`);
-        } else if (t.kind === "material") {
-          parts.push(
-            `<rect x="${jx - 1.4}" y="${jy - 1.4}" width="2.8" height="2.8" fill="${DEEP.material}" ` +
-              `opacity="0.6" transform="rotate(45 ${jx} ${jy})"/>`,
-          );
-        } else if (t.kind === "knowledge") {
-          parts.push(
-            `<line x1="${jx - 1.6}" y1="${jy}" x2="${jx + 1.6}" y2="${jy}" ` +
-              `stroke="${DEEP.knowledge}" stroke-width="1.2" opacity="0.6" stroke-linecap="round"/>`,
-          );
-        }
+      const jx = cx + (hash(t.x, t.y, 9) - 0.5) * 6;
+      const jy = cy + (hash(t.x, t.y, 10) - 0.5) * 6;
+
+      if (t.kind === "river" && r < 0.6) {
+        const dx = (hash(t.x, t.y, 8) - 0.5) * 6;
+        parts.push(
+          `<path d="M ${cx - 5 + dx} ${cy} Q ${cx + dx} ${cy - 3} ${cx + 5 + dx} ${cy}" ` +
+            `stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.6" stroke-linecap="round"/>`,
+        );
+      } else if (t.kind === "food" && r < 0.3) {
+        // 木（葉の丸みと幹）
+        parts.push(
+          `<circle cx="${jx}" cy="${jy - 1.4}" r="2.4" fill="${DEEP.food}" opacity="0.8"/>`,
+          `<rect x="${jx - 0.5}" y="${jy}" width="1" height="2" fill="#7A5B3A" opacity="0.7"/>`,
+        );
+      } else if (t.kind === "material" && r < 0.3) {
+        // 山（雪をかぶった二つの峰）
+        parts.push(
+          `<path d="M ${jx - 5} ${jy + 3} L ${jx - 1.5} ${jy - 4} L ${jx + 0.5} ${jy - 1} ` +
+            `L ${jx + 2.5} ${jy - 3.5} L ${jx + 5} ${jy + 3} Z" fill="${DEEP.material}" opacity="0.8"/>`,
+          `<path d="M ${jx - 2.4} ${jy - 2.4} L ${jx - 1.5} ${jy - 4} L ${jx - 0.6} ${jy - 2.3} Z" ` +
+            `fill="#FFFFFF" opacity="0.65"/>`,
+        );
+      } else if (t.kind === "knowledge" && r < 0.3) {
+        // 塔（尖った屋根の小さな塔）
+        parts.push(
+          `<rect x="${jx - 1.4}" y="${jy - 1}" width="2.8" height="4.4" fill="${DEEP.knowledge}" opacity="0.8"/>`,
+          `<path d="M ${jx - 2} ${jy - 1} L ${jx} ${jy - 5} L ${jx + 2} ${jy - 1} Z" ` +
+            `fill="${DEEP.knowledge}" opacity="0.8"/>`,
+        );
+      } else if (t.kind === "waste" && r < 0.55) {
+        // 転がる岩・枯れ木の茂み
+        parts.push(
+          `<ellipse cx="${jx - 1.4}" cy="${jy + 1.2}" rx="1.6" ry="1" fill="${DEEP.waste}" opacity="0.7"/>`,
+          `<ellipse cx="${jx + 1.4}" cy="${jy + 0.4}" rx="1.1" ry="0.8" fill="${DEEP.waste}" opacity="0.55"/>`,
+        );
       }
     }
 
@@ -275,6 +290,8 @@ export function renderMapSvg(w: World): string {
       parts.push(
         `<path d="M ${cx - 5} ${headY} L ${cx + 5} ${headY} L ${cx} ${cy} Z" fill="${color}"/>`,
         `<circle cx="${cx}" cy="${headY}" r="7" fill="${color}" stroke="#FBFAF7" stroke-width="1.6"/>`,
+        `<path d="M ${cx - 5.5} ${headY - 5.5} L ${cx} ${headY - 11} L ${cx + 5.5} ${headY - 5.5} Z" ` +
+          `fill="${color}"/>`,
       );
       parts.push(`</g>`);
       parts.push(
