@@ -3,3 +3,4 @@ out_test/
 out_solo/
 node_modules/
 .claude/settings.local.json
+.env
