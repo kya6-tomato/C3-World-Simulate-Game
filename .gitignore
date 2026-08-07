@@ -5,3 +5,4 @@ out_github/
 node_modules/
 .claude/settings.local.json
 .env
+運営ガイド.md
