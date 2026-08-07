@@ -1,6 +1,7 @@
 out/
 out_test/
 out_solo/
+out_github/
 node_modules/
 .claude/settings.local.json
 .env
