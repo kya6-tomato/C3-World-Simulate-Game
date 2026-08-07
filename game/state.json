@@ -1,5 +1,5 @@
 {
-  "turn": 0,
+  "turn": 1,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -3505,7 +3505,7 @@
       "x": 5,
       "y": 17,
       "kind": "food",
-      "owner": null
+      "owner": "p00"
     },
     {
       "x": 6,
@@ -4911,7 +4911,7 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 9,
         "material": 20,
         "knowledge": 10
       },
@@ -4922,6 +4922,6 @@
   "contracts": [],
   "landOffers": [],
   "log": [
-    "世界が生成された。"
+    "p00 が (5,17) を開拓した [食料]。"
   ]
 }
