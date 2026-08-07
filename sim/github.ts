@@ -63,6 +63,14 @@ export async function listComments(
   )) as GhComment[];
 }
 
+/** 新しいIssueを1つ作る。 */
+export async function createIssue(title: string, body: string): Promise<GhIssue> {
+  return (await gh(`/repos/${OWNER}/${REPO}/issues`, {
+    method: "POST",
+    body: JSON.stringify({ title, body }),
+  })) as GhIssue;
+}
+
 /** そのIssueに返信コメントを投稿する。 */
 export async function postComment(issueNumber: number, body: string): Promise<void> {
   await gh(`/repos/${OWNER}/${REPO}/issues/${issueNumber}/comments`, {
