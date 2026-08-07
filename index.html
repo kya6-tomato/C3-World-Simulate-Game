@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>盤面ビューア — 非同期永続世界ゲーム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --paper: #FBFAF7; --paper-raised: #F3F1EA; --paper-sunken: #EFEDE4;
+    --ink: #3D3D3A; --ink-soft: #74716A; --line: #E2E0D8;
+    --food: #C0DD97; --material: #FAC775; --knowledge: #CECBF6; --river: #8FB8D9;
+    --active: #1D9E75; --warn: #E24B4A; --accent: #D85A30;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1B1915; --paper-raised: #232019; --paper-sunken: #19170F;
+      --ink: #ECE8DF; --ink-soft: #A39D8F; --line: #35322A;
+      --food: #8FBF66; --material: #D99A3C; --knowledge: #A79FE0; --river: #5C93C4;
+      --active: #2BBE8E; --warn: #FF6B5E; --accent: #E8734A;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+    line-height: 1.7; padding: clamp(16px, 4vw, 48px);
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; font-variant-numeric: tabular-nums; }
+  a { color: var(--accent); }
+
+  .page { max-width: 1440px; margin: 0 auto; display: flex; flex-direction: column; gap: 26px; }
+
+  .notice {
+    font-size: 12.5px; color: var(--ink-soft);
+    background: var(--paper-raised); border: 1px solid var(--line);
+    border-radius: 6px; padding: 10px 14px;
+  }
+  .notice b { color: var(--ink); }
+
+  header.status {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+    gap: 12px 24px; border-bottom: 1px solid var(--line); padding-bottom: 16px;
+  }
+  header.status h1 { font-size: clamp(20px, 2.6vw, 26px); font-weight: 600; margin: 0; text-wrap: balance; }
+  header.status .sub { color: var(--ink-soft); font-size: 13.5px; }
+  .vitals { display: flex; gap: 28px; flex-wrap: wrap; }
+  .vital { display: flex; flex-direction: column; gap: 2px; }
+  .vital .label { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
+  .vital .value { font-size: 19px; font-weight: 600; }
+  .vital .value.countdown { color: var(--accent); }
+
+  main.board { display: flex; flex-direction: column; gap: 22px; }
+  .contracts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px 22px; }
+  .board-lower { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr); gap: 22px; align-items: start; }
+  @media (max-width: 860px) { .board-lower { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .panel h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin: 0 0 14px; }
+
+  .map-caption { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 12px; }
+  .map-svg-wrap { overflow-x: auto; border-radius: 6px; }
+  .map-svg-wrap svg { width: 100%; height: auto; display: block; }
+  .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
+  .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+
+  ul.contracts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  li.contract { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; font-family: ui-monospace, monospace; }
+  .arrow { color: var(--ink-soft); }
+  .terms { color: var(--ink-soft); font-family: inherit; margin-left: 2px; }
+  .pill {
+    margin-left: auto; font-size: 10.5px; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+    padding: 2px 8px; border-radius: 100px; border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .empty-note { font-size: 12.5px; color: var(--ink-soft); }
+
+  .log-feed { max-height: 520px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-right: 4px; }
+  .log-turn { display: flex; flex-direction: column; gap: 6px; }
+  .log-turn-head {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: var(--accent);
+    font-family: ui-monospace, monospace; text-transform: uppercase;
+    position: sticky; top: 0; background: var(--paper-raised); padding: 2px 0;
+  }
+  ul.log-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  ul.log-lines li {
+    font-size: 12.5px; padding: 7px 10px; border-radius: 6px; background: var(--paper-sunken);
+    border-left: 2px solid var(--line);
+  }
+  .log-id { font-family: ui-monospace, monospace; font-weight: 700; }
+
+  .roster-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .roster-note { font-size: 12px; color: var(--ink-soft); }
+  .table-scroll { overflow-x: auto; }
+  table.roster { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+  table.roster th {
+    text-align: left; font-size: 11px; font-weight: 600; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 9px; border-bottom: 1px solid var(--line);
+    cursor: pointer; user-select: none; white-space: nowrap;
+  }
+  table.roster th:hover { color: var(--ink); }
+  table.roster th.num, table.roster td.num { text-align: right; }
+  table.roster td {
+    padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  table.roster td.who { font-family: inherit; display: flex; align-items: center; gap: 7px; }
+  table.roster td.who a { color: inherit; text-decoration: none; }
+  table.roster td.who a:hover { text-decoration: underline; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+  td.rank { color: var(--ink-soft); width: 22px; }
+  td.score { font-weight: 700; color: var(--accent); }
+  .trust-low { color: var(--warn); font-weight: 600; }
+
+  footer {
+    border-top: 1px solid var(--line); padding-top: 14px; font-size: 12px; color: var(--ink-soft);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  #loading { padding: 40px 0; text-align: center; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="notice">
+    <b>このページはURLを知っている人なら誰でも見られます。</b> 命令の書き込みはGitHubのIssue（ログインが必要）で行います。
+  </div>
+
+  <header class="status">
+    <div>
+      <h1>非同期永続世界ゲーム</h1>
+      <div class="sub" id="sub-line">読み込み中…</div>
+    </div>
+    <div class="vitals">
+      <div class="vital"><span class="label">現在</span><span class="value mono" id="turn-value">-</span></div>
+      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09 / 13 / 17 / 21 時</span></div>
+      <div class="vital"><span class="label">次のターンまで</span><span class="value mono countdown" id="countdown">--:--:--</span></div>
+    </div>
+  </header>
+
+  <div id="loading">読み込み中…</div>
+
+  <div id="content" style="display:none; flex-direction:column; gap:26px;">
+    <main class="board">
+      <div class="panel">
+        <div class="map-caption">四角の色は資源の種類、枠の色は持ち主。<b style="color:var(--river)">水色の帯</b>は川で、開拓では越えられません（取引・土地の交換はできます）。</div>
+        <div class="map-svg-wrap" id="map-wrap"></div>
+        <div class="legend-row">
+          <span><i class="swatch" style="background:var(--food)"></i>食料</span>
+          <span><i class="swatch" style="background:var(--material)"></i>資材</span>
+          <span><i class="swatch" style="background:var(--knowledge)"></i>知識</span>
+          <span><i class="swatch" style="background:var(--line)"></i>荒地</span>
+          <span><i class="swatch" style="background:var(--river)"></i>川</span>
+          <span style="margin-left:auto">丸の数字 = 都市レベル</span>
+        </div>
+      </div>
+    </main>
+
+    <div class="board-lower">
+      <section class="panel">
+        <div class="roster-head">
+          <h3 style="margin:0;">プレイヤー一覧</h3>
+          <span class="roster-note">列の見出しをクリックすると並べ替わります</span>
+        </div>
+        <div class="table-scroll">
+          <table class="roster" id="roster">
+            <thead>
+              <tr>
+                <th data-col="rank">#</th>
+                <th data-col="who">参加者</th>
+                <th data-col="lv" class="num">都市</th>
+                <th data-col="land" class="num">領土</th>
+                <th data-col="trust" class="num">信用</th>
+                <th data-col="food" class="num">食料</th>
+                <th data-col="material" class="num">資材</th>
+                <th data-col="knowledge" class="num">知識</th>
+                <th data-col="score" class="num">得点</th>
+              </tr>
+            </thead>
+            <tbody id="roster-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>ターンのログ（新しい順）</h3>
+        <div class="log-feed" id="log-feed"></div>
+      </section>
+    </div>
+
+    <div class="contracts-row">
+      <div class="panel">
+        <h3>進行中の交渉</h3>
+        <ul class="contracts" id="contracts-list"></ul>
+      </div>
+      <div class="panel">
+        <h3>土地のやり取り</h3>
+        <ul class="contracts" id="land-offers-list"></ul>
+      </div>
+    </div>
+
+    <footer>
+      <span>盤面ビューア — 非同期永続世界ゲーム</span>
+      <span id="footer-note"></span>
+    </footer>
+  </div>
+
+</div>
+<script>
+  var PLAYER_COLORS = [
+    "#D85A30", "#185FA5", "#0F6E56", "#993556", "#854F0B", "#534AB7",
+    "#B0473C", "#2E7D8C", "#6B8E23", "#C2185B", "#5D4037", "#7B1FA2",
+    "#E07B39", "#37474F", "#9C7C38",
+  ];
+  var RESOURCE_JA = { food: "食料", material: "資材", knowledge: "知識" };
+  var TURN_TIMES_JST = [9, 13, 17, 21];
+
+  function colorOf(id) {
+    var n = parseInt(id.replace(/[^0-9]/g, ""), 10);
+    if (isNaN(n)) n = 0;
+    return PLAYER_COLORS[n % PLAYER_COLORS.length];
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function score(world, playerId) {
+    var p = world.players[playerId];
+    if (!p) return 0;
+    var levels = p.cities.reduce(function (s, c) { return s + c.level; }, 0);
+    var land = world.tiles.filter(function (t) { return t.owner === playerId; }).length;
+    return levels * 10 + land;
+  }
+
+  function nextTurnMs() {
+    var now = new Date();
+    var jstNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 9 * 3600000);
+    var y = jstNow.getFullYear(), m = jstNow.getMonth(), d = jstNow.getDate();
+    for (var i = 0; i < TURN_TIMES_JST.length; i++) {
+      var t = new Date(y, m, d, TURN_TIMES_JST[i], 0, 0);
+      var tUtcMs = t.getTime() - 9 * 3600000 - now.getTimezoneOffset() * 60000;
+      if (tUtcMs > now.getTime()) return tUtcMs - now.getTime();
+    }
+    var t2 = new Date(y, m, d + 1, TURN_TIMES_JST[0], 0, 0);
+    var t2UtcMs = t2.getTime() - 9 * 3600000 - now.getTimezoneOffset() * 60000;
+    return t2UtcMs - now.getTime();
+  }
+  function tickCountdown() {
+    var s = Math.floor(nextTurnMs() / 1000);
+    var hh = String(Math.floor(s / 3600)).padStart(2, "0");
+    var mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+    var ss = String(s % 60).padStart(2, "0");
+    var el = document.getElementById("countdown");
+    if (el) el.textContent = hh + ":" + mm + ":" + ss;
+  }
+
+  function highlightIds(line, ids) {
+    var pattern = new RegExp("\\b(" + ids.map(function (i) { return i; }).join("|") + ")\\b", "g");
+    return esc(line).replace(pattern, function (id) {
+      return '<span class="log-id" style="color:' + colorOf(id) + '">' + id + "</span>";
+    });
+  }
+
+  async function main() {
+    var state, history, players;
+    try {
+      var res = await fetch("game/state.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("state.json が見つかりません（まだ世界が始まっていないようです）");
+      state = await res.json();
+      history = await fetch("game/history.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : []; });
+      players = await fetch("players.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : {}; });
+    } catch (e) {
+      document.getElementById("loading").textContent = "読み込みに失敗しました: " + e.message;
+      return;
+    }
+
+    var ids = Object.keys(state.players);
+    document.getElementById("turn-value").textContent = state.turn + "ターン目";
+    document.getElementById("sub-line").textContent = "部員 " + ids.length + "人 · 4ターン/日 · 全112ターン（4週間）";
+    document.getElementById("footer-note").textContent = "データ出所: game/state.json（" + state.turn + "ターン目時点、自動更新）";
+
+    // 地図
+    var mapSvg = await fetch("game/map.svg", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; });
+    document.getElementById("map-wrap").innerHTML = mapSvg;
+
+    // プレイヤー一覧
+    var rows = ids.map(function (id) {
+      var p = state.players[id];
+      var land = state.tiles.filter(function (t) { return t.owner === id; }).length;
+      var lv = p.cities.reduce(function (s, c) { return s + c.level; }, 0);
+      return { id: id, lv: lv, land: land, trust: p.trust, stock: p.stock, score: score(state, id) };
+    }).sort(function (a, b) { return b.score - a.score; });
+
+    var tbody = document.getElementById("roster-body");
+    rows.forEach(function (r, i) {
+      var tr = document.createElement("tr");
+      tr.dataset.score = r.score; tr.dataset.lv = r.lv; tr.dataset.land = r.land; tr.dataset.trust = r.trust;
+      tr.dataset.food = r.stock.food; tr.dataset.material = r.stock.material; tr.dataset.knowledge = r.stock.knowledge;
+      var issueNum = players[r.id];
+      var whoHtml = '<span class="dot" style="background:' + colorOf(r.id) + '"></span>';
+      whoHtml += issueNum ? '<a href="https://github.com/kya6-tomato/C3-mini-world-game/issues/' + issueNum + '" target="_blank" rel="noopener">' + esc(r.id) + "</a>" : esc(r.id);
+      tr.innerHTML =
+        '<td class="rank">' + (i + 1) + "</td>" +
+        '<td class="who">' + whoHtml + "</td>" +
+        '<td class="num">Lv' + r.lv + "</td>" +
+        '<td class="num">' + r.land + "</td>" +
+        '<td class="num ' + (r.trust < 90 ? "trust-low" : "") + '">' + r.trust + "</td>" +
+        '<td class="num">' + r.stock.food + "</td>" +
+        '<td class="num">' + r.stock.material + "</td>" +
+        '<td class="num">' + r.stock.knowledge + "</td>" +
+        '<td class="num score">' + r.score + "</td>";
+      tbody.appendChild(tr);
+    });
+
+    // 並べ替え
+    var sortState = { col: "score", dir: -1 };
+    function applySort() {
+      var trs = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+      trs.sort(function (a, b) {
+        if (sortState.col === "who") {
+          return sortState.dir * a.querySelector(".who").textContent.localeCompare(b.querySelector(".who").textContent);
+        }
+        var av = parseFloat(a.dataset[sortState.col] || 0);
+        var bv = parseFloat(b.dataset[sortState.col] || 0);
+        return sortState.dir * (av - bv);
+      });
+      trs.forEach(function (tr) { tbody.appendChild(tr); });
+    }
+    document.querySelectorAll("#roster th[data-col]").forEach(function (th) {
+      th.addEventListener("click", function () {
+        var col = th.dataset.col;
+        if (sortState.col === col) sortState.dir *= -1; else { sortState.col = col; sortState.dir = -1; }
+        applySort();
+      });
+    });
+
+    // 進行中の交渉
+    var contractsEl = document.getElementById("contracts-list");
+    var activeContracts = state.contracts.filter(function (c) { return c.status === "active" || c.status === "proposed"; });
+    if (activeContracts.length === 0) {
+      contractsEl.innerHTML = '<li class="empty-note">今のところありません</li>';
+    } else {
+      contractsEl.innerHTML = activeContracts.map(function (c) {
+        return '<li class="contract"><span class="dot" style="background:' + colorOf(c.from) + '"></span>' + esc(c.from) +
+          '<span class="arrow">⇄</span><span class="dot" style="background:' + colorOf(c.to) + '"></span>' + esc(c.to) +
+          '<span class="terms">' + RESOURCE_JA[c.give] + c.giveAmount + " ↔ " + RESOURCE_JA[c.take] + c.takeAmount + "・残り" + c.turnsLeft + "ターン</span>" +
+          '<span class="pill">' + (c.status === "proposed" ? "提案中" : "進行中") + "</span></li>";
+      }).join("");
+    }
+
+    // 土地のやり取り
+    var landEl = document.getElementById("land-offers-list");
+    var landOffers = (state.landOffers || []).filter(function (l) { return l.status === "proposed"; });
+    if (landOffers.length === 0) {
+      landEl.innerHTML = '<li class="empty-note">今のところありません</li>';
+    } else {
+      landEl.innerHTML = landOffers.map(function (l) {
+        return '<li class="contract"><span class="dot" style="background:' + colorOf(l.from) + '"></span>' + esc(l.from) +
+          '<span class="arrow">→</span><span class="dot" style="background:' + colorOf(l.to) + '"></span>' + esc(l.to) +
+          '<span class="terms">(' + l.x + "," + l.y + ") の代わりに " + RESOURCE_JA[l.wantResource] + l.wantAmount + "</span>" +
+          '<span class="pill">提案中</span></li>';
+      }).join("");
+    }
+
+    // ターンのログ
+    var logFeed = document.getElementById("log-feed");
+    logFeed.innerHTML = history.slice().reverse().map(function (t) {
+      var lines = t.log.length
+        ? t.log.map(function (l) { return "<li>" + highlightIds(l, ids) + "</li>"; }).join("")
+        : '<li class="empty-note">（動きなし）</li>';
+      return '<div class="log-turn"><div class="log-turn-head">ターン ' + t.turn + '</div><ul class="log-lines">' + lines + "</ul></div>";
+    }).join("");
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("content").style.display = "flex";
+
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+  }
+
+  main();
+</script>
+</body>
+</html>
