@@ -142,6 +142,10 @@ async function main() {
     if (errs.length === 0 && mine.length === 0) {
       lines.push("", "（今回は特に動きはありませんでした）");
     }
+    lines.push(
+      "",
+      `次の命令をこのIssueにコメントしてください（次のターンは ${CONFIG.turnTimesJst.map((t) => `${t}時`).join("・")} のいずれか）。何も書かなければ、いつもの行動が自動で続きます。`,
+    );
     await postSystemComment(issueNumber, lines.join("\n"));
   }
   console.log("各参加者のIssueに結果を返信しました。");
