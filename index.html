@@ -9,23 +9,29 @@
     --paper: #FBFAF7; --paper-raised: #F3F1EA; --paper-sunken: #EFEDE4;
     --ink: #3D3D3A; --ink-soft: #74716A; --line: #E2E0D8;
     --food: #C0DD97; --material: #FAC775; --knowledge: #CECBF6; --river: #8FB8D9;
-    --active: #1D9E75; --warn: #E24B4A; --accent: #D85A30;
+    --active: #1D9E75; --warn: #E24B4A; --accent: #D85A30; --accent-soft: #E9C2AE;
+    --shadow: 0 1px 2px rgba(61,53,40,0.06), 0 6px 20px -8px rgba(61,53,40,0.18);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #1B1915; --paper-raised: #232019; --paper-sunken: #19170F;
-      --ink: #ECE8DF; --ink-soft: #A39D8F; --line: #35322A;
+      --paper: #171510; --paper-raised: #211D16; --paper-sunken: #1A1712;
+      --ink: #ECE8DF; --ink-soft: #A39D8F; --line: #362F24;
       --food: #8FBF66; --material: #D99A3C; --knowledge: #A79FE0; --river: #5C93C4;
-      --active: #2BBE8E; --warn: #FF6B5E; --accent: #E8734A;
+      --active: #2BBE8E; --warn: #FF6B5E; --accent: #E8834F; --accent-soft: #4A2E1E;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 28px -10px rgba(0,0,0,0.55);
     }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    background: var(--paper); color: var(--ink);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -8%, rgba(216,90,48,0.08), transparent),
+      var(--paper);
+    color: var(--ink);
     font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
     line-height: 1.7; padding: clamp(16px, 4vw, 48px);
   }
+  .serif { font-family: "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; }
   .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; font-variant-numeric: tabular-nums; }
   a { color: var(--accent); }
 
@@ -39,27 +45,51 @@
   .notice b { color: var(--ink); }
 
   header.status {
-    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
-    gap: 12px 24px; border-bottom: 1px solid var(--line); padding-bottom: 16px;
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+    gap: 16px 24px; padding-bottom: 20px; position: relative;
   }
-  header.status h1 { font-size: clamp(20px, 2.6vw, 26px); font-weight: 600; margin: 0; text-wrap: balance; }
-  header.status .sub { color: var(--ink-soft); font-size: 13.5px; }
-  .vitals { display: flex; gap: 28px; flex-wrap: wrap; }
-  .vital { display: flex; flex-direction: column; gap: 2px; }
-  .vital .label { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
-  .vital .value { font-size: 19px; font-weight: 600; }
-  .vital .value.countdown { color: var(--accent); }
+  header.status::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+    background:
+      linear-gradient(90deg, var(--accent) 0%, var(--accent) 40px, var(--line) 40px, var(--line) 100%);
+    opacity: 0.55; border-radius: 2px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .crest { flex: none; filter: drop-shadow(0 2px 3px rgba(61,53,40,0.25)); }
+  header.status h1 {
+    font-size: clamp(24px, 3.2vw, 34px); font-weight: 600; margin: 0; text-wrap: balance;
+    letter-spacing: 0.01em;
+  }
+  header.status .sub { color: var(--ink-soft); font-size: 13px; margin-top: 4px; }
+  .vitals { display: flex; gap: 10px; flex-wrap: wrap; }
+  .vital {
+    display: flex; flex-direction: column; gap: 3px; padding: 8px 16px;
+    background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px;
+    box-shadow: var(--shadow); min-width: 108px;
+  }
+  .vital .label { font-size: 10.5px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.1em; }
+  .vital .value { font-size: 19px; font-weight: 700; }
+  .vital.countdown-vital { background: var(--accent); border-color: var(--accent); }
+  .vital.countdown-vital .label { color: rgba(255,255,255,0.75); }
+  .vital.countdown-vital .value { color: #fff; }
 
   main.board { display: flex; flex-direction: column; gap: 22px; }
   .contracts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px 22px; }
   .board-lower { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr); gap: 22px; align-items: start; }
   @media (max-width: 860px) { .board-lower { grid-template-columns: 1fr; } }
 
-  .panel { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
-  .panel h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); margin: 0 0 14px; }
+  .panel {
+    background: var(--paper-raised); border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; box-shadow: var(--shadow);
+  }
+  .panel h3 {
+    font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--ink-soft); margin: 0 0 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .panel h3::before { content: ""; width: 3px; height: 13px; background: var(--accent); border-radius: 2px; display: inline-block; }
 
   .map-caption { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 12px; }
-  .map-svg-wrap { overflow-x: auto; border-radius: 6px; }
+  .map-svg-wrap { overflow-x: auto; border-radius: 8px; }
   .map-svg-wrap svg { width: 100%; height: auto; display: block; }
   .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
   .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
@@ -85,29 +115,31 @@
   ul.log-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
   ul.log-lines li {
     font-size: 12.5px; padding: 7px 10px; border-radius: 6px; background: var(--paper-sunken);
-    border-left: 2px solid var(--line);
+    border-left: 2px solid var(--accent-soft);
   }
   .log-id { font-family: ui-monospace, monospace; font-weight: 700; }
 
-  .roster-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .roster-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+  .roster-head h3 { margin: 0; }
   .roster-note { font-size: 12px; color: var(--ink-soft); }
   .table-scroll { overflow-x: auto; }
   table.roster { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
   table.roster th {
-    text-align: left; font-size: 11px; font-weight: 600; color: var(--ink-soft);
-    text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 9px; border-bottom: 1px solid var(--line);
+    text-align: left; font-size: 11px; font-weight: 700; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 10px; border-bottom: 2px solid var(--line);
     cursor: pointer; user-select: none; white-space: nowrap;
   }
-  table.roster th:hover { color: var(--ink); }
+  table.roster th:hover { color: var(--accent); }
   table.roster th.num, table.roster td.num { text-align: right; }
   table.roster td {
-    padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line);
+    padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line);
     font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; white-space: nowrap;
   }
+  table.roster tbody tr:hover { background: var(--paper-sunken); }
   table.roster td.who { font-family: inherit; display: flex; align-items: center; gap: 7px; }
   table.roster td.who a { color: inherit; text-decoration: none; }
   table.roster td.who a:hover { text-decoration: underline; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; box-shadow: 0 0 0 2px var(--paper-raised); }
   td.rank { color: var(--ink-soft); width: 22px; }
   td.score { font-weight: 700; color: var(--accent); }
   .trust-low { color: var(--warn); font-weight: 600; }
@@ -116,7 +148,7 @@
     border-top: 1px solid var(--line); padding-top: 14px; font-size: 12px; color: var(--ink-soft);
     display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
   }
-  #loading { padding: 40px 0; text-align: center; color: var(--ink-soft); }
+  #loading { padding: 60px 0; text-align: center; color: var(--ink-soft); font-size: 14px; }
 </style>
 </head>
 <body>
@@ -127,14 +159,21 @@
   </div>
 
   <header class="status">
-    <div>
-      <h1>C3-World-Simulate-Game</h1>
-      <div class="sub" id="sub-line">読み込み中…</div>
+    <div class="brand">
+      <svg class="crest" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="19" fill="var(--paper-raised)" stroke="var(--accent)" stroke-width="1.4"/>
+        <path d="M6 27 L12 14 L16 20 L20 11 L25 21 L29 15 L34 27 Z" fill="var(--accent)" opacity="0.9"/>
+        <circle cx="12" cy="14" r="1.6" fill="#fff" opacity="0.85"/>
+      </svg>
+      <div>
+        <h1 class="serif">C3-World-Simulate-Game</h1>
+        <div class="sub" id="sub-line">読み込み中…</div>
+      </div>
     </div>
     <div class="vitals">
       <div class="vital"><span class="label">現在</span><span class="value mono" id="turn-value">-</span></div>
-      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09 / 13 / 17 / 21 時</span></div>
-      <div class="vital"><span class="label">次のターンまで</span><span class="value mono countdown" id="countdown">--:--:--</span></div>
+      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09/13/17/21時</span></div>
+      <div class="vital countdown-vital"><span class="label">次のターンまで</span><span class="value mono" id="countdown">--:--:--</span></div>
     </div>
   </header>
 
@@ -159,7 +198,7 @@
     <div class="board-lower">
       <section class="panel">
         <div class="roster-head">
-          <h3 style="margin:0;">プレイヤー一覧</h3>
+          <h3>プレイヤー一覧</h3>
           <span class="roster-note">列の見出しをクリックすると並べ替わります</span>
         </div>
         <div class="table-scroll">

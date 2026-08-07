@@ -165,38 +165,40 @@ export function renderMapSvg(w: World): string {
       const jx = cx + (hash(t.x, t.y, 9) - 0.5) * 6;
       const jy = cy + (hash(t.x, t.y, 10) - 0.5) * 6;
 
-      if (t.kind === "river" && r < 0.6) {
+      if (t.kind === "river" && r < 0.75) {
         const dx = (hash(t.x, t.y, 8) - 0.5) * 6;
         parts.push(
           `<path d="M ${cx - 5 + dx} ${cy} Q ${cx + dx} ${cy - 3} ${cx + 5 + dx} ${cy}" ` +
-            `stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.6" stroke-linecap="round"/>`,
+            `stroke="#FFFFFF" stroke-width="1.2" fill="none" opacity="0.7" stroke-linecap="round"/>`,
         );
-      } else if (t.kind === "food" && r < 0.3) {
+      } else if (t.kind === "food" && r < 0.55) {
         // 木（葉の丸みと幹）
         parts.push(
-          `<circle cx="${jx}" cy="${jy - 1.4}" r="2.4" fill="${DEEP.food}" opacity="0.8"/>`,
-          `<rect x="${jx - 0.5}" y="${jy}" width="1" height="2" fill="#7A5B3A" opacity="0.7"/>`,
+          `<circle cx="${jx}" cy="${jy - 1.6}" r="2.9" fill="${DEEP.food}" stroke="#5B7A3F" stroke-width="0.4" opacity="0.92"/>`,
+          `<rect x="${jx - 0.6}" y="${jy}" width="1.2" height="2.4" fill="#6B4B2E" opacity="0.85"/>`,
         );
-      } else if (t.kind === "material" && r < 0.3) {
+      } else if (t.kind === "material" && r < 0.55) {
         // 山（雪をかぶった二つの峰）
         parts.push(
-          `<path d="M ${jx - 5} ${jy + 3} L ${jx - 1.5} ${jy - 4} L ${jx + 0.5} ${jy - 1} ` +
-            `L ${jx + 2.5} ${jy - 3.5} L ${jx + 5} ${jy + 3} Z" fill="${DEEP.material}" opacity="0.8"/>`,
-          `<path d="M ${jx - 2.4} ${jy - 2.4} L ${jx - 1.5} ${jy - 4} L ${jx - 0.6} ${jy - 2.3} Z" ` +
-            `fill="#FFFFFF" opacity="0.65"/>`,
+          `<path d="M ${jx - 6} ${jy + 3.5} L ${jx - 1.8} ${jy - 5} L ${jx + 0.6} ${jy - 1.2} ` +
+            `L ${jx + 3} ${jy - 4.3} L ${jx + 6} ${jy + 3.5} Z" fill="${DEEP.material}" ` +
+            `stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>`,
+          `<path d="M ${jx - 2.9} ${jy - 3} L ${jx - 1.8} ${jy - 5} L ${jx - 0.7} ${jy - 2.9} Z" ` +
+            `fill="#FFFFFF" opacity="0.75"/>`,
         );
-      } else if (t.kind === "knowledge" && r < 0.3) {
+      } else if (t.kind === "knowledge" && r < 0.55) {
         // 塔（尖った屋根の小さな塔）
         parts.push(
-          `<rect x="${jx - 1.4}" y="${jy - 1}" width="2.8" height="4.4" fill="${DEEP.knowledge}" opacity="0.8"/>`,
-          `<path d="M ${jx - 2} ${jy - 1} L ${jx} ${jy - 5} L ${jx + 2} ${jy - 1} Z" ` +
-            `fill="${DEEP.knowledge}" opacity="0.8"/>`,
+          `<rect x="${jx - 1.7}" y="${jy - 1.2}" width="3.4" height="5.2" fill="${DEEP.knowledge}" ` +
+            `stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>`,
+          `<path d="M ${jx - 2.4} ${jy - 1.2} L ${jx} ${jy - 6} L ${jx + 2.4} ${jy - 1.2} Z" ` +
+            `fill="${DEEP.knowledge}" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>`,
         );
-      } else if (t.kind === "waste" && r < 0.55) {
+      } else if (t.kind === "waste" && r < 0.6) {
         // 転がる岩・枯れ木の茂み
         parts.push(
-          `<ellipse cx="${jx - 1.4}" cy="${jy + 1.2}" rx="1.6" ry="1" fill="${DEEP.waste}" opacity="0.7"/>`,
-          `<ellipse cx="${jx + 1.4}" cy="${jy + 0.4}" rx="1.1" ry="0.8" fill="${DEEP.waste}" opacity="0.55"/>`,
+          `<ellipse cx="${jx - 1.6}" cy="${jy + 1.3}" rx="1.9" ry="1.2" fill="${DEEP.waste}" opacity="0.8"/>`,
+          `<ellipse cx="${jx + 1.6}" cy="${jy + 0.4}" rx="1.3" ry="0.9" fill="${DEEP.waste}" opacity="0.65"/>`,
         );
       }
     }
