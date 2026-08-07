@@ -4,7 +4,7 @@
  */
 
 const OWNER = "kya6-tomato";
-const REPO = "C3-mini-world-game";
+const REPO = "C3-World-Simulate-Game";
 const API = "https://api.github.com";
 
 function token(): string {

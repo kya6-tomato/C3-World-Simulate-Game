@@ -6,7 +6,7 @@
 
 盤面はここでいつでも見られます。
 
-**https://kya6-tomato.github.io/C3-mini-world-game/**
+**https://kya6-tomato.github.io/C3-World-Simulate-Game/**
 
 ---
 

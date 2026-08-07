@@ -299,7 +299,7 @@
       tr.dataset.food = r.stock.food; tr.dataset.material = r.stock.material; tr.dataset.knowledge = r.stock.knowledge;
       var issueNum = players[r.id];
       var whoHtml = '<span class="dot" style="background:' + colorOf(r.id) + '"></span>';
-      whoHtml += issueNum ? '<a href="https://github.com/kya6-tomato/C3-mini-world-game/issues/' + issueNum + '" target="_blank" rel="noopener">' + esc(r.id) + "</a>" : esc(r.id);
+      whoHtml += issueNum ? '<a href="https://github.com/kya6-tomato/C3-World-Simulate-Game/issues/' + issueNum + '" target="_blank" rel="noopener">' + esc(r.id) + "</a>" : esc(r.id);
       tr.innerHTML =
         '<td class="rank">' + (i + 1) + "</td>" +
         '<td class="who">' + whoHtml + "</td>" +
