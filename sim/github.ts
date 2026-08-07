@@ -70,3 +70,20 @@ export async function postComment(issueNumber: number, body: string): Promise<vo
     body: JSON.stringify({ body }),
   });
 }
+
+/**
+ * Botが投稿する返信の先頭に必ず付ける、目に見えない印。
+ * これが付いたコメントは、次にコメントを読み取るときに「命令」として扱わない。
+ * 手元でテストするときはBotも人間と同じアカウントで投稿するため、
+ * 投稿者では見分けられない。内容に印を付けることで確実に区別する。
+ */
+const SYSTEM_MARKER = "<!-- system-reply -->";
+
+export function isSystemReply(body: string): boolean {
+  return body.trimStart().startsWith(SYSTEM_MARKER);
+}
+
+/** Botの返信として、印を付けてから投稿する。 */
+export async function postSystemComment(issueNumber: number, body: string): Promise<void> {
+  await postComment(issueNumber, `${SYSTEM_MARKER}\n${body}`);
+}

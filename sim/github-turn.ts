@@ -3,13 +3,13 @@ import { existsSync as fileExists } from "node:fs";
 // あるときだけ読み込む（無いと process.loadEnvFile がエラーで止まってしまうため）。
 if (fileExists(".env")) process.loadEnvFile(".env");
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
-import { createWorld } from "../src/worldgen.ts";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolveTurn } from "../src/rules.ts";
 import { renderMapSvg } from "../src/render.ts";
 import { CONFIG } from "../src/config.ts";
-import { listComments, postComment } from "./github.ts";
+import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
+import { bootstrapWorld } from "./worldBootstrap.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -24,20 +24,6 @@ import type { World, Command } from "../src/types.ts";
  *     実行するたびに0ターン目からやり直しになってしまう）
  */
 
-// Botが投稿する返信の先頭に必ず付ける、目に見えない印。
-// これが付いたコメントは、次にコメントを読み取るときに「命令」として扱わない。
-// 手元でテストするときはBotも自分と同じアカウントで投稿するため、
-// 投稿者では見分けられない。内容に印を付けることで確実に区別する。
-const SYSTEM_MARKER = "<!-- system-reply -->";
-
-function isSystemReply(body: string): boolean {
-  return body.trimStart().startsWith(SYSTEM_MARKER);
-}
-
-async function postSystemComment(issueNumber: number, body: string): Promise<void> {
-  await postComment(issueNumber, `${SYSTEM_MARKER}\n${body}`);
-}
-
 const GAME_DIR = process.env.GAME_DIR || "out_github";
 const STATE_PATH = `${GAME_DIR}/state.json`;
 const HISTORY_PATH = `${GAME_DIR}/history.json`;
@@ -51,7 +37,6 @@ function loadPlayers(): Record<string, number> {
 }
 
 async function main() {
-  mkdirSync(GAME_DIR, { recursive: true });
   const players = loadPlayers();
   const ids = Object.keys(players);
 
@@ -61,25 +46,8 @@ async function main() {
   }
 
   if (!existsSync(STATE_PATH)) {
-    const world = createWorld(ids, SEED);
-    writeFileSync(STATE_PATH, JSON.stringify(world, null, 2));
-    writeFileSync(MAP_PATH, renderMapSvg(world));
-    writeFileSync(
-      HISTORY_PATH,
-      JSON.stringify([{ turn: world.turn, log: world.log }], null, 2),
-    );
-    writeFileSync(
-      RUN_PATH,
-      JSON.stringify({ processedAt: new Date().toISOString() }, null, 2),
-    );
-    console.log("GitHub連携用の世界を作りました（0ターン目）。");
-    for (const id of ids) {
-      await postSystemComment(
-        players[id],
-        `世界が始まりました。あなたは **${id}** です。\n\nこのIssueにコメントで命令を書くと、次に \`node sim/github-turn.ts\` を実行したときに反映されます。書き方は ${"`"}commands_書き方.md${"`"} と同じ考え方（建設・開拓・提案・承諾・破棄・土地提案・土地承諾・奪う・待機）ですが、スマホでも打てる一行形式です。例: \`建設\` / \`提案 p05 わたす 資材 9 もらう 知識 9 8ターン\``,
-      );
-    }
-    console.log("各参加者のIssueに開始のお知らせを投稿しました。");
+    await bootstrapWorld(GAME_DIR, players, SEED);
+    console.log("世界を作りました（0ターン目）。各参加者のIssueに開始のお知らせを投稿しました。");
     return;
   }
 
