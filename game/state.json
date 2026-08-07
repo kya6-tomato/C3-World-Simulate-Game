@@ -1,5 +1,5 @@
 {
-  "turn": 1,
+  "turn": 0,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -4911,7 +4911,7 @@
         }
       ],
       "stock": {
-        "food": 33,
+        "food": 20,
         "material": 20,
         "knowledge": 10
       },
@@ -4921,5 +4921,7 @@
   },
   "contracts": [],
   "landOffers": [],
-  "log": []
+  "log": [
+    "世界が生成された。"
+  ]
 }

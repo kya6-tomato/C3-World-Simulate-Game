@@ -24,6 +24,20 @@ import type { World, Command } from "../src/types.ts";
  *     実行するたびに0ターン目からやり直しになってしまう）
  */
 
+// Botが投稿する返信の先頭に必ず付ける、目に見えない印。
+// これが付いたコメントは、次にコメントを読み取るときに「命令」として扱わない。
+// 手元でテストするときはBotも自分と同じアカウントで投稿するため、
+// 投稿者では見分けられない。内容に印を付けることで確実に区別する。
+const SYSTEM_MARKER = "<!-- system-reply -->";
+
+function isSystemReply(body: string): boolean {
+  return body.trimStart().startsWith(SYSTEM_MARKER);
+}
+
+async function postSystemComment(issueNumber: number, body: string): Promise<void> {
+  await postComment(issueNumber, `${SYSTEM_MARKER}\n${body}`);
+}
+
 const GAME_DIR = process.env.GAME_DIR || "out_github";
 const STATE_PATH = `${GAME_DIR}/state.json`;
 const HISTORY_PATH = `${GAME_DIR}/history.json`;
@@ -60,7 +74,7 @@ async function main() {
     );
     console.log("GitHub連携用の世界を作りました（0ターン目）。");
     for (const id of ids) {
-      await postComment(
+      await postSystemComment(
         players[id],
         `世界が始まりました。あなたは **${id}** です。\n\nこのIssueにコメントで命令を書くと、次に \`node sim/github-turn.ts\` を実行したときに反映されます。書き方は ${"`"}commands_書き方.md${"`"} と同じ考え方（建設・開拓・提案・承諾・破棄・土地提案・土地承諾・奪う・待機）ですが、スマホでも打てる一行形式です。例: \`建設\` / \`提案 p05 わたす 資材 9 もらう 知識 9 8ターン\``,
       );
@@ -81,7 +95,9 @@ async function main() {
 
   for (const id of ids) {
     const issueNumber = players[id];
-    const comments = await listComments(issueNumber, since);
+    const comments = (await listComments(issueNumber, since)).filter(
+      (c) => !isSystemReply(c.body),
+    );
     if (comments.length === 0) continue;
 
     // 前回の処理より後に書かれたコメントのうち、一番新しいものだけを今ターンの命令にする。
@@ -126,7 +142,7 @@ async function main() {
     if (errs.length === 0 && mine.length === 0) {
       lines.push("", "（今回は特に動きはありませんでした）");
     }
-    await postComment(issueNumber, lines.join("\n"));
+    await postSystemComment(issueNumber, lines.join("\n"));
   }
   console.log("各参加者のIssueに結果を返信しました。");
 }
