@@ -207,18 +207,27 @@
 
 </div>
 <script>
-  var PLAYER_COLORS = [
-    "#D85A30", "#185FA5", "#0F6E56", "#993556", "#854F0B", "#534AB7",
-    "#B0473C", "#2E7D8C", "#6B8E23", "#C2185B", "#5D4037", "#7B1FA2",
-    "#E07B39", "#37474F", "#9C7C38",
-  ];
   var RESOURCE_JA = { food: "食料", material: "資材", knowledge: "知識" };
   var TURN_TIMES_JST = [9, 13, 17, 21];
 
+  // 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
+  // 黄金角ずつ色相をずらすと、何人分作っても隣り合う色が均等に離れて見分けやすい。
+  // src/render.ts（盤面SVGを作る側）と同じ考え方・同じ式にしてあるので、色が一致する。
+  var PLAYER_IDS = [];
+  var GOLDEN_ANGLE = 137.508;
+
+  function hslToHex(h, s, l) {
+    s /= 100; l /= 100;
+    function k(n) { return (n + h / 30) % 12; }
+    var a = s * Math.min(l, 1 - l);
+    function f(n) { return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); }
+    function toHex(x) { return Math.round(x * 255).toString(16).padStart(2, "0"); }
+    return "#" + toHex(f(0)) + toHex(f(8)) + toHex(f(4));
+  }
   function colorOf(id) {
-    var n = parseInt(id.replace(/[^0-9]/g, ""), 10);
-    if (isNaN(n)) n = 0;
-    return PLAYER_COLORS[n % PLAYER_COLORS.length];
+    var idx = PLAYER_IDS.indexOf(id);
+    var hue = ((idx < 0 ? 0 : idx) * GOLDEN_ANGLE) % 360;
+    return hslToHex(hue, 62, 42);
   }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -276,6 +285,7 @@
     }
 
     var ids = Object.keys(state.players);
+    PLAYER_IDS = ids;
     document.getElementById("turn-value").textContent = state.turn + "ターン目";
     document.getElementById("sub-line").textContent = "部員 " + ids.length + "人 · 4ターン/日 · 全112ターン（4週間）";
     document.getElementById("footer-note").textContent = "データ出所: game/state.json（" + state.turn + "ターン目時点、自動更新）";

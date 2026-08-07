@@ -16,7 +16,7 @@ const FILL: Record<TileKind, string> = {
   river: "#8FB8D9",
 };
 
-// 各資源を少し濃くした色。グラデーションの下端・境界線・アイコンに使う。
+// 各資源を少し濃くした色。境界線・アイコン・地形の濃淡の下端に使う。
 const DEEP: Record<TileKind, string> = {
   food: "#93B96A",
   material: "#D9A24E",
@@ -25,19 +25,64 @@ const DEEP: Record<TileKind, string> = {
   river: "#5E90BE",
 };
 
-// 人数分に近いほど見分けやすくなるので、できるだけ多くの色を用意する。
-const PLAYER_COLORS = [
-  "#D85A30", "#185FA5", "#0F6E56", "#993556", "#854F0B", "#534AB7",
-  "#B0473C", "#2E7D8C", "#6B8E23", "#C2185B", "#5D4037", "#7B1FA2",
-  "#E07B39", "#37474F", "#9C7C38",
-];
-
 /** (x, y) から 0〜1 の疑似乱数を作る。毎回同じ入力なら必ず同じ値になる（世界を再描画しても地図がちらつかない）。 */
 function hash(x: number, y: number, salt = 0): number {
   let h = (x * 374761393 + y * 668265263 + salt * 2654435761) | 0;
   h = (h ^ (h >>> 13)) * 1274126177;
   h = h ^ (h >>> 16);
   return ((h >>> 0) % 100000) / 100000;
+}
+
+/** 格子点のハッシュ値をなめらかに補間する。地形の起伏のような、自然な濃淡の帯を作る。 */
+function smoothField(x: number, y: number, scale: number, salt: number): number {
+  const gx = x / scale;
+  const gy = y / scale;
+  const x0 = Math.floor(gx);
+  const y0 = Math.floor(gy);
+  const fx = gx - x0;
+  const fy = gy - y0;
+  const h00 = hash(x0, y0, salt);
+  const h10 = hash(x0 + 1, y0, salt);
+  const h01 = hash(x0, y0 + 1, salt);
+  const h11 = hash(x0 + 1, y0 + 1, salt);
+  const top = h00 + (h10 - h00) * fx;
+  const bottom = h01 + (h11 - h01) * fx;
+  return top + (bottom - top) * fy;
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function lerpColor(a: string, b: string, t: number): string {
+  const [ar, ag, ab] = hexToRgb(a);
+  const [br, bg, bb] = hexToRgb(b);
+  const mix = (x: number, y: number) => Math.round(x + (y - x) * t);
+  const toHex = (v: number) => v.toString(16).padStart(2, "0");
+  return `#${toHex(mix(ar, br))}${toHex(mix(ag, bg))}${toHex(mix(ab, bb))}`;
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100;
+  l /= 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) =>
+    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, "0");
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+}
+
+/**
+ * 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
+ * 黄金角（約137.5度）ずつ色相をずらすと、何人分作っても隣り合う色が
+ * 均等に離れて見分けやすくなる（一覧の途中に人が増減しても他の人の色は変わらない）。
+ */
+const GOLDEN_ANGLE = 137.508;
+function colorForIndex(index: number): string {
+  const hue = (index * GOLDEN_ANGLE) % 360;
+  return hslToHex(hue, 62, 42);
 }
 
 export function renderMapSvg(w: World): string {
@@ -49,8 +94,7 @@ export function renderMapSvg(w: World): string {
   const top = PAD + 30;
 
   const ids = Object.keys(w.players);
-  const colorOf = (id: string) =>
-    PLAYER_COLORS[ids.indexOf(id) % PLAYER_COLORS.length];
+  const colorOf = (id: string) => colorForIndex(ids.indexOf(id));
 
   const grid: (Tile | undefined)[][] = Array.from({ length: w.height }, () => []);
   for (const t of w.tiles) grid[t.y][t.x] = t;
@@ -68,31 +112,30 @@ export function renderMapSvg(w: World): string {
     `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" font-family="Hiragino Sans, Noto Sans JP, Yu Gothic, Meiryo, sans-serif">`,
   );
 
-  // ------------------------------------------------------- 定義（グラデーション・影）
+  // ------------------------------------------------------- 定義（背景・影・紙の粒状感）
   parts.push("<defs>");
   parts.push(
     `<radialGradient id="bg" cx="50%" cy="40%" r="75%">` +
       `<stop offset="0%" stop-color="#FFFFFF"/>` +
-      `<stop offset="100%" stop-color="#EDEAE0"/>` +
+      `<stop offset="100%" stop-color="#EAE6D9"/>` +
       `</radialGradient>`,
   );
-  for (const kind of Object.keys(FILL) as TileKind[]) {
-    parts.push(
-      `<linearGradient id="fill-${kind}" x1="0" y1="0" x2="1" y2="1">` +
-        `<stop offset="0%" stop-color="${FILL[kind]}"/>` +
-        `<stop offset="100%" stop-color="${DEEP[kind]}"/>` +
-        `</linearGradient>`,
-    );
-  }
   parts.push(
     `<filter id="cityShadow" x="-60%" y="-60%" width="220%" height="220%">` +
       `<feDropShadow dx="0" dy="1.2" stdDeviation="1.1" flood-color="#000000" flood-opacity="0.35"/>` +
       `</filter>`,
   );
+  // 紙のような粒状のノイズ。ベタ塗りの上にごく薄く重ねて、印刷された地図っぽくする。
+  parts.push(
+    `<filter id="grain" x="0%" y="0%" width="100%" height="100%">` +
+      `<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/>` +
+      `<feColorMatrix in="n" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.22  0 0 0 0 0.18  0 0 0 0.05 0"/>` +
+      `</filter>`,
+  );
   parts.push("</defs>");
 
+  parts.push(`<rect width="${svgW}" height="${svgH}" fill="url(#bg)"/>`);
   parts.push(
-    `<rect width="${svgW}" height="${svgH}" fill="url(#bg)"/>`,
     `<text x="${PAD}" y="${PAD + 14}" font-size="15" font-weight="500" fill="#3D3D3A">Turn ${w.turn}</text>`,
   );
 
@@ -100,11 +143,15 @@ export function renderMapSvg(w: World): string {
   for (const t of w.tiles) {
     const x = PAD + t.x * TILE;
     const y = top + t.y * TILE;
-    // 同じ資源のマス同士は継ぎ目が見えないよう少しだけ重ねて塗る。
-    // 隣が違う資源のときだけ、あとで自然な境界線を引く。
+
+    // 地形の起伏のような、なめらかな濃淡。ベタ塗りではなく、
+    // 隣接するマスとゆるやかにつながる明暗にすることで自然に見せる。
+    const relief = smoothField(t.x, t.y, 4.5, 3);
+    const fillColor = lerpColor(FILL[t.kind], DEEP[t.kind], 0.15 + relief * 0.55);
+
     parts.push(
       `<rect x="${x - 0.4}" y="${y - 0.4}" width="${TILE + 0.8}" height="${TILE + 0.8}" ` +
-        `rx="1.5" fill="url(#fill-${t.kind})"/>`,
+        `rx="1.5" fill="${fillColor}"/>`,
     );
 
     // まばらに資源のアイコンを置く（都市が建つマスは避ける）。
@@ -113,11 +160,11 @@ export function renderMapSvg(w: World): string {
       const cy = y + TILE / 2;
       const r = hash(t.x, t.y, 7);
       if (t.kind === "river") {
-        if (r < 0.55) {
+        if (r < 0.6) {
           const dx = (hash(t.x, t.y, 8) - 0.5) * 6;
           parts.push(
             `<path d="M ${cx - 5 + dx} ${cy} Q ${cx + dx} ${cy - 3} ${cx + 5 + dx} ${cy}" ` +
-              `stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.55" stroke-linecap="round"/>`,
+              `stroke="#FFFFFF" stroke-width="1" fill="none" opacity="0.6" stroke-linecap="round"/>`,
           );
         }
       } else if (r < 0.22) {
@@ -143,19 +190,19 @@ export function renderMapSvg(w: World): string {
     const rightKind = kindAt(t.x + 1, t.y);
     if (rightKind !== null && rightKind !== t.kind) {
       const ex = x + TILE;
-      const jitter = (hash(t.x, t.y, 1) - 0.5) * 5;
+      const jitter = (hash(t.x, t.y, 1) - 0.5) * 6;
       parts.push(
         `<path d="M ${ex} ${y} Q ${ex + jitter} ${y + TILE / 2} ${ex} ${y + TILE}" ` +
-          `stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.18"/>`,
+          `stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>`,
       );
     }
     const downKind = kindAt(t.x, t.y + 1);
     if (downKind !== null && downKind !== t.kind) {
       const ey = y + TILE;
-      const jitter = (hash(t.x, t.y, 2) - 0.5) * 5;
+      const jitter = (hash(t.x, t.y, 2) - 0.5) * 6;
       parts.push(
         `<path d="M ${x} ${ey} Q ${x + TILE / 2} ${ey + jitter} ${x + TILE} ${ey}" ` +
-          `stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.18"/>`,
+          `stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>`,
       );
     }
 
@@ -168,10 +215,29 @@ export function renderMapSvg(w: World): string {
     }
   }
 
-  // 地図全体のふちを軽く落とす（ページの中に収まっている感じを出す）
+  // 紙の粒状感を地図の上に薄く重ねる
+  parts.push(
+    `<rect x="${PAD}" y="${top}" width="${mapW}" height="${mapH}" filter="url(#grain)"/>`,
+  );
+
+  // 地図のふち（二重線の縁取りで、古い地図らしい額装にする）
   parts.push(
     `<rect x="${PAD}" y="${top}" width="${mapW}" height="${mapH}" fill="none" ` +
-      `stroke="#3D3D3A" stroke-width="1" opacity="0.12" rx="2"/>`,
+      `stroke="#3D3D3A" stroke-width="1.4" opacity="0.35" rx="2"/>`,
+    `<rect x="${PAD + 3}" y="${top + 3}" width="${mapW - 6}" height="${mapH - 6}" fill="none" ` +
+      `stroke="#3D3D3A" stroke-width="0.6" opacity="0.2" rx="1"/>`,
+  );
+
+  // 方位磁針（右上のあき地に）
+  const compassX = PAD + mapW - 26;
+  const compassY = top + 26;
+  parts.push(
+    `<g opacity="0.55">`,
+    `<circle cx="${compassX}" cy="${compassY}" r="15" fill="#FBFAF7" stroke="#3D3D3A" stroke-width="0.8"/>`,
+    `<path d="M ${compassX} ${compassY - 11} L ${compassX + 3} ${compassY} L ${compassX} ${compassY + 11} L ${compassX - 3} ${compassY} Z" fill="#3D3D3A"/>`,
+    `<path d="M ${compassX - 11} ${compassY} L ${compassX} ${compassY - 3} L ${compassX + 11} ${compassY} L ${compassX} ${compassY + 3} Z" fill="#3D3D3A" opacity="0.4"/>`,
+    `<text x="${compassX}" y="${compassY - 18}" font-size="8" font-weight="700" fill="#3D3D3A" text-anchor="middle">N</text>`,
+    `</g>`,
   );
 
   // ------------------------------------------------ 契約の線（都市どうしを結ぶ）
@@ -231,7 +297,7 @@ export function renderMapSvg(w: World): string {
   ];
   for (const [kind, label] of legend) {
     parts.push(
-      `<rect x="${lx}" y="${ly - 11}" width="14" height="14" fill="url(#fill-${kind})" rx="3"/>`,
+      `<rect x="${lx}" y="${ly - 11}" width="14" height="14" fill="${FILL[kind]}" rx="3"/>`,
       `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">${label}</text>`,
     );
     ly += 24;
