@@ -234,7 +234,9 @@
 <path d="M 246.06136 107.44278 L 247.16136 105.44278 L 248.26136000000002 107.54278 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 240 120 Q 249 118.48824 258 120" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="257.6" y="101.6" width="18.8" height="18.8" rx="1.5" fill="#edb865"/>
+<rect x="259.5" y="103.5" width="15" height="15" rx="1" fill="none" stroke="#6d3286" stroke-width="1.5" opacity="0.85"/>
 <rect x="275.6" y="101.6" width="18.8" height="18.8" rx="1.5" fill="#edb866"/>
+<rect x="277.5" y="103.5" width="15" height="15" rx="1" fill="none" stroke="#6d3286" stroke-width="1.5" opacity="0.85"/>
 <rect x="293.6" y="101.6" width="18.8" height="18.8" rx="1.5" fill="#ecb865"/>
 <path d="M 294.52278 115.28672 L 298.72278 106.78672 L 301.12278000000003 110.58672 L 303.52278 107.48672 L 306.52278 115.28672 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 297.62278000000003 108.78672 L 298.72278 106.78672 L 299.82278 108.88672 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -2473,6 +2475,14 @@
 <text x="465" y="270" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">1</text>
 <rect x="453" y="275" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="465" y="283" font-size="7.5" font-weight="700" fill="#90bd4c" text-anchor="middle">zama</text>
+<g filter="url(#cityShadow)">
+<path d="M 262 105 L 272 105 L 267 111 Z" fill="#6d3286"/>
+<circle cx="267" cy="105" r="7" fill="#6d3286" stroke="#FBFAF7" stroke-width="1.6"/>
+<path d="M 261.5 99.5 L 267 94 L 272.5 99.5 Z" fill="#6d3286"/>
+</g>
+<text x="267" y="108" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">1</text>
+<rect x="255" y="113" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
+<text x="267" y="121" font-size="7.5" font-weight="700" fill="#6d3286" text-anchor="middle">kya6</text>
 <rect x="678" y="69" width="14" height="14" fill="#C0DD97" rx="3"/>
 <text x="700" y="80" font-size="13" fill="#3D3D3A">食料</text>
 <rect x="678" y="93" width="14" height="14" fill="#FAC775" rx="3"/>
