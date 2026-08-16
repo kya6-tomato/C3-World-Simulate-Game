@@ -135,10 +135,9 @@ export function createWorld(playerIds: string[], seed: number): World {
         const minDist = taken.length === 0
           ? 999
           : Math.min(...taken.map((p) => Math.abs(p.x - x) + Math.abs(p.y - y)));
-        if (minDist < 5) continue;
+        if (minDist < 4) continue;
 
-        // 離れているほど高得点（上限を高めにして、余裕があるほど積極的に散らす）
-        const sc = Math.min(minDist, 16) * 10 + far;
+        const sc = Math.min(minDist, 6) * 10 + far;
         if (sc > bestScore) {
           bestScore = sc;
           bestSpot = { x, y };
