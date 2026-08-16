@@ -10,6 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
+import { statusHint } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -110,6 +111,12 @@ async function main() {
     if (errs.length === 0 && mine.length === 0) {
       lines.push("", "（今回は特に動きはありませんでした）");
     }
+
+    const hints = statusHint(next, id);
+    if (hints.length > 0) {
+      lines.push("", "**次の目安**", ...hints.map((h) => `- ${h}`));
+    }
+
     lines.push(
       "",
       `次の命令をこのIssueにコメントしてください（次のターンは ${CONFIG.turnTimesJst.map((t) => `${t}時`).join("・")} のいずれか）。何も書かなければ、いつもの行動が自動で続きます。`,

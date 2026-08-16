@@ -6,4 +6,14 @@
 # 書いたら node sim/sync-members.ts を実行してください。
 # まだIssueが無い人だけ、新しくIssueが作られます。
 
-p00
+keitan
+Zomba
+saku
+SAN
+getey
+たにゅ
+CoffeeDa
+buridaikon
+鍵原∀原鍵
+shinya
+zama

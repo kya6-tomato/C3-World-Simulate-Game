@@ -1,78 +1,78 @@
 {
-  "turn": 1,
+  "turn": 0,
   "width": 34,
   "height": 24,
   "tiles": [
     {
       "x": 0,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 0,
-      "kind": "food",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 2,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 3,
       "y": 0,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 0,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 5,
       "y": 0,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 6,
       "y": 0,
-      "kind": "food",
-      "owner": null
+      "kind": "material",
+      "owner": "keitan"
     },
     {
       "x": 7,
+      "y": 0,
+      "kind": "material",
+      "owner": "keitan"
+    },
+    {
+      "x": 8,
       "y": 0,
       "kind": "waste",
       "owner": null
     },
     {
-      "x": 8,
-      "y": 0,
-      "kind": "material",
-      "owner": null
-    },
-    {
       "x": 9,
       "y": 0,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 10,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 0,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
@@ -84,43 +84,43 @@
     {
       "x": 13,
       "y": 0,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 0,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 0,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 19,
       "y": 0,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
@@ -132,49 +132,49 @@
     {
       "x": 21,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 0,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 26,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 0,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -186,91 +186,91 @@
     {
       "x": 30,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 0,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 0,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 33,
       "y": 0,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 0,
       "y": 1,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 1,
       "y": 1,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 2,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 3,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 1,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 5,
       "y": 1,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 1,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 7,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 8,
       "y": 1,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 9,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
@@ -282,331 +282,331 @@
     {
       "x": 12,
       "y": 1,
-      "kind": "food",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 13,
       "y": 1,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 1,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 1,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 1,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 1,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 19,
       "y": 1,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 20,
       "y": 1,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 1,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 1,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 28,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 1,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 1,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 33,
       "y": 1,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 0,
       "y": 2,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 2,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 3,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 5,
       "y": 2,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 8,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 2,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 12,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 2,
-      "kind": "food",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 16,
       "y": 2,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 17,
       "y": 2,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 2,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 19,
       "y": 2,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 20,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 2,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 2,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 31,
       "y": 2,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 2,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -618,103 +618,103 @@
     {
       "x": 0,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 3,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 3,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 5,
       "y": 3,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 6,
       "y": 3,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 7,
       "y": 3,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 8,
       "y": 3,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 3,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 12,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 3,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 3,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 3,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
@@ -726,211 +726,211 @@
     {
       "x": 18,
       "y": 3,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 19,
       "y": 3,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 20,
       "y": 3,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 21,
       "y": 3,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 3,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 3,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 3,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 3,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 3,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 3,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 3,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 29,
       "y": 3,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 3,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 3,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 3,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 33,
       "y": 3,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 0,
       "y": 4,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 4,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 2,
       "y": 4,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 3,
       "y": 4,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 4,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 5,
       "y": 4,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 4,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 4,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 8,
       "y": 4,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 4,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 12,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 4,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 17,
       "y": 4,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 4,
-      "kind": "knowledge",
+      "kind": "river",
       "owner": null
     },
     {
@@ -942,7 +942,7 @@
     {
       "x": 20,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -954,31 +954,31 @@
     {
       "x": 22,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 4,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -990,37 +990,37 @@
     {
       "x": 28,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 4,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 30,
       "y": 4,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 31,
       "y": 4,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 4,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 33,
       "y": 4,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -1032,109 +1032,109 @@
     {
       "x": 1,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 3,
       "y": 5,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 4,
       "y": 5,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 5,
       "y": 5,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 6,
       "y": 5,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 5,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 8,
       "y": 5,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 5,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 5,
-      "kind": "river",
-      "owner": null
+      "kind": "material",
+      "owner": "getey"
     },
     {
       "x": 11,
       "y": 5,
-      "kind": "food",
-      "owner": null
+      "kind": "material",
+      "owner": "getey"
     },
     {
       "x": 12,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 5,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 14,
       "y": 5,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 5,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 5,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
@@ -1146,199 +1146,199 @@
     {
       "x": 20,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 5,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 5,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 27,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 5,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 29,
       "y": 5,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 30,
       "y": 5,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 5,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 5,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 33,
       "y": 5,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "たにゅ"
     },
     {
       "x": 0,
       "y": 6,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 6,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 2,
       "y": 6,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 3,
       "y": 6,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 4,
       "y": 6,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 5,
       "y": 6,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 6,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 8,
       "y": 6,
-      "kind": "waste",
-      "owner": null
+      "kind": "material",
+      "owner": "shinya"
     },
     {
       "x": 9,
       "y": 6,
-      "kind": "river",
-      "owner": null
+      "kind": "material",
+      "owner": "shinya"
     },
     {
       "x": 10,
       "y": 6,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 6,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 12,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 6,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 6,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
@@ -1350,43 +1350,43 @@
     {
       "x": 20,
       "y": 6,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 21,
       "y": 6,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 22,
       "y": 6,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 6,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 6,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 6,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 26,
       "y": 6,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -1398,55 +1398,55 @@
     {
       "x": 28,
       "y": 6,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 29,
       "y": 6,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 30,
       "y": 6,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 6,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "buridaikon"
     },
     {
       "x": 32,
       "y": 6,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "buridaikon"
     },
     {
       "x": 33,
       "y": 6,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "たにゅ"
     },
     {
       "x": 0,
       "y": 7,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 1,
       "y": 7,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
@@ -1458,19 +1458,19 @@
     {
       "x": 4,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 5,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
@@ -1482,235 +1482,235 @@
     {
       "x": 8,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 7,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 7,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 7,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 12,
       "y": 7,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 13,
       "y": 7,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 7,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 7,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 7,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 7,
-      "kind": "waste",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 18,
       "y": 7,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 19,
       "y": 7,
-      "kind": "river",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 20,
       "y": 7,
-      "kind": "river",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 7,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 7,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 25,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 7,
-      "kind": "food",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 30,
       "y": 7,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 31,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 7,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 7,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 0,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 3,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 4,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 5,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 6,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 8,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 8,
-      "kind": "waste",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 8,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 8,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 12,
       "y": 8,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
@@ -1722,169 +1722,169 @@
     {
       "x": 14,
       "y": 8,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 15,
       "y": 8,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 16,
       "y": 8,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 8,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 18,
       "y": 8,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 19,
       "y": 8,
-      "kind": "food",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 20,
       "y": 8,
-      "kind": "river",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 23,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 25,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 27,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 8,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 8,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 30,
       "y": 8,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "SAN"
     },
     {
       "x": 31,
       "y": 8,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "SAN"
     },
     {
       "x": 32,
       "y": 8,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "鍵原∀原鍵"
     },
     {
       "x": 33,
       "y": 8,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "鍵原∀原鍵"
     },
     {
       "x": 0,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 1,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 2,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 3,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 4,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 5,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 6,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
@@ -1896,37 +1896,37 @@
     {
       "x": 9,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 10,
       "y": 9,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 11,
       "y": 9,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 12,
       "y": 9,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 13,
       "y": 9,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 14,
       "y": 9,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
@@ -1938,80 +1938,80 @@
     {
       "x": 16,
       "y": 9,
-      "kind": "food",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 17,
       "y": 9,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 18,
       "y": 9,
-      "kind": "food",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 19,
       "y": 9,
-      "kind": "food",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 20,
       "y": 9,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 21,
       "y": 9,
-      "kind": "river",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 9,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 23,
       "y": 9,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 24,
       "y": 9,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 25,
       "y": 9,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 26,
       "y": 9,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 27,
       "y": 9,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "zama"
     },
     {
       "x": 28,
       "y": 9,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "zama"
     },
     {
       "x": 29,
@@ -2028,1531 +2028,1531 @@
     {
       "x": 31,
       "y": 9,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 9,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 9,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 10,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 10,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 10,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 10,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 10,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 10,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 10,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 10,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 10,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 10,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 10,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 10,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 11,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 11,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 11,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 11,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 11,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 11,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 11,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 11,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 11,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 11,
-      "kind": "food",
-      "owner": "p00"
-    },
-    {
-      "x": 16,
-      "y": 11,
-      "kind": "food",
-      "owner": "p00"
-    },
-    {
-      "x": 17,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 11,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 11,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 11,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 11,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 11,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 11,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 12,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 12,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 12,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 12,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 12,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 12,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 12,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 12,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 12,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 12,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 12,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 12,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 12,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 12,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 13,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 13,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 13,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 13,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 13,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 13,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 13,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 13,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 13,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 14,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 14,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 14,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 14,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 14,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 14,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 14,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 14,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 14,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 14,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 15,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 15,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 15,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 15,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 15,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 15,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 15,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 15,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 15,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 15,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 15,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 15,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 0,
-      "y": 16,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 1,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 2,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 16,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 16,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 16,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 16,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 19,
-      "y": 16,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 20,
-      "y": 16,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 21,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 22,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 23,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 24,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 25,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 26,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 27,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 28,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 29,
-      "y": 16,
-      "kind": "food",
-      "owner": null
-    },
-    {
-      "x": 30,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 31,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 32,
-      "y": 16,
-      "kind": "material",
-      "owner": null
-    },
-    {
-      "x": 33,
-      "y": 16,
       "kind": "knowledge",
       "owner": null
     },
     {
       "x": 0,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 10,
+      "kind": "river",
       "owner": null
     },
     {
       "x": 1,
-      "y": 17,
+      "y": 10,
       "kind": "waste",
       "owner": null
     },
     {
       "x": 2,
-      "y": 17,
+      "y": 10,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 10,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 10,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 10,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 10,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 10,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 10,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 10,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 11,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 11,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 11,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 11,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 11,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 11,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 11,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 11,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 11,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 11,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 12,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 12,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 12,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 12,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 12,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 12,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 12,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 13,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 13,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 13,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 13,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 13,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 13,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 14,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 14,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 14,
       "kind": "knowledge",
       "owner": null
     },
     {
       "x": 3,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 4,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 5,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 6,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 7,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 8,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 9,
-      "y": 17,
-      "kind": "knowledge",
+      "y": 14,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 10,
-      "y": 17,
+      "y": 14,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 14,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 14,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 14,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 14,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 14,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 14,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 14,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 14,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 15,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 15,
       "kind": "knowledge",
       "owner": null
     },
     {
       "x": 11,
-      "y": 17,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 15,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 15,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 15,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 15,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 15,
       "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 15,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 15,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 15,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 15,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 15,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 16,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 16,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 16,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 16,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 20,
+      "y": 16,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 21,
+      "y": 16,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 22,
+      "y": 16,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 23,
+      "y": 16,
+      "kind": "river",
+      "owner": null
+    },
+    {
+      "x": 24,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 25,
+      "y": 16,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 26,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 27,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 28,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 29,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 30,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 31,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 32,
+      "y": 16,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 33,
+      "y": 16,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 0,
+      "y": 17,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 1,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 2,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 3,
+      "y": 17,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 17,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 17,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 17,
+      "kind": "material",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 17,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 17,
+      "kind": "food",
       "owner": null
     },
     {
       "x": 12,
       "y": 17,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 13,
       "y": 17,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
@@ -3582,49 +3582,49 @@
     {
       "x": 18,
       "y": 17,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 19,
       "y": 17,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 20,
       "y": 17,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 21,
       "y": 17,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 22,
       "y": 17,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 23,
       "y": 17,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 24,
       "y": 17,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 25,
       "y": 17,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
@@ -3636,31 +3636,31 @@
     {
       "x": 27,
       "y": 17,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 28,
       "y": 17,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 17,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 17,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 17,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
@@ -3678,100 +3678,100 @@
     {
       "x": 0,
       "y": 18,
-      "kind": "knowledge",
-      "owner": null
+      "kind": "food",
+      "owner": "Zomba"
     },
     {
       "x": 1,
       "y": 18,
-      "kind": "knowledge",
-      "owner": null
+      "kind": "food",
+      "owner": "Zomba"
     },
     {
       "x": 2,
-      "y": 18,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 18,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 18,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 18,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 18,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 15,
       "y": 18,
       "kind": "food",
       "owner": null
     },
     {
+      "x": 3,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 18,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 18,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 18,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 18,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 18,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 18,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
       "x": 16,
       "y": 18,
       "kind": "food",
@@ -3780,145 +3780,145 @@
     {
       "x": 17,
       "y": 18,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 18,
       "y": 18,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 19,
       "y": 18,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 20,
       "y": 18,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 21,
       "y": 18,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 22,
       "y": 18,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 23,
       "y": 18,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 24,
       "y": 18,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 25,
       "y": 18,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 26,
       "y": 18,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 27,
       "y": 18,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 18,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 18,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 18,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 18,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 18,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 18,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 0,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 1,
       "y": 19,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 2,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 3,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 4,
       "y": 19,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 5,
       "y": 19,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 6,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
@@ -3930,67 +3930,67 @@
     {
       "x": 8,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 9,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 10,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 11,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 12,
       "y": 19,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 13,
       "y": 19,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 14,
       "y": 19,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 15,
       "y": 19,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 16,
       "y": 19,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 17,
       "y": 19,
-      "kind": "river",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 18,
       "y": 19,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
@@ -4002,61 +4002,61 @@
     {
       "x": 20,
       "y": 19,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 21,
       "y": 19,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 22,
       "y": 19,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 23,
       "y": 19,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 24,
       "y": 19,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 19,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 26,
       "y": 19,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 27,
       "y": 19,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 19,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 29,
       "y": 19,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -4068,19 +4068,19 @@
     {
       "x": 31,
       "y": 19,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 19,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 19,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -4092,121 +4092,121 @@
     {
       "x": 1,
       "y": 20,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 2,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 3,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 4,
-      "y": 20,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 5,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 6,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 7,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 8,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 9,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 10,
-      "y": 20,
-      "kind": "waste",
-      "owner": null
-    },
-    {
-      "x": 11,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 12,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 13,
-      "y": 20,
-      "kind": "knowledge",
-      "owner": null
-    },
-    {
-      "x": 14,
-      "y": 20,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 15,
-      "y": 20,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 16,
-      "y": 20,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 17,
-      "y": 20,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 18,
-      "y": 20,
-      "kind": "river",
-      "owner": null
-    },
-    {
-      "x": 19,
       "y": 20,
       "kind": "food",
       "owner": null
     },
     {
+      "x": 3,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 4,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 5,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 6,
+      "y": 20,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 7,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 8,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 9,
+      "y": 20,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 10,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 11,
+      "y": 20,
+      "kind": "waste",
+      "owner": null
+    },
+    {
+      "x": 12,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 13,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 14,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 15,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 16,
+      "y": 20,
+      "kind": "knowledge",
+      "owner": null
+    },
+    {
+      "x": 17,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 18,
+      "y": 20,
+      "kind": "food",
+      "owner": null
+    },
+    {
+      "x": 19,
+      "y": 20,
+      "kind": "waste",
+      "owner": null
+    },
+    {
       "x": 20,
       "y": 20,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
@@ -4218,7 +4218,7 @@
     {
       "x": 22,
       "y": 20,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -4230,85 +4230,85 @@
     {
       "x": 24,
       "y": 20,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 20,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 26,
       "y": 20,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 27,
       "y": 20,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 20,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 20,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 20,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 20,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 20,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 20,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 0,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 1,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 2,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 3,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
@@ -4320,169 +4320,169 @@
     {
       "x": 5,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 6,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 7,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 8,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 9,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 10,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 11,
       "y": 21,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 12,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 13,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 14,
       "y": 21,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 15,
       "y": 21,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 16,
       "y": 21,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 17,
       "y": 21,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 18,
       "y": 21,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 19,
       "y": 21,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 20,
       "y": 21,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 21,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 22,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 23,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 24,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 26,
       "y": 21,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 27,
       "y": 21,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 21,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 21,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 21,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 21,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 21,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
@@ -4494,31 +4494,31 @@
     {
       "x": 0,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 1,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 2,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 3,
       "y": 22,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 4,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
@@ -4530,260 +4530,260 @@
     {
       "x": 6,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 7,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 8,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "material",
       "owner": null
     },
     {
       "x": 9,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 10,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 11,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 12,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 13,
       "y": 22,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 14,
       "y": 22,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 15,
       "y": 22,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 16,
       "y": 22,
-      "kind": "river",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 17,
       "y": 22,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 18,
       "y": 22,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 19,
       "y": 22,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 20,
       "y": 22,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 21,
       "y": 22,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 22,
       "y": 22,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 23,
       "y": 22,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 24,
       "y": 22,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 22,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 26,
       "y": 22,
-      "kind": "waste",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 27,
       "y": 22,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 22,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 22,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 22,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 22,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 32,
       "y": 22,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 33,
       "y": 22,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 0,
       "y": 23,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 1,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 2,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 3,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 4,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 5,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 6,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 7,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 8,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 9,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 10,
       "y": 23,
-      "kind": "waste",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 11,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 12,
       "y": 23,
-      "kind": "knowledge",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 13,
       "y": 23,
-      "kind": "knowledge",
-      "owner": null
+      "kind": "food",
+      "owner": "CoffeeDa"
     },
     {
       "x": 14,
       "y": 23,
-      "kind": "waste",
-      "owner": null
+      "kind": "food",
+      "owner": "CoffeeDa"
     },
     {
       "x": 15,
@@ -4794,124 +4794,294 @@
     {
       "x": 16,
       "y": 23,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 17,
       "y": 23,
-      "kind": "river",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 18,
       "y": 23,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 19,
       "y": 23,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 20,
       "y": 23,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 21,
       "y": 23,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 22,
       "y": 23,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 23,
       "y": 23,
-      "kind": "material",
+      "kind": "waste",
       "owner": null
     },
     {
       "x": 24,
       "y": 23,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 25,
       "y": 23,
-      "kind": "material",
+      "kind": "food",
       "owner": null
     },
     {
       "x": 26,
       "y": 23,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 27,
       "y": 23,
-      "kind": "material",
+      "kind": "river",
       "owner": null
     },
     {
       "x": 28,
       "y": 23,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 29,
       "y": 23,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 30,
       "y": 23,
-      "kind": "waste",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 31,
       "y": 23,
-      "kind": "material",
+      "kind": "knowledge",
       "owner": null
     },
     {
       "x": 32,
       "y": 23,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "saku"
     },
     {
       "x": 33,
       "y": 23,
-      "kind": "material",
-      "owner": null
+      "kind": "knowledge",
+      "owner": "saku"
     }
   ],
   "players": {
-    "p00": {
-      "id": "p00",
+    "keitan": {
+      "id": "keitan",
       "cities": [
         {
-          "x": 16,
-          "y": 11,
+          "x": 7,
+          "y": 0,
           "level": 1
         }
       ],
       "stock": {
-        "food": 33,
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "Zomba": {
+      "id": "Zomba",
+      "cities": [
+        {
+          "x": 0,
+          "y": 18,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "saku": {
+      "id": "saku",
+      "cities": [
+        {
+          "x": 33,
+          "y": 23,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "SAN": {
+      "id": "SAN",
+      "cities": [
+        {
+          "x": 30,
+          "y": 8,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "getey": {
+      "id": "getey",
+      "cities": [
+        {
+          "x": 10,
+          "y": 5,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "たにゅ": {
+      "id": "たにゅ",
+      "cities": [
+        {
+          "x": 33,
+          "y": 5,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "CoffeeDa": {
+      "id": "CoffeeDa",
+      "cities": [
+        {
+          "x": 13,
+          "y": 23,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "buridaikon": {
+      "id": "buridaikon",
+      "cities": [
+        {
+          "x": 31,
+          "y": 6,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "鍵原∀原鍵": {
+      "id": "鍵原∀原鍵",
+      "cities": [
+        {
+          "x": 33,
+          "y": 8,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "shinya": {
+      "id": "shinya",
+      "cities": [
+        {
+          "x": 8,
+          "y": 6,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
+        "material": 20,
+        "knowledge": 10
+      },
+      "trust": 100,
+      "standing": "build"
+    },
+    "zama": {
+      "id": "zama",
+      "cities": [
+        {
+          "x": 28,
+          "y": 9,
+          "level": 1
+        }
+      ],
+      "stock": {
+        "food": 20,
         "material": 20,
         "knowledge": 10
       },
@@ -4921,5 +5091,7 @@
   },
   "contracts": [],
   "landOffers": [],
-  "log": []
+  "log": [
+    "世界が生成された。"
+  ]
 }
