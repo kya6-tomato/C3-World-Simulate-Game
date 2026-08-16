@@ -153,10 +153,19 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
     if (used.has(c.player)) continue;
     used.add(c.player);
     economic.push(c);
+
+    // 自分で選んだ経済行動は「いつもの行動」として覚える。次に何も
+    // 書かなかったときは、これが自動で続く（奪うは一回きりの行動なので対象外）。
+    const p = w.players[c.player];
+    if (p && (c.type === "build" || c.type === "expand" || c.type === "pass")) {
+      p.standing = c.type;
+    }
   }
   // 経済行動を出さなかった人は、常設命令で自動的に補う。
+  const autoFilled = new Set<string>();
   for (const p of Object.values(w.players)) {
     if (used.has(p.id)) continue;
+    autoFilled.add(p.id);
     economic.push({ type: p.standing, player: p.id } as Command);
   }
 
@@ -164,10 +173,21 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
   for (const cmd of [...rng.shuffle(diplomacy), ...rng.shuffle(economic)]) {
     const p = w.players[cmd.player];
     if (!p) continue;
+    const isAuto = autoFilled.has(cmd.player);
 
     switch (cmd.type) {
-      case "expand": doExpand(w, p, rng); break;
-      case "build": doBuild(w, p); break;
+      case "expand": {
+        const ok = doExpand(w, p, rng);
+        // 何も書かなかった人がたまたま開拓できないときは、建設できないか代わりに試す。
+        // 「せっかくの自動継続が毎回空振りになる」のを避けるため。
+        if (!ok && isAuto) doBuild(w, p);
+        break;
+      }
+      case "build": {
+        const ok = doBuild(w, p);
+        if (!ok && isAuto) doExpand(w, p, rng);
+        break;
+      }
       case "offer": doOffer(w, p, cmd); break;
       case "accept": doAccept(w, p, cmd.contractId); break;
       case "break": doBreak(w, p, cmd.contractId); break;
@@ -187,12 +207,13 @@ function pay(stock: Stock, cost: Partial<Stock>) {
   for (const r of RESOURCES) stock[r] -= cost[r] ?? 0;
 }
 
-function doExpand(w: World, p: Player, rng: Rng) {
+/** 実行できたら true を返す（何も書かなかった人の自動フォールバックの判定に使う）。 */
+function doExpand(w: World, p: Player, rng: Rng): boolean {
   const owned = w.tiles.filter((t) => t.owner === p.id).length;
   const cost = expandCostTotal(owned);
   if (totalStock(p.stock) < cost) {
     w.log.push(`${p.id} は資源が足りず開拓できなかった（要 合計${cost}）。`);
-    return;
+    return false;
   }
 
   // 自分の領土に隣接している、誰のものでもないマスを集める
@@ -207,7 +228,7 @@ function doExpand(w: World, p: Player, rng: Rng) {
   }
   if (candidates.length === 0) {
     w.log.push(`${p.id} は開拓できる土地がなかった。`);
-    return;
+    return false;
   }
 
   // 一番足りていない資源のマスを優先して取る
@@ -220,27 +241,30 @@ function doExpand(w: World, p: Player, rng: Rng) {
   w.log.push(
     `${p.id} が (${target.x},${target.y}) を開拓した [${RESOURCE_JA[target.kind as Resource]}]。`,
   );
+  return true;
 }
 
-function doBuild(w: World, p: Player) {
+/** 実行できたら true を返す（何も書かなかった人の自動フォールバックの判定に使う）。 */
+function doBuild(w: World, p: Player): boolean {
   const city = p.cities
     .slice()
     .sort((a, b) => a.level - b.level)
     .find((c) => c.level < CONFIG.maxCityLevel);
   if (!city) {
     w.log.push(`${p.id} の都市はすべて最大レベル。`);
-    return;
+    return false;
   }
   const cost = buildCostFor(city.level + 1, p.trust);
   if (!canAfford(p.stock, cost)) {
     // 資源が足りず建設できなかっただけなら記録しない。
     // 常設命令が「建設」の人は資源が貯まるまで毎ターンここに来るので、
     // 逐一記録すると失敗の羅列で埋め尽くされてしまう。
-    return;
+    return false;
   }
   pay(p.stock, cost);
   city.level += 1;
   w.log.push(`${p.id} が都市を Lv${city.level} に発展させた。`);
+  return true;
 }
 
 function doOffer(
