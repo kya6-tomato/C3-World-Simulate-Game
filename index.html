@@ -94,6 +94,13 @@
   .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
   .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
   .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  .tile-info {
+    margin-top: 12px; font-size: 12.5px; color: var(--ink-soft);
+    background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .tile-info b { color: var(--ink); font-family: ui-monospace, monospace; }
+  .tile-info .dot { margin-right: 2px; }
 
   ul.contracts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   li.contract { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; font-family: ui-monospace, monospace; }
@@ -192,6 +199,7 @@
           <span><i class="swatch" style="background:var(--river)"></i>川</span>
           <span style="margin-left:auto">丸の数字 = 都市レベル</span>
         </div>
+        <div class="tile-info" id="tile-info">マスをクリック（スマホはタップ）すると、ここに座標と中身が表示されます。</div>
       </div>
     </main>
 
@@ -254,6 +262,13 @@
   // src/render.ts（盤面SVGを作る側）と同じ考え方・同じ式にしてあるので、色が一致する。
   var PLAYER_IDS = [];
   var GOLDEN_ANGLE = 137.508;
+  // src/render.ts の colorForIndex と同じパレット・同じロジック（地図画像と表示を一致させるため）
+  var PLAYER_PALETTE = [
+    "#b12f2f", "#3ecc3e", "#3e3ecc", "#3eafcc", "#b1972f",
+    "#cc3ea1", "#328653", "#324b86", "#863253", "#865c32",
+    "#90bd4c", "#6d3286", "#3eccaf", "#af3ecc", "#3ecc76",
+    "#326d86", "#cc763e", "#cc3e68", "#3e68cc", "#279127",
+  ];
 
   function hslToHex(h, s, l) {
     s /= 100; l /= 100;
@@ -265,7 +280,9 @@
   }
   function colorOf(id) {
     var idx = PLAYER_IDS.indexOf(id);
-    var hue = ((idx < 0 ? 0 : idx) * GOLDEN_ANGLE) % 360;
+    if (idx < 0) idx = 0;
+    if (idx < PLAYER_PALETTE.length) return PLAYER_PALETTE[idx];
+    var hue = (idx * GOLDEN_ANGLE) % 360;
     return hslToHex(hue, 62, 42);
   }
   function esc(s) {
@@ -331,7 +348,36 @@
 
     // 地図
     var mapSvg = await fetch("game/map.svg", { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; });
-    document.getElementById("map-wrap").innerHTML = mapSvg;
+    var mapWrap = document.getElementById("map-wrap");
+    mapWrap.innerHTML = mapSvg;
+
+    // マスをクリック/タップすると、その座標と中身を表示する
+    var RESOURCE_KIND_JA = { food: "食料", material: "資材", knowledge: "知識", waste: "荒地", river: "川" };
+    var tileInfoEl = document.getElementById("tile-info");
+    mapWrap.addEventListener("click", function (ev) {
+      var hit = ev.target.closest(".tile-hit");
+      if (!hit) return;
+      var tx = parseInt(hit.getAttribute("data-x"), 10);
+      var ty = parseInt(hit.getAttribute("data-y"), 10);
+      var tile = state.tiles.find(function (t) { return t.x === tx && t.y === ty; });
+      if (!tile) return;
+
+      var kindLabel = RESOURCE_KIND_JA[tile.kind] || tile.kind;
+      var ownerHtml = "誰のものでもない土地";
+      var cityHtml = "";
+      if (tile.owner) {
+        ownerHtml = '<span class="dot" style="background:' + colorOf(tile.owner) + '"></span>' + esc(tile.owner) + " の土地";
+        var op = state.players[tile.owner];
+        var cityHere = op && op.cities.find(function (c) { return c.x === tx && c.y === ty; });
+        if (cityHere) cityHtml = " ・ 都市 Lv" + cityHere.level;
+      }
+      var extra =
+        tile.kind === "river" ? "開拓では越えられません（交渉・土地の交換はできます）。" :
+        tile.kind === "waste" ? "何も採れないマスです。" : "";
+      tileInfoEl.innerHTML =
+        "選んだマス: <b>(" + tx + ", " + ty + ")</b> ・ " + kindLabel + " ・ " + ownerHtml + cityHtml +
+        (extra ? "<br>" + extra : "");
+    });
 
     // プレイヤー一覧
     var rows = ids.map(function (id) {

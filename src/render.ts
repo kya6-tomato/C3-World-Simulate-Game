@@ -75,12 +75,23 @@ function hslToHex(h: number, s: number, l: number): string {
 }
 
 /**
- * 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
- * 黄金角（約137.5度）ずつ色相をずらすと、何人分作っても隣り合う色が
- * 均等に離れて見分けやすくなる（一覧の途中に人が増減しても他の人の色は変わらない）。
+ * 参加者の数に関係なく、1人に1色が必ず割り当たるようにする
+ * （一覧の途中に人が増減しても、他の人の色は変わらない）。
+ *
+ * 色相を均等にずらすだけだと、人数が増えたときに隣り合う色相同士が
+ * 近くなって見分けづらくなる（例: 赤とオレンジがほぼ同じ色に見える）。
+ * そこで、まず知覚的に離れた20色の固定パレットを使い切り、
+ * それでも足りない場合だけ黄金角（約137.5度）で色相をずらして補う。
  */
+const PLAYER_PALETTE = [
+  "#b12f2f", "#3ecc3e", "#3e3ecc", "#3eafcc", "#b1972f",
+  "#cc3ea1", "#328653", "#324b86", "#863253", "#865c32",
+  "#90bd4c", "#6d3286", "#3eccaf", "#af3ecc", "#3ecc76",
+  "#326d86", "#cc763e", "#cc3e68", "#3e68cc", "#279127",
+];
 const GOLDEN_ANGLE = 137.508;
 function colorForIndex(index: number): string {
+  if (index < PLAYER_PALETTE.length) return PLAYER_PALETTE[index];
   const hue = (index * GOLDEN_ANGLE) % 360;
   return hslToHex(hue, 62, 42);
 }
@@ -89,9 +100,14 @@ export function renderMapSvg(w: World): string {
   const mapW = w.width * TILE;
   const mapH = w.height * TILE;
   const legendW = 230;
-  const svgW = PAD * 2 + mapW + legendW;
-  const svgH = PAD * 2 + mapH + 30;
-  const top = PAD + 30;
+  // 開拓・土地提案・奪うは座標指定が必要なので、マスから座標を数えやすいように
+  // 上と左に余白を取って目盛りを置く。
+  const axisGutterX = 22;
+  const axisGutterY = 16;
+  const mapLeft = PAD + axisGutterX;
+  const mapTop = PAD + 30 + axisGutterY;
+  const svgW = mapLeft + mapW + legendW + PAD;
+  const svgH = mapTop + mapH + PAD;
 
   const ids = Object.keys(w.players);
   const colorOf = (id: string) => colorForIndex(ids.indexOf(id));
@@ -141,8 +157,8 @@ export function renderMapSvg(w: World): string {
 
   // ------------------------------------------------------------- マス目
   for (const t of w.tiles) {
-    const x = PAD + t.x * TILE;
-    const y = top + t.y * TILE;
+    const x = mapLeft + t.x * TILE;
+    const y = mapTop + t.y * TILE;
 
     // 地形の起伏のような、なめらかな濃淡。ベタ塗りではなく、
     // 隣接するマスとゆるやかにつながる明暗にすることで自然に見せる。
@@ -232,22 +248,45 @@ export function renderMapSvg(w: World): string {
     }
   }
 
+  // ------------------------------------------------------- 座標の目盛り
+  // 開拓・土地提案・奪うのコマンドには座標（x, y）が要る。数えやすいように
+  // 5マスごとに数字とうっすらした格子線を入れる。
+  const AXIS_STEP = 5;
+  parts.push(`<g font-size="8.5" fill="#74716A">`);
+  for (let gx = 0; gx < w.width; gx += AXIS_STEP) {
+    const lineX = mapLeft + gx * TILE;
+    parts.push(
+      `<text x="${lineX + 2}" y="${mapTop - 5}" text-anchor="start">${gx}</text>`,
+      `<line x1="${lineX}" y1="${mapTop}" x2="${lineX}" y2="${mapTop + mapH}" ` +
+        `stroke="#3D3D3A" stroke-width="0.5" opacity="0.12"/>`,
+    );
+  }
+  for (let gy = 0; gy < w.height; gy += AXIS_STEP) {
+    const lineY = mapTop + gy * TILE;
+    parts.push(
+      `<text x="${mapLeft - 5}" y="${lineY + 9}" text-anchor="end">${gy}</text>`,
+      `<line x1="${mapLeft}" y1="${lineY}" x2="${mapLeft + mapW}" y2="${lineY}" ` +
+        `stroke="#3D3D3A" stroke-width="0.5" opacity="0.12"/>`,
+    );
+  }
+  parts.push(`</g>`);
+
   // 紙の粒状感を地図の上に薄く重ねる
   parts.push(
-    `<rect x="${PAD}" y="${top}" width="${mapW}" height="${mapH}" filter="url(#grain)"/>`,
+    `<rect x="${mapLeft}" y="${mapTop}" width="${mapW}" height="${mapH}" filter="url(#grain)"/>`,
   );
 
   // 地図のふち（二重線の縁取りで、古い地図らしい額装にする）
   parts.push(
-    `<rect x="${PAD}" y="${top}" width="${mapW}" height="${mapH}" fill="none" ` +
+    `<rect x="${mapLeft}" y="${mapTop}" width="${mapW}" height="${mapH}" fill="none" ` +
       `stroke="#3D3D3A" stroke-width="1.4" opacity="0.35" rx="2"/>`,
-    `<rect x="${PAD + 3}" y="${top + 3}" width="${mapW - 6}" height="${mapH - 6}" fill="none" ` +
+    `<rect x="${mapLeft + 3}" y="${mapTop + 3}" width="${mapW - 6}" height="${mapH - 6}" fill="none" ` +
       `stroke="#3D3D3A" stroke-width="0.6" opacity="0.2" rx="1"/>`,
   );
 
   // 方位磁針（右上のあき地に）
-  const compassX = PAD + mapW - 26;
-  const compassY = top + 26;
+  const compassX = mapLeft + mapW - 26;
+  const compassY = mapTop + 26;
   parts.push(
     `<g opacity="0.55">`,
     `<circle cx="${compassX}" cy="${compassY}" r="15" fill="#FBFAF7" stroke="#3D3D3A" stroke-width="0.8"/>`,
@@ -262,7 +301,7 @@ export function renderMapSvg(w: World): string {
     const p = w.players[id];
     if (!p || p.cities.length === 0) return null;
     const c = p.cities[0];
-    return { x: PAD + c.x * TILE + TILE / 2, y: top + c.y * TILE + TILE / 2 };
+    return { x: mapLeft + c.x * TILE + TILE / 2, y: mapTop + c.y * TILE + TILE / 2 };
   };
 
   for (const c of w.contracts) {
@@ -284,8 +323,8 @@ export function renderMapSvg(w: World): string {
   // 人数分の見分けがつかないので、IDも小さく添える。
   for (const p of Object.values(w.players)) {
     for (const c of p.cities) {
-      const cx = PAD + c.x * TILE + TILE / 2;
-      const cy = top + c.y * TILE + TILE / 2;
+      const cx = mapLeft + c.x * TILE + TILE / 2;
+      const cy = mapTop + c.y * TILE + TILE / 2;
       const headY = cy - 6;
       const color = colorOf(p.id);
       parts.push(`<g filter="url(#cityShadow)">`);
@@ -305,8 +344,8 @@ export function renderMapSvg(w: World): string {
   }
 
   // ------------------------------------------------------------ 凡例
-  const lx = PAD + mapW + 24;
-  let ly = top + 14;
+  const lx = mapLeft + mapW + 24;
+  let ly = mapTop + 14;
   const legend: [TileKind, string][] = [
     ["food", "食料"],
     ["material", "資材"],
@@ -344,6 +383,20 @@ export function renderMapSvg(w: World): string {
     );
     ly += 20;
   }
+
+  // ------------------------------------------------- クリック/タップの当たり判定
+  // 見た目には出さない透明な四角を、全マスぶん一番上に重ねる。
+  // ビューア（index.html）側がこれのクリック/タップを拾って、マスの座標や中身を表示する。
+  parts.push(`<g>`);
+  for (const t of w.tiles) {
+    const x = mapLeft + t.x * TILE;
+    const y = mapTop + t.y * TILE;
+    parts.push(
+      `<rect class="tile-hit" data-x="${t.x}" data-y="${t.y}" x="${x}" y="${y}" ` +
+        `width="${TILE}" height="${TILE}" fill="transparent" style="cursor:pointer"/>`,
+    );
+  }
+  parts.push(`</g>`);
 
   parts.push("</svg>");
   return parts.join("\n");
