@@ -94,10 +94,17 @@ async function main() {
   console.log(`=== ${next.turn}ターン目まで進みました ===`);
   next.log.forEach((l) => console.log(`  ${l}`));
 
-  // 各参加者に、自分に関係する出来事だけを返信する。
+  // 2人以上のプレイヤーが関わる出来事（取引・土地のやり取り・奪取など）は、
+  // 当事者だけでなく全員に共有する。市場の動きが見えないと交渉相手を探しにくいため。
+  const interactiveLines = next.log.filter(
+    (l) => ids.filter((pid) => l.includes(pid)).length >= 2,
+  );
+
+  // 各参加者に、自分に関係する出来事・全体の出来事・今の状況・次の目安を返信する。
   for (const id of ids) {
     const issueNumber = players[id];
     const mine = next.log.filter((l) => l.includes(id));
+    const others = interactiveLines.filter((l) => !mine.includes(l));
     const errs = errorsByPlayer[id] ?? [];
 
     const lines: string[] = [`**${next.turn}ターン目の結果**`];
@@ -110,6 +117,23 @@ async function main() {
     }
     if (errs.length === 0 && mine.length === 0) {
       lines.push("", "（今回は特に動きはありませんでした）");
+    }
+
+    if (others.length > 0) {
+      lines.push("", "**全体のできごと**", ...others.map((l) => `- ${l}`));
+    }
+
+    const p = next.players[id];
+    if (p) {
+      const land = next.tiles.filter((t) => t.owner === id).length;
+      const cityLv = p.cities.reduce((s, c) => s + c.level, 0);
+      const score = cityLv * 10 + land;
+      lines.push(
+        "",
+        "**今の状況**",
+        `都市 Lv${cityLv} ・ 領土 ${land}マス ・ 信用 ${p.trust} ・ 得点 ${score}（都市Lv×10＋領土）`,
+        `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
+      );
     }
 
     const hints = statusHint(next, id);
