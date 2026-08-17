@@ -261,3 +261,34 @@ export function resourceLedger(before: World, after: World, playerId: string): s
   }
   return lines;
 }
+
+/**
+ * 自分宛てに来ている、まだ返事をしていない提案・土地提案を一覧にする。
+ * 承諾するためのコマンドをそのままコピペできる形で添えるので、
+ * 提案されたことに気づきさえすれば、迷わず承諾できる。
+ */
+export function pendingOffersHint(w: World, playerId: string): string[] {
+  const lines: string[] = [];
+
+  for (const c of w.contracts) {
+    if (c.status !== "proposed" || c.to !== playerId) continue;
+    const left = CONFIG.offerExpiryTurns - (w.turn - c.proposedAt);
+    lines.push(
+      `${c.from} からの提案（あと${left}ターンで失効）: 承諾すると ${RESOURCE_JA[c.give]}${c.giveAmount}をもらい、` +
+        `${RESOURCE_JA[c.take]}${c.takeAmount}を渡す（毎ターン・${c.turnsLeft}ターン間）ことになります。` +
+        `承諾するには次のコメントをそのままコピペ: \`承諾 ${c.id}\``,
+    );
+  }
+
+  for (const lo of w.landOffers) {
+    if (lo.status !== "proposed" || lo.to !== playerId) continue;
+    const left = CONFIG.offerExpiryTurns - (w.turn - lo.proposedAt);
+    lines.push(
+      `${lo.from} からの土地提案（あと${left}ターンで失効）: 承諾すると (${lo.x},${lo.y}) がもらえる代わりに、` +
+        `${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を渡すことになります。` +
+        `承諾するには次のコメントをそのままコピペ: \`土地承諾 ${lo.id}\``,
+    );
+  }
+
+  return lines;
+}
