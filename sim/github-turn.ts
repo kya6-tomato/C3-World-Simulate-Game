@@ -148,7 +148,7 @@ async function main() {
 
     lines.push(
       "",
-      `次の命令をこのIssueにコメントしてください（次のターンは ${CONFIG.turnTimesJst.map((t) => `${t}時`).join("・")} のいずれか）。何も書かなければ、いつもの行動が自動で続きます。`,
+      `次の命令をこのIssueにコメントしてください（次のターンは ${CONFIG.turnTimesJst.map((t) => `${t}時${CONFIG.turnMinuteJst}分`).join("・")} のいずれか）。何も書かなければ、いつもの行動が自動で続きます。`,
     );
     await postSystemComment(issueNumber, lines.join("\n"));
   }

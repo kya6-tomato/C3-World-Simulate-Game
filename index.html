@@ -179,7 +179,7 @@
     </div>
     <div class="vitals">
       <div class="vital"><span class="label">現在</span><span class="value mono" id="turn-value">-</span></div>
-      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09/13/17/21時</span></div>
+      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09:30/13:30/17:30/21:30</span></div>
       <div class="vital countdown-vital"><span class="label">次のターンまで</span><span class="value mono" id="countdown">--:--:--</span></div>
     </div>
   </header>
@@ -256,6 +256,7 @@
 <script>
   var RESOURCE_JA = { food: "食料", material: "資材", knowledge: "知識" };
   var TURN_TIMES_JST = [9, 13, 17, 21];
+  var TURN_MINUTE_JST = 30;
 
   // 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
   // 黄金角ずつ色相をずらすと、何人分作っても隣り合う色が均等に離れて見分けやすい。
@@ -303,11 +304,11 @@
     var jstNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + 9 * 3600000);
     var y = jstNow.getFullYear(), m = jstNow.getMonth(), d = jstNow.getDate();
     for (var i = 0; i < TURN_TIMES_JST.length; i++) {
-      var t = new Date(y, m, d, TURN_TIMES_JST[i], 0, 0);
+      var t = new Date(y, m, d, TURN_TIMES_JST[i], TURN_MINUTE_JST, 0);
       var tUtcMs = t.getTime() - 9 * 3600000 - now.getTimezoneOffset() * 60000;
       if (tUtcMs > now.getTime()) return tUtcMs - now.getTime();
     }
-    var t2 = new Date(y, m, d + 1, TURN_TIMES_JST[0], 0, 0);
+    var t2 = new Date(y, m, d + 1, TURN_TIMES_JST[0], TURN_MINUTE_JST, 0);
     var t2UtcMs = t2.getTime() - 9 * 3600000 - now.getTimezoneOffset() * 60000;
     return t2UtcMs - now.getTime();
   }
