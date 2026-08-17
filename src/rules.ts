@@ -30,6 +30,7 @@ export function resolveTurn(world: World, commands: Command[]): World {
   const rng = new Rng(turnSeed(CONFIG.simSeed, w.turn));
 
   produce(w);
+  provideRelief(w);
   upkeep(w);
   executeContracts(w);
   applyCommands(w, commands, rng);
@@ -59,6 +60,50 @@ function produce(w: World) {
   for (const p of Object.values(w.players)) {
     const totalLevel = p.cities.reduce((s, c) => s + c.level, 0);
     p.stock.food += CONFIG.cityFoodPerLevel * totalLevel * mult(p);
+  }
+}
+
+/** そのプレイヤーが一番多く持っている資源（土地の種類ベース）。誰の土地も無ければ null。 */
+function dominantResourceOf(w: World, playerId: string): Resource | null {
+  const counts: Record<Resource, number> = { food: 0, material: 0, knowledge: 0 };
+  for (const t of w.tiles) {
+    if (t.owner === playerId && t.kind !== "waste" && t.kind !== "river") {
+      counts[t.kind as Resource]++;
+    }
+  }
+  const sorted = RESOURCES.slice().sort((a, b) => counts[b] - counts[a]);
+  return counts[sorted[0]] > 0 ? sorted[0] : null;
+}
+
+/**
+ * 救援物資。自分では持っていない資源について、交渉範囲内にその資源を
+ * 専門にしている相手が誰もいなければ、実質的に取引で手に入らないので、
+ * 数ターンに1回、少しだけ自動で補給する。
+ */
+function provideRelief(w: World) {
+  if (w.turn % CONFIG.reliefIntervalTurns !== 0) return;
+
+  const ids = Object.keys(w.players);
+  const dominant = new Map(ids.map((id) => [id, dominantResourceOf(w, id)]));
+
+  for (const id of ids) {
+    const p = w.players[id];
+    const mine = dominant.get(id);
+    for (const r of RESOURCES) {
+      if (r === mine) continue;
+      const reachable = ids.some((o) => {
+        if (o === id) return false;
+        const d = territoryDistance(w, id, o);
+        return d !== null && d <= CONFIG.tradeRange && dominant.get(o) === r;
+      });
+      if (!reachable) {
+        p.stock[r] += CONFIG.reliefAmount;
+        w.log.push(
+          `【救援物資】${id} は ${RESOURCE_JA[r]} を専門にする相手が交渉範囲内にいないため、` +
+            `${RESOURCE_JA[r]}を${CONFIG.reliefAmount}受け取った。`,
+        );
+      }
+    }
   }
 }
 
@@ -142,7 +187,7 @@ function executeContracts(w: World) {
 // ------------------------------------------------------- 4. 命令の解決
 
 /** 手番を消費する命令（経済行動）。1ターンに1つだけ。 */
-const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest"]);
+const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest", "bridge"]);
 
 function applyCommands(w: World, commands: Command[], rng: Rng) {
   // 外交（提案・承諾・破棄）は手番を消費しない。何度でも行える。
@@ -210,6 +255,7 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "acceptLand": doAcceptLand(w, p, cmd.landOfferId); break;
       case "seize": doSeize(w, p, cmd); break;
       case "harvest": doHarvest(w, p, cmd.resource); break;
+      case "bridge": doBridge(w, p, cmd.x, cmd.y, rng); break;
       case "pass": break;
     }
   }
@@ -557,6 +603,44 @@ function doHarvest(w: World, p: Player, resource: Resource) {
   p.stock[resource] += amount;
   w.log.push(
     `${p.id} が土地から ${RESOURCE_JA[resource]} を${amount}回収した（${tiles}マス分）。`,
+  );
+}
+
+/**
+ * 隣接する川のマスに橋を架けて、対岸への足がかりを得る。
+ * 橋になったマスは、資源がランダムに割り当たった普通のマスになり、
+ * そこを起点に次のターン以降の開拓で対岸に広げていける。1シーズンに1回だけ。
+ */
+function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
+  if (p.hasBridged) {
+    w.log.push(`${p.id} はこのシーズン、もう橋を架けている。`);
+    return;
+  }
+  const t = tileAt(w.tiles, w.width, x, y);
+  if (!t || t.kind !== "river") {
+    w.log.push(`${p.id} は (${x},${y}) が川ではないので橋を架けられなかった。`);
+    return;
+  }
+  const adjacent = neighbors(x, y, w.width, w.height).some((n) => {
+    const nt = tileAt(w.tiles, w.width, n.x, n.y);
+    return nt && nt.owner === p.id;
+  });
+  if (!adjacent) {
+    w.log.push(`${p.id} は自分の領土に隣接していない川には橋を架けられなかった。`);
+    return;
+  }
+  if (totalStock(p.stock) < CONFIG.bridgeCostTotal) {
+    w.log.push(`${p.id} は資源が足りず橋を架けられなかった（要 合計${CONFIG.bridgeCostTotal}）。`);
+    return;
+  }
+
+  payAny(p.stock, CONFIG.bridgeCostTotal);
+  t.kind = rng.pick(RESOURCES);
+  t.owner = p.id;
+  p.hasBridged = true;
+  w.log.push(
+    `【橋】${p.id} が (${x},${y}) に橋を架けて対岸への足がかりを得た [${RESOURCE_JA[t.kind]}]。` +
+      `このシーズン中はもう橋を架けられない。`,
   );
 }
 

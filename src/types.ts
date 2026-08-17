@@ -44,6 +44,8 @@ export interface Player {
   standing: "expand" | "build" | "pass";
   /** 常設命令が「開拓」のとき、資源を優先して使いたい指定があれば覚えておく。 */
   standingResource?: Resource;
+  /** このシーズン中に「橋」を使ったか（1シーズンに1回だけの制限に使う）。 */
+  hasBridged?: boolean;
 }
 
 /** 契約の状態。 */
@@ -157,6 +159,13 @@ export type Command =
       type: "harvest";
       player: string;
       resource: Resource;
+    }
+  | {
+      /** 隣接する川のマスに橋を架けて、対岸への足がかりを得る。1シーズンに1回だけ。手番を消費する。 */
+      type: "bridge";
+      player: string;
+      x: number;
+      y: number;
     };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];
