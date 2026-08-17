@@ -43,6 +43,23 @@ const USAGE: Record<string, string> = {
   奪う: "奪う x y（例: 奪う 12 7）",
 };
 
+/**
+ * 末尾の「Nターン」を読み取る。「8ターン」（くっつけ）でも「8 ターン」
+ * （スペースあり）でも読めるようにして、細かい書き方の違いで
+ * 失敗しないようにしている。
+ */
+function extractTurns(tokens: string[]): number {
+  const last = tokens[tokens.length - 1] ?? "";
+  const secondLast = tokens[tokens.length - 2] ?? "";
+  if (/^\d+ターン$/.test(last)) {
+    return Number(last.replace("ターン", ""));
+  }
+  if (last === "ターン" && /^\d+$/.test(secondLast)) {
+    return Number(secondLast);
+  }
+  return NaN;
+}
+
 export function parseComment(player: string, rawText: string): ParseResult {
   // 全角スペースも区切りとして扱い、前後の空白は無視する。
   const tokens = rawText
@@ -93,29 +110,62 @@ export function parseComment(player: string, rawText: string): ParseResult {
   }
 
   if (kind === "offer") {
-    const to = tokens[1];
-    const giveIdx = tokens.indexOf("わたす");
-    const takeIdx = tokens.indexOf("もらう");
-    const give = giveIdx >= 0 ? RESOURCE_JA_TO_EN[tokens[giveIdx + 1]] : undefined;
-    const giveAmount = giveIdx >= 0 ? Number(tokens[giveIdx + 2]) : NaN;
-    const take = takeIdx >= 0 ? RESOURCE_JA_TO_EN[tokens[takeIdx + 1]] : undefined;
-    const takeAmount = takeIdx >= 0 ? Number(tokens[takeIdx + 2]) : NaN;
-    const turnsWord = tokens[tokens.length - 1] ?? "";
-    const turns = Number(turnsWord.replace("ターン", ""));
+    // どこが読み取れなかったかを具体的に伝える。「書き方」を丸ごと
+    // 見せるだけだと、どこを直せばいいのか分かりにくいため。
+    const usage = `書き方: ${USAGE[word]}`;
 
-    if (
-      !to ||
-      !give ||
-      !take ||
-      !Number.isInteger(giveAmount) ||
-      giveAmount <= 0 ||
-      !Number.isInteger(takeAmount) ||
-      takeAmount <= 0 ||
-      !Number.isInteger(turns) ||
-      turns <= 0
-    ) {
-      return { command: null, error: `書き方: ${USAGE[word]}` };
+    const to = tokens[1];
+    if (!to) {
+      return { command: null, error: `提案の相手が書かれていません。${usage}` };
     }
+
+    const giveIdx = tokens.indexOf("わたす");
+    if (giveIdx < 0) {
+      return { command: null, error: `「わたす」が見つかりません。${usage}` };
+    }
+    const takeIdx = tokens.indexOf("もらう");
+    if (takeIdx < 0) {
+      return { command: null, error: `「もらう」が見つかりません。${usage}` };
+    }
+
+    const give = RESOURCE_JA_TO_EN[tokens[giveIdx + 1]];
+    if (!give) {
+      return {
+        command: null,
+        error: `「わたす」の次には 食料・資材・知識 のどれかを書いてください。${usage}`,
+      };
+    }
+    const giveAmount = Number(tokens[giveIdx + 2]);
+    if (!Number.isInteger(giveAmount) || giveAmount <= 0) {
+      return {
+        command: null,
+        error: `「わたす ${tokens[giveIdx + 1]}」の次に、渡す数を半角数字で書いてください。${usage}`,
+      };
+    }
+
+    const take = RESOURCE_JA_TO_EN[tokens[takeIdx + 1]];
+    if (!take) {
+      return {
+        command: null,
+        error: `「もらう」の次には 食料・資材・知識 のどれかを書いてください。${usage}`,
+      };
+    }
+    const takeAmount = Number(tokens[takeIdx + 2]);
+    if (!Number.isInteger(takeAmount) || takeAmount <= 0) {
+      return {
+        command: null,
+        error: `「もらう ${tokens[takeIdx + 1]}」の次に、もらう数を半角数字で書いてください。${usage}`,
+      };
+    }
+
+    const turns = extractTurns(tokens);
+    if (!Number.isInteger(turns) || turns <= 0) {
+      return {
+        command: null,
+        error: `一番最後に、続ける期間を「8ターン」のように書いてください。${usage}`,
+      };
+    }
+
     return {
       command: { type: "offer", player, to, give, giveAmount, take, takeAmount, turns },
       error: null,

@@ -64,7 +64,8 @@ async function main() {
     if (players[name] !== undefined) continue; // 既にIssueがある人はそのまま
     const issue = await createIssue(
       name,
-      `${name} さん専用のIssueです。ここに命令をコメントしてください。書き方は「コメントの書き方.md」を見てください。`,
+      `${name} さん専用のIssueです。ここに命令をコメントしてください。書き方は ` +
+        `[コメントの書き方.md](https://github.com/kya6-tomato/C3-World-Simulate-Game/blob/main/コメントの書き方.md) を見てください。`,
     );
     players[name] = issue.number;
     created++;

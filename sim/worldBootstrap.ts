@@ -40,7 +40,8 @@ export async function bootstrapWorld(
         `何も書かなくても、いつもの行動が自動で続くので、書き忘れても大丈夫です。\n` +
         `今回は約1週間のお試し期間です。\n\n` +
         `盤面はここで誰でも見られます: https://kya6-tomato.github.io/C3-World-Simulate-Game/\n\n` +
-        `詳しい書き方は [コメントの書き方.md](コメントの書き方.md)、ルールの中身は [ルールブック.md](ルールブック.md) を見てください。`,
+        `詳しい書き方は [コメントの書き方.md](https://github.com/kya6-tomato/C3-World-Simulate-Game/blob/main/コメントの書き方.md)、` +
+          `ルールの中身は [ルールブック.md](https://github.com/kya6-tomato/C3-World-Simulate-Game/blob/main/ルールブック.md) を見てください。`,
     );
   }
 }
