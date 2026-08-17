@@ -102,14 +102,33 @@
   .tile-info b { color: var(--ink); font-family: ui-monospace, monospace; }
   .tile-info .dot { margin-right: 2px; }
 
-  ul.contracts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-  li.contract { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; font-family: ui-monospace, monospace; }
+  .contract-group { margin-bottom: 16px; }
+  .contract-group:last-child { margin-bottom: 0; }
+  .contract-group-head {
+    display: flex; align-items: center; gap: 7px; margin: 0 0 8px;
+    font-size: 11px; font-weight: 700; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .contract-group-head .count {
+    font-family: ui-monospace, monospace; font-weight: 700; color: var(--ink);
+    background: var(--paper-sunken); border-radius: 100px; padding: 1px 8px; font-size: 10.5px;
+  }
+  ul.contracts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  li.contract {
+    display: flex; flex-direction: column; gap: 5px; font-size: 12.5px;
+    background: var(--paper-sunken); border: 1px solid var(--line); border-left: 3px solid var(--accent-soft);
+    border-radius: 8px; padding: 9px 12px;
+  }
+  .contract-top { display: flex; align-items: center; gap: 6px; font-family: ui-monospace, monospace; }
   .arrow { color: var(--ink-soft); }
-  .terms { color: var(--ink-soft); font-family: inherit; margin-left: 2px; }
+  .terms { color: var(--ink-soft); font-family: ui-monospace, monospace; font-size: 12px; }
   .pill {
     margin-left: auto; font-size: 10.5px; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
     padding: 2px 8px; border-radius: 100px; border: 1px solid var(--line); color: var(--ink-soft);
+    white-space: nowrap;
   }
+  .pill.active { color: var(--active); border-color: var(--active); background: color-mix(in srgb, var(--active) 12%, transparent); }
+  .pill.proposed { color: var(--accent); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .empty-note { font-size: 12.5px; color: var(--ink-soft); }
 
   .log-feed { max-height: 520px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-right: 4px; }
@@ -238,7 +257,7 @@
     <div class="contracts-row">
       <div class="panel">
         <h3>進行中の交渉</h3>
-        <ul class="contracts" id="contracts-list"></ul>
+        <div id="contracts-list"></div>
       </div>
       <div class="panel">
         <h3>土地のやり取り</h3>
@@ -256,6 +275,7 @@
 <script>
   var RESOURCE_JA = { food: "食料", material: "資材", knowledge: "知識" };
   var TURN_TIMES_JST = [9, 13, 17, 21];
+  var OFFER_EXPIRY_TURNS = 8;
 
   // 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
   // 黄金角ずつ色相をずらすと、何人分作っても隣り合う色が均等に離れて見分けやすい。
@@ -430,18 +450,41 @@
       });
     });
 
-    // 進行中の交渉
+    // 進行中の交渉（提案中＝返事待ちと、進行中＝自動更新中を分けて見せる）
     var contractsEl = document.getElementById("contracts-list");
-    var activeContracts = state.contracts.filter(function (c) { return c.status === "active" || c.status === "proposed"; });
-    if (activeContracts.length === 0) {
-      contractsEl.innerHTML = '<li class="empty-note">今のところありません</li>';
+    function contractRow(c) {
+      var isActive = c.status === "active";
+      var timeLabel = isActive
+        ? "残り" + c.turnsLeft + "ターン"
+        : "あと" + Math.max(0, OFFER_EXPIRY_TURNS - (state.turn - c.proposedAt)) + "ターンで失効";
+      return '<li class="contract">' +
+        '<div class="contract-top">' +
+          '<span class="dot" style="background:' + colorOf(c.from) + '"></span>' + esc(c.from) +
+          '<span class="arrow">⇄</span>' +
+          '<span class="dot" style="background:' + colorOf(c.to) + '"></span>' + esc(c.to) +
+          '<span class="pill ' + (isActive ? "active" : "proposed") + '">' + (isActive ? "進行中" : "提案中") + '</span>' +
+        '</div>' +
+        '<div class="terms">' + RESOURCE_JA[c.give] + c.giveAmount + " ↔ " + RESOURCE_JA[c.take] + c.takeAmount + "・" + timeLabel + '</div>' +
+      '</li>';
+    }
+    // 古い提案ほど失効が近いので、proposedAtが古い順（＝失効が近い順）に並べる。
+    var proposedContracts = state.contracts.filter(function (c) { return c.status === "proposed"; })
+      .sort(function (a, b) { return a.proposedAt - b.proposedAt; });
+    var activeContracts = state.contracts.filter(function (c) { return c.status === "active"; })
+      .sort(function (a, b) { return a.turnsLeft - b.turnsLeft; });
+    if (proposedContracts.length === 0 && activeContracts.length === 0) {
+      contractsEl.innerHTML = '<p class="empty-note">今のところありません</p>';
     } else {
-      contractsEl.innerHTML = activeContracts.map(function (c) {
-        return '<li class="contract"><span class="dot" style="background:' + colorOf(c.from) + '"></span>' + esc(c.from) +
-          '<span class="arrow">⇄</span><span class="dot" style="background:' + colorOf(c.to) + '"></span>' + esc(c.to) +
-          '<span class="terms">' + RESOURCE_JA[c.give] + c.giveAmount + " ↔ " + RESOURCE_JA[c.take] + c.takeAmount + "・残り" + c.turnsLeft + "ターン</span>" +
-          '<span class="pill">' + (c.status === "proposed" ? "提案中" : "進行中") + "</span></li>";
-      }).join("");
+      var groups = "";
+      if (proposedContracts.length > 0) {
+        groups += '<div class="contract-group"><div class="contract-group-head">提案中・返事待ち<span class="count">' + proposedContracts.length + '</span></div>' +
+          '<ul class="contracts">' + proposedContracts.map(contractRow).join("") + '</ul></div>';
+      }
+      if (activeContracts.length > 0) {
+        groups += '<div class="contract-group"><div class="contract-group-head">進行中・自動更新中<span class="count">' + activeContracts.length + '</span></div>' +
+          '<ul class="contracts">' + activeContracts.map(contractRow).join("") + '</ul></div>';
+      }
+      contractsEl.innerHTML = groups;
     }
 
     // 土地のやり取り
