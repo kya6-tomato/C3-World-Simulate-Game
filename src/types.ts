@@ -14,6 +14,8 @@ export interface Tile {
   kind: TileKind;
   /** そのマスを所有しているプレイヤーID。誰のものでもなければ null。 */
   owner: string | null;
+  /** 掘り当てた「豊かな土地」（産出量が通常の数倍になる）かどうか。 */
+  rich?: boolean;
 }
 
 /** 手持ちの資源。 */
@@ -45,6 +47,18 @@ export interface PlayerStats {
   harvestsDone: number;
   /** これまでの信用の最低値（信用がどん底から立ち直った、を判定するため）。 */
   minTrustEver: number;
+  /** これまでに援助で送った資源の合計量。得点への貢献度の計算に使う。 */
+  totalAidGiven: number;
+  /** 平均得点に対する自分の得点の比率の、これまでの最低値（劣勢からの逆転を判定するため）。 */
+  worstScoreRatioEver: number;
+  /** これまでに「世界の脅威」へ貢献した資源の合計量。得点への貢献度の計算に使う。 */
+  totalThreatContribution: number;
+  /** 貢献して撃退に成功した「世界の脅威」の数。 */
+  threatsRepelled: number;
+  /** これまでに「共同事業」へ輸出した資源の合計量。得点への貢献度の計算に使う。 */
+  totalExported: number;
+  /** 自分が着工して完成させた「共同事業」の数。 */
+  projectsBuilt: number;
 }
 
 /** 称号を獲得すると付く、永続的な小さいバフの合計。 */
@@ -129,6 +143,55 @@ export interface LandOffer {
   status: LandOfferStatus;
 }
 
+/**
+ * 世界全体を襲う「共通の敵」。個人ではなく全員に関わる脅威で、
+ * みんなで資源を出し合って撃退する（プレイヤー同士を敵味方に分けない、
+ * 協力だけが発生する仕組み）。同時に発生するのは1つだけ。
+ */
+export interface WorldThreat {
+  id: string;
+  /** 見た目の名前（例: 「大寒波」）。ゲーム的な意味はない、雰囲気づけ。 */
+  name: string;
+  spawnedAt: number;
+  /** このターンまでに撃退できないと被害が出る。 */
+  deadlineTurn: number;
+  /** 撃退に必要な貢献の合計量。 */
+  requirement: number;
+  /** これまでに集まった貢献の合計量。 */
+  contributed: number;
+  /** プレイヤーごとの貢献量。 */
+  contributions: Record<string, number>;
+}
+
+/**
+ * 世界のどこかに現れる「共同事業」（例: 灯台）。脅威と違って罰はなく、
+ * 資源が集まって現地の誰かが着工すれば、全員に恒久的な恩恵が入る。
+ * 資源は誰でも `輸出` で送れるが、実際に着工できるのは現地（隣接地）の
+ * プレイヤーだけ、という役割分担がある。
+ */
+export interface WorldProject {
+  id: string;
+  /** 見た目の名前（例: 「灯台」）。種類によって完成時の恩恵が変わる。 */
+  name: string;
+  /** 完成時にどのボーナスが全員に付くか（AchievementBonusのキー）。 */
+  rewardKind: "tradeRange" | "storage" | "disasterMitigation" | "harvestBonus";
+  /** そのボーナスの量。 */
+  rewardAmount: number;
+  /** 報酬の説明（ログ・表示用）。 */
+  rewardDesc: string;
+  x: number;
+  y: number;
+  spawnedAt: number;
+  /** 着工に必要な資源の合計量。 */
+  requirement: number;
+  /** これまでに集まった資源の合計量。 */
+  pooled: number;
+  /** プレイヤーごとの拠出量。 */
+  contributions: Record<string, number>;
+  /** 必要量に達して、あとは現地の誰かが着工するだけの状態か。 */
+  ready: boolean;
+}
+
 /** 世界まるごと。このオブジェクトがそのまま state.json になる。 */
 export interface World {
   turn: number;
@@ -138,6 +201,14 @@ export interface World {
   players: Record<string, Player>;
   contracts: Contract[];
   landOffers: LandOffer[];
+  /** 現在発生中の「世界の脅威」。無ければ null。 */
+  threat?: WorldThreat | null;
+  /** 現在進行中の「共同事業」。無ければ null。 */
+  project?: WorldProject | null;
+  /** 現在の世界目標の種類（例: "land"）。達成すると別の種類にランダムで切り替わる。 */
+  worldGoalType?: string;
+  /** 現在の世界目標の、次の到達ライン。 */
+  worldGoalNextThreshold?: number;
   /** そのターンに起きたことの記録。 */
   log: string[];
 }
@@ -209,6 +280,31 @@ export type Command =
       to: string;
       resource: Resource;
       amount: number;
+    }
+  | {
+      /** 「世界の脅威」の撃退に資源を出す。手番を消費しない（援助などと同じ枠）。 */
+      type: "contribute";
+      player: string;
+      resource: Resource;
+      amount: number;
+    }
+  | {
+      /** 「共同事業」に資源を出す。どこにいても送れる。手番を消費しない。 */
+      type: "export";
+      player: string;
+      resource: Resource;
+      amount: number;
+    }
+  | {
+      /** 資源が集まった「共同事業」を、現地（隣接地）で着工して完成させる。手番を消費する。 */
+      type: "commence";
+      player: string;
+    }
+  | {
+      /** 掲示板に短いメッセージを投稿する。全員に共有される。手番を消費しない。 */
+      type: "post";
+      player: string;
+      message: string;
     };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];

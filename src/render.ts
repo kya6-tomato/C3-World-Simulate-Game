@@ -1,4 +1,5 @@
 import type { World, Tile, TileKind } from "./types.ts";
+import { totalScore } from "./rules.ts";
 
 /**
  * 世界をSVG画像（文字列）にする。
@@ -369,8 +370,9 @@ export function renderMapSvg(w: World): string {
       land: w.tiles.filter((t) => t.owner === id).length,
       lv: w.players[id].cities.reduce((s, c) => s + c.level, 0),
       trust: w.players[id].trust,
+      score: totalScore(w, id),
     }))
-    .sort((a, b) => b.lv * 10 + b.land - (a.lv * 10 + a.land))
+    .sort((a, b) => b.score - a.score)
     .slice(0, 8);
   parts.push(
     `<text x="${lx}" y="${ly}" font-size="13" font-weight="500" fill="#3D3D3A">上位プレイヤー</text>`,

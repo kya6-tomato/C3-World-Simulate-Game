@@ -7,10 +7,14 @@ import {
   dominantResourceOf,
   effectiveTradeRange,
   expandCostTotal,
+  isUnderdog,
   seizeCostFor,
   territoryDistance,
   totalCityLevel,
+  totalScore,
   totalStock,
+  underdogCostDiscount,
+  underdogTier,
 } from "../src/rules.ts";
 import { tileAt, neighbors } from "../src/worldgen.ts";
 
@@ -63,6 +67,14 @@ export function statusHint(w: World, playerId: string): string[] {
 
   const lines: string[] = [];
   const pointless: string[] = [];
+  const underdogRate = underdogCostDiscount(w, playerId);
+
+  if (underdogRate > 0) {
+    const tierLabel = underdogTier(w, playerId) === 2 ? "危機的" : "劣勢";
+    lines.push(
+      `平均得点より${tierLabel}のため、開拓・建設・奪うのコストが${Math.round(underdogRate * 100)}%割引されています。`,
+    );
+  }
 
   // 建設まで、あと何が足りないか
   const city = p.cities
@@ -73,7 +85,7 @@ export function statusHint(w: World, playerId: string): string[] {
     lines.push("すべての都市が最大レベルです。");
     pointless.push("建設（すべての都市が最大レベルのため）");
   } else {
-    const cost = buildCostFor(city.level + 1, p.trust);
+    const cost = buildCostFor(city.level + 1, p.trust, underdogRate);
     const missing = RESOURCES.filter((r) => p.stock[r] < cost[r]).map(
       (r) => `${RESOURCE_JA[r]}${cost[r] - p.stock[r]}`,
     );
@@ -89,7 +101,7 @@ export function statusHint(w: World, playerId: string): string[] {
 
   // 開拓まで、あと合計いくつ足りないか
   const owned = w.tiles.filter((t) => t.owner === playerId).length;
-  const expandCost = expandCostTotal(owned, totalCityLevel(p));
+  const expandCost = expandCostTotal(owned, totalCityLevel(p), underdogRate);
   const have = totalStock(p.stock);
   const expandCandidates = adjacentUnowned(w, playerId);
   if (expandCandidates.length === 0) {
@@ -135,7 +147,7 @@ export function statusHint(w: World, playerId: string): string[] {
     pointless.push("奪う（隣接して信用の低い相手がいないため）");
   } else {
     // 相手の都市レベルによる防衛分はここでは考慮しない（対象が複数あり得るため）。
-    const seizeCost = seizeCostFor(owned, totalCityLevel(p));
+    const seizeCost = seizeCostFor(owned, totalCityLevel(p), 0, underdogRate);
     if (have < seizeCost) {
       pointless.push(`奪う（資源が足りないため。必要 合計${seizeCost}）`);
     }
@@ -308,6 +320,73 @@ export function achievementSummaryLine(w: World, playerId: string): string | nul
   const p = w.players[playerId];
   if (!p || !p.achievements || p.achievements.length === 0) return null;
   return `称号 ${p.achievements.length}/${ACHIEVEMENTS.length}個 獲得済み。`;
+}
+
+/**
+ * 発生中の「世界の脅威」の状況（進捗・締切）を1行にする。
+ * 発生していなければ null。
+ */
+export function threatHint(w: World): string | null {
+  if (!w.threat) return null;
+  const t = w.threat;
+  const left = t.deadlineTurn - w.turn;
+  const deadlineLabel = left > 0 ? `あと${left}ターンで期限` : "期限切れ・被害が毎ターン拡大中";
+  return (
+    `「${t.name}」進行中: 貢献 ${t.contributed}/${t.requirement}（${deadlineLabel}）。` +
+    `\`貢献 資源名 数\` で協力できます。`
+  );
+}
+
+/**
+ * 進行中の「共同事業」の状況を1行にする。自分がその隣接地を持っていて
+ * 着工できる状態なら、その旨も添える。発生していなければ null。
+ */
+export function projectHint(w: World, playerId: string): string | null {
+  if (!w.project) return null;
+  const pr = w.project;
+  if (!pr.ready) {
+    return (
+      `「${pr.name}」建設地 (${pr.x},${pr.y}): 拠出 ${pr.pooled}/${pr.requirement}。` +
+      `\`輸出 資源名 数\` で協力できます。`
+    );
+  }
+  const canCommence = neighbors(pr.x, pr.y, w.width, w.height).some((n) => {
+    const nt = tileAt(w.tiles, w.width, n.x, n.y);
+    return nt && nt.owner === playerId;
+  });
+  return (
+    `「${pr.name}」建設地 (${pr.x},${pr.y}): 資材が集まりました。` +
+    (canCommence
+      ? "あなたはこの隣接地を持っています。`着工` で完成させられます。"
+      : "隣接地を持つ人が `着工` すれば完成します。")
+  );
+}
+
+/**
+ * 世界目標（世界全体の都市レベル合計）の、次の到達ラインまでの進捗を1行にする。
+ * 罰の無いプラスの目標なので、専用コマンドは無く常に進行中。
+ */
+export function worldGoalHint(w: World): string {
+  const totalWorldLevel = Object.values(w.players).reduce((s, p) => s + totalCityLevel(p), 0);
+  const threshold = w.worldGoalNextThreshold ?? CONFIG.worldGoalStep;
+  return (
+    `世界全体の都市レベル合計 ${totalWorldLevel}/${threshold} に到達すると、全員に資源が贈られます` +
+    `（誰かが建設すれば自然に進みます。専用の操作は不要です）。`
+  );
+}
+
+/**
+ * 今起きている世界規模のイベント（世界の脅威・共同事業・世界目標）を、
+ * まとめて一覧にする。返信の「現在のイベント」欄に使う。
+ */
+export function worldEventsHint(w: World, playerId: string): string[] {
+  const lines: string[] = [];
+  const threat = threatHint(w);
+  if (threat) lines.push(`【世界の脅威】${threat}`);
+  const project = projectHint(w, playerId);
+  if (project) lines.push(`【共同事業】${project}`);
+  lines.push(`【世界目標】${worldGoalHint(w)}`);
+  return lines;
 }
 
 /**

@@ -14,6 +14,7 @@
     --cat-territory: #B0552A;
     --cat-city: #2B5FA3;
     --cat-flavor: #9C3B52;
+    --cat-world: #1F7FA0;
     --code-bg: #DEDFEC;
   }
 
@@ -32,6 +33,7 @@
       --cat-territory: #E3966A;
       --cat-city: #7EA8E0;
       --cat-flavor: #E37F98;
+      --cat-world: #6FC9E8;
       --code-bg: #262A3D;
     }
   }
@@ -49,6 +51,7 @@
     --cat-territory: #E3966A;
     --cat-city: #7EA8E0;
     --cat-flavor: #E37F98;
+    --cat-world: #6FC9E8;
     --code-bg: #262A3D;
   }
 
@@ -128,6 +131,7 @@
     font-size: 14px;
   }
   nav.toc li { margin: 4px 0; break-inside: avoid; }
+  nav.toc li.sub { padding-left: 1.1em; font-size: 12.5px; }
   nav.toc a { text-decoration: none; }
   nav.toc a:hover { text-decoration: underline; }
 
@@ -172,6 +176,12 @@
     font-size: 17px;
     margin: 30px 0 8px;
     color: var(--ink);
+  }
+  h4.sub-chapter {
+    font-size: 15px;
+    margin: 28px 0 8px;
+    color: var(--brass-strong);
+    letter-spacing: 0.01em;
   }
 
   p { margin: 10px 0; }
@@ -298,15 +308,19 @@
       <li><a href="#comment-basic">コメントの基本</a></li>
       <li><a href="#comment-list">使える命令一覧</a></li>
       <li><a href="#comment-offer">提案・土地提案の読み方</a></li>
-      <li><a href="#comment-advanced">資源・マスの指定、複数命令</a></li>
+      <li><a href="#comment-expand-detail">開拓を詳しく指定する</a></li>
+      <li><a href="#comment-events">援助・世界のイベントについて</a></li>
+      <li><a href="#comment-multi">複数の命令を同時に出す</a></li>
       <li><a href="#rule-goal">1. 目的</a></li>
       <li><a href="#rule-world">2. 世界の姿</a></li>
       <li><a href="#rule-resource">3. 資源の意味</a></li>
       <li><a href="#rule-actions">4. できること（行動）</a></li>
       <li><a href="#rule-trust">5. 信用について</a></li>
       <li><a href="#rule-disaster">6. 災害</a></li>
-      <li><a href="#rule-achievements">7. 称号</a></li>
-      <li><a href="#rule-standing">8. 命令を出さなかったら？</a></li>
+      <li><a href="#rule-events">7. 世界のイベント</a></li>
+      <li><a href="#rule-underdog">8. 追い上げの仕組み</a></li>
+      <li><a href="#rule-achievements">9. 称号</a></li>
+      <li><a href="#rule-standing">10. 命令を出さなかったら？</a></li>
     </ul>
   </nav>
 
@@ -333,23 +347,37 @@
 
   <section class="part" id="comment-list">
     <h3>使える命令。ここからコピーして書き換えてください</h3>
+    <p>命令は大きく2種類です。<strong>本番の行動</strong>は1ターンに1つだけ（2行以上書いても一番上だけが使われます）。<strong>外交・協力の行動</strong>は手番を消費せず、何行でも・何度でも書けます。</p>
+
+    <h4 class="sub-chapter">本番の行動（1ターンに1つ）</h4>
     <div class="tbl-wrap">
     <table class="cmd-table">
       <tr><th>したいこと</th><th>書き方の例</th></tr>
       <tr><td>都市を発展させる</td><td><code>建設</code></td></tr>
-      <tr><td>土地を広げる</td><td><code>開拓</code>（マスや支払う資源も指定できます。下の「開拓のマス・支払いを指定する」を参照）</td></tr>
+      <tr><td>土地を広げる</td><td><code>開拓</code>（マスや支払う資源も指定できます。下の「開拓を詳しく指定する」を参照）</td></tr>
+      <tr><td>信用の低い隣人から土地を奪う</td><td><code>奪う 12 7</code>（<code>奪う 12 7 資材</code>のように資源を指定すると、それを優先して使う）</td></tr>
+      <tr><td>自分の土地から資源をまとめて回収する</td><td><code>回収 資材</code>（その資源のマス数×3がもらえる）</td></tr>
+      <tr><td>川に橋を架けて対岸へ進出する</td><td><code>橋 12 7</code>（自分の土地に隣接する川のマスを指定すると、一番近い陸地まで一気につながる。川1マスにつき50払う。1シーズンに1回だけ）</td></tr>
+      <tr><td>共同事業を完成させる</td><td><code>着工</code>（引数なし。資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます）</td></tr>
       <tr><td>何もしない</td><td><code>待機</code></td></tr>
+    </table>
+    </div>
+
+    <h4 class="sub-chapter">外交・協力の行動（何度でも）</h4>
+    <div class="tbl-wrap">
+    <table class="cmd-table">
+      <tr><th>したいこと</th><th>書き方の例</th></tr>
       <tr><td>取引を持ちかける</td><td><code>提案 p05 わたす 資材 9 もらう 知識 9 8ターン</code></td></tr>
       <tr><td>取引を受け入れる</td><td><code>承諾 C5-p00-3</code></td></tr>
       <tr><td>取引をやめる</td><td><code>破棄 C5-p00-3</code></td></tr>
-      <tr><td>提案を断る</td><td><code>拒否 C5-p00-3</code>（自分宛ての、まだ返事をしていない提案だけ断れます。放っておいて期限切れを待つより早く相手に伝わります）</td></tr>
+      <tr><td>提案を断る</td><td><code>拒否 C5-p00-3</code>（自分宛ての、まだ返事をしていない提案だけ断れます）</td></tr>
       <tr><td>土地を譲る提案をする</td><td><code>土地提案 p05 12 7 もらう 知識 30</code></td></tr>
       <tr><td>土地の提案を受け入れる</td><td><code>土地承諾 L3-p05-1</code></td></tr>
       <tr><td>土地の提案を断る</td><td><code>土地拒否 L3-p05-1</code></td></tr>
-      <tr><td>信用の低い隣人から土地を奪う</td><td><code>奪う 12 7</code>（<code>奪う 12 7 資材</code>のように資源を指定すると、それを優先して使う）</td></tr>
-      <tr><td>自分の土地から資源をまとめて回収する</td><td><code>回収 資材</code>（その資源のマス数×3がもらえる。マスを持っていない資源は回収できません）</td></tr>
-      <tr><td>川に橋を架けて対岸へ進出する</td><td><code>橋 12 7</code>（自分の土地に隣接する川のマスを指定すると、一番近い陸地まで一気につながる。川1マスにつき50払う。1シーズンに1回だけ）</td></tr>
       <tr><td>誰かに資源を無償で送る</td><td><code>援助 p05 資材 20</code>（距離・信用に関係なく送れる。送った側は少し信用が上がる）</td></tr>
+      <tr><td>世界の脅威に貢献する</td><td><code>貢献 資材 20</code>（世界の脅威が発生している間だけ使えます）</td></tr>
+      <tr><td>共同事業に資源を送る</td><td><code>輸出 資材 20</code>（共同事業が進行している間だけ使えます。どこにいても送れます）</td></tr>
+      <tr><td>掲示板に投稿する</td><td><code>掲示 灯台まであと少し、資材ください</code>（80文字まで。全員に共有されます）</td></tr>
     </table>
     </div>
   </section>
@@ -371,9 +399,21 @@
       <li><code>12 7</code> … 自分の持っているマスのうち、譲りたいマスの座標（x, y）。座標は盤面のページで確認できます</li>
       <li><code>もらう 知識 30</code> … 代わりにもらいたい資源と数</li>
     </ul>
+
+    <div class="callout">
+      <span class="lbl">契約ID・土地提案IDについて</span>
+      <code>承諾</code>・<code>破棄</code>・<code>拒否</code>・<code>土地承諾</code>・<code>土地拒否</code>で使うID（<code>C5-p00-3</code>とか<code>L3-p05-1</code>みたいな文字列）は、自分で考えなくていいです。Botの返信コメントに書いてあるものを、そのままコピペしてください。<br><br>
+      自分宛てにまだ返事をしていない提案があるときは、毎ターンの返信の「あなたへの提案（未返答）」欄に、承諾するためのコメントがそのままコピペできる形で毎回表示されます（<code>承諾 C5-p00-3</code> のように）。提案した側だけでなく、されている側にもきちんと届くので、見落としても次のターンでまた気づけます。
+    </div>
+
+    <h3>「承諾」は1回だけ書けば、あとは自動で続きます</h3>
+    <p><code>承諾</code>した取引は、承諾したその場で1回目の取引が行われ、そこから先は決めた期間（例: 8ターン）が終わるか、<code>破棄</code>するまで、何もコメントしなくても毎ターン自動的に資源が交換され続けます。承諾のたびに毎回コメントし直す必要はありません。途中でやめたいときだけ <code>破棄 契約ID</code> を書いてください。</p>
+
+    <h3>提案を断りたいとき</h3>
+    <p>自分宛ての提案（取引・土地提案）に応じたくないときは、<code>拒否 契約ID</code> / <code>土地拒否 提案ID</code> で断れます。何もしなくても8ターンで自動的に期限切れになりますが、明示的に断ることで相手にも早く伝わります。信用が下がるようなペナルティはありません。自分宛て以外の提案や、すでに返事をした提案は断れません。</p>
   </section>
 
-  <section class="part" id="comment-advanced">
+  <section class="part" id="comment-expand-detail">
     <h3>開拓・奪うで使う資源を指定する</h3>
     <p>開拓や奪うは、食料・資材・知識のどれを使ってもいい仕組みです。何も指定しなければ、今一番多く持っている資源から自動的に使われます。</p>
     <p>もし「この資源は温存しておきたい」というときは、最後に資源名を書いてください。</p>
@@ -396,29 +436,33 @@
     </div>
     <p>マスの座標（x, y）は、自分の土地に隣接しているマスしか指定できません。座標は盤面のページでマスをクリック（スマホはタップ）すると確認できます。</p>
     <p>支払いを指定する場合は、書いた数の合計が必要コストとぴったり一致していないと失敗します（必要コストは直前の返信の「次の目安」欄に出ています）。一部の資源だけ書いて残りは自動、ということはできません。書くなら全部書いてください。</p>
+    <p>なお、開拓したマスがまれに「豊かな土地」（産出量3倍）になることがあります。平均得点より劣勢なプレイヤーほど確率が上がる、運の要素です。詳しくは<a href="#rule-actions">「開拓する」</a>を見てください。</p>
+  </section>
 
-    <div class="callout">
-      <span class="lbl">契約ID・土地提案IDについて</span>
-      <code>承諾</code>・<code>破棄</code>・<code>拒否</code>・<code>土地承諾</code>・<code>土地拒否</code>で使うID（<code>C5-p00-3</code>とか<code>L3-p05-1</code>みたいな文字列）は、自分で考えなくていいです。Botの返信コメントに書いてあるものを、そのままコピペしてください。<br><br>
-      自分宛てにまだ返事をしていない提案があるときは、毎ターンの返信の「あなたへの提案（未返答）」欄に、承諾するためのコメントがそのままコピペできる形で毎回表示されます（<code>承諾 C5-p00-3</code> のように）。提案した側だけでなく、されている側にもきちんと届くので、見落としても次のターンでまた気づけます。
-    </div>
-
-    <h3>提案を断りたいとき</h3>
-    <p>自分宛ての提案（取引・土地提案）に応じたくないときは、<code>拒否 契約ID</code> / <code>土地拒否 提案ID</code> で断れます。何もしなくても8ターンで自動的に期限切れになりますが、明示的に断ることで相手にも早く伝わります。信用が下がるようなペナルティはありません。自分宛て以外の提案や、すでに返事をした提案は断れません。</p>
-
+  <section class="part" id="comment-events">
     <h3>援助について</h3>
     <p><code>援助 p05 資材 20</code> のように書くと、距離や信用に関係なく、誰にでも資源を無償で送れます。何度でもでき、本番の行動（開拓や建設など）は別に1つ使えます。</p>
     <p>もし誰かが災害に遭ったら、返信に「援助 ○○ 資源名 数」のような案内が出ます。困っている人がいたら、遠慮なく送ってあげてください（送った側にも少し信用が入ります）。</p>
 
-    <h3>「承諾」は1回だけ書けば、あとは自動で続きます</h3>
-    <p><code>承諾</code>した取引は、承諾したその場で1回目の取引が行われ、そこから先は決めた期間（例: 8ターン）が終わるか、<code>破棄</code>するまで、何もコメントしなくても毎ターン自動的に資源が交換され続けます。承諾のたびに毎回コメントし直す必要はありません。途中でやめたいときだけ <code>破棄 契約ID</code> を書いてください。</p>
+    <h3>世界の脅威について</h3>
+    <p>時々、プレイヤー全員に関わる「世界の脅威」が現れます。誰か1人を狙うものではなく、みんなで資源を出し合って撃退する、協力だけが発生する仕組みです。</p>
+    <p>発生すると返信に案内が出るので、<code>貢献 資材 20</code> のように書けば、脅威が発生している間は誰でも何度でも協力できます（本番の行動とは別枠）。全員の貢献の合計が必要量に達した瞬間に撃退成立です。猶予期間を過ぎても撃退できていないと、そこから毎ターン被害が発生し、時間が経つほど重くなっていくので、余裕があるときはぜひ協力してあげてください。</p>
 
+    <h3>共同事業について</h3>
+    <p>世界のどこかの空き地に、みんなで資源を出し合う建設プロジェクトが時々現れます（灯台・見張り塔など、種類はいろいろ）。<code>輸出 資材 20</code> で、誰でも・どこにいても資源を送って協力できます。</p>
+    <p>資材が集まると「着工できる」状態になりますが、実際に完成させられるのは、<strong>その建設地に隣接する土地を持つ人だけ</strong>です（<code>着工</code> と書く）。現地から離れている人は、資源を送って手伝ってください。「近くにいる人、着工お願いします」のような呼びかけには、下の掲示板が便利です。</p>
+
+    <h3>掲示板について</h3>
+    <p><code>掲示 メッセージ</code> で、コマンド以外の一言を全員に伝えられます（例: <code>掲示 灯台の建設地の近くにいる人いますか？</code>）。80文字までで、本番の行動は消費しません。</p>
+  </section>
+
+  <section class="part" id="comment-multi">
     <h3>複数の命令を同時に出す</h3>
     <p>1つのコメントに、命令を1行1つずつ改行で分けて書けば、まとめて実行されます。</p>
     <pre>開拓
 承諾 C5-p00-3</pre>
-    <p>このように書くと、「開拓」と「承諾」が両方とも実行されます。取引まわりの命令（提案・承諾・破棄・土地提案・土地承諾）は何行あっても構いません。何度でも行えます。</p>
-    <p>ただし、本番の行動（建設・開拓・奪う・待機）は1ターンに1つだけです。2行以上書いてしまった場合は、一番上に書いたものだけが使われます。</p>
+    <p>このように書くと、「開拓」と「承諾」が両方とも実行されます。外交・協力の行動（提案・承諾・破棄・拒否・土地提案・土地承諾・土地拒否・援助・貢献・輸出・掲示）は何行あっても構いません。何度でも行えます。</p>
+    <p>ただし、本番の行動（建設・開拓・奪う・回収・橋・着工・待機）は1ターンに1つだけです。2行以上書いてしまった場合は、一番上に書いたものだけが使われます。</p>
   </section>
 
   <div class="rule"><span>ルールブック</span></div>
@@ -428,15 +472,16 @@
   <section class="part" id="rule-goal">
     <h2 class="chapter"><span class="n">01</span>目的</h2>
     <p>得点を高くすることを目指します。</p>
-    <pre>得点 = 都市レベルの合計 × 10 + 持っているマスの数</pre>
-    <p>都市を発展させる（レベルを上げる）ことが得点の主軸で、領土の広さはおまけくらいに考えてください。4ターン/日で112ターン（4週間＝1シーズン）進み、その時点の得点で成績が決まります。</p>
+    <pre>得点 = 都市レベルの合計 × 10 + 持っているマスの数
+     + 援助の貢献点 + 世界の脅威への貢献点 + 共同事業への貢献点</pre>
+    <p>都市を発展させる（レベルを上げる）ことが得点の主軸で、領土の広さはおまけくらいに考えてください。3つの「貢献点」は、いずれもこれまでに出した資源の累計量に応じて増える得点で、詳しくは各項目を参照してください（援助は5につき+1点・最大+40点、世界の脅威と共同事業は4につき+1点・最大+30点）。4ターン/日で112ターン（4週間＝1シーズン）進み、その時点の得点で成績が決まります。</p>
   </section>
 
   <section class="part" id="rule-world">
     <h2 class="chapter"><span class="n">02</span>世界の姿</h2>
     <p>地図は3つの「大陸」に分かれていて、それぞれ食料・資材・知識のどれか1つが多く採れます。大陸の中には同じ資源の小さな飛び地もあって、見た目は少しでこぼこしています。</p>
     <ul>
-      <li><strong>荒地</strong>: 何も採れませんが、開拓して自分のものにはできます。保管上限が増えたり、災害の被害を軽減したりする効果があります。</li>
+      <li><strong>荒地</strong>: 何も採れませんが、開拓して自分のものにはできます。保管上限が増えたり、災害の被害を軽減したりする効果があります（「荒地の使いみち」を参照）。</li>
       <li><strong>川</strong>: 違う資源の大陸同士が接する境目に流れています。開拓では絶対に越えられません（橋を架ければ別）。ただし取引は、距離が届けば川の向こうの相手ともできます。</li>
     </ul>
     <p>自分の周りを広げるだけでは、3種類の資源はまずそろいません。これがこのゲームの一番の前提です。誰かとの取引が必要になるように、最初からそう作ってあります（ごくまれに、自分の大陸に他の資源が1マスだけ混じっていることがありますが、あてにできる量ではありません）。</p>
@@ -453,8 +498,8 @@
     </table>
     </div>
     <ul>
-      <li>都市は食料だけ自給できます。ただし維持費はレベルが上がるほど重くなり、Lv4を超えたあたりから自給だけでは足りなくなります</li>
-      <li>食料が尽きると、一番大きい都市がレベル-1されます（飢餓）。育てすぎて赤字になっても自動で釣り合うレベルに戻るので詰みません</li>
+      <li>都市は食料だけ自給できます（他の2つは自給できません）。ただし維持費はレベルが上がるほど重くなっていくので、Lv4を超えたあたりから自給だけでは足りなくなり、食料の土地か交易が必要になります</li>
+      <li>食料が尽きると、一番大きい都市がレベル-1されます（飢餓）。育てすぎて赤字になっても、これで自動的に釣り合うレベルまで戻るので詰みません</li>
       <li>資源には持てる上限があります（基本45＋都市レベル合計×15）。超えた分は捨てられるので、貯め込みすぎないようにしてください</li>
     </ul>
     <p><strong>荒地の使いみち</strong>: 荒地は資源こそ採れませんが、開拓して自分のものにできます。持っている荒地1マスにつき、</p>
@@ -467,8 +512,14 @@
 
   <section class="part" id="rule-actions">
     <h2 class="chapter"><span class="n">04</span>できること（行動）</h2>
-    <p>1ターンに使える「本番の行動」（建設・開拓・奪う・回収・橋・待機）は1つだけです。ただし取引の提案・承諾・破棄、土地の提案・承諾、そして援助は何度でもでき、本番の行動を消費しません。</p>
-    <p>これらを同時に行いたいときは、コメントを改行で複数行に分けて、1行に1つずつ書いてください（例: 1行目に「開拓」、2行目に「承諾 C5-p00-3」）。書き方の詳しい例は<a href="#comment-advanced">コメントの書き方</a>を見てください。</p>
+    <p>命令は大きく2種類に分かれます。</p>
+    <ul>
+      <li><strong>本番の行動</strong>: 1ターンに1つだけ。開拓・建設・奪う・回収・橋・着工・待機がこれにあたります</li>
+      <li><strong>外交・協力の行動</strong>: 何度でも、手番を消費せずに行えます。取引の提案・承諾・破棄・拒否、土地の提案・承諾・拒否、援助、そして世界のイベントへの貢献（貢献・輸出）、掲示板への投稿がこれにあたります</li>
+    </ul>
+    <p>同時に行いたいときは、コメントを改行で複数行に分けて、1行に1つずつ書いてください（例: 1行目に「開拓」、2行目に「承諾 C5-p00-3」）。書き方の詳しい例は<a href="#comment-basic">コメントの書き方</a>を見てください。</p>
+
+    <h4 class="sub-chapter">4-1. 本番の行動</h4>
 
     <h3>開拓する</h3>
     <p>隣接する空き地を1マス、自分のものにします。</p>
@@ -477,13 +528,19 @@
       <li>何も指定しなければ、一番多く持っている資源から自動的に使われます。特定の資源を温存したいときは <code>開拓 資材</code> のように書けば、それを優先して使えます</li>
       <li>どのマスを開拓するかも自分で指定できます（<code>開拓 10 8</code> のように、自分の土地に隣接するマスの座標を書く）。支払う資源の内訳まで指定したいときは <code>開拓 10 8 食料 2 資材 8 知識 10</code> のように書きます（合計が必要コストと一致しないと失敗します）</li>
       <li>川は取得できません（橋を架ければ別）。荒地は取得できます（「荒地の使いみち」を参照）</li>
+      <li>平均得点より劣勢・危機的なプレイヤーは、コストが30%〜50%引きになります（「追い上げの仕組み」を参照）</li>
     </ul>
+    <div class="callout">
+      <span class="lbl">豊かな土地（幸運）</span>
+      平均得点より劣勢なプレイヤーほど、開拓したマスが「豊かな土地」（産出量が3倍）になる確率が上がります（平均以上なら確率0、得点0に近いほど最大15%）。豊かな土地は、毎ターンの自動生産・「回収」の両方で3倍の産出になります。一発逆転につながるかもしれない、劣勢なプレイヤー向けの運の要素です。
+    </div>
 
     <h3>建設する</h3>
     <p>自分の都市をレベル+1します。</p>
     <ul>
       <li>コスト: 10 × 目標レベル を、食料・資材・知識それぞれ用意する必要があります（1つでも足りないと失敗します）</li>
       <li>レベルが上がるほど高くなるので、自給自足だけではいつか必ず頭打ちになります</li>
+      <li>平均得点より劣勢・危機的なプレイヤーは、コストが30%〜50%引きになります（「追い上げの仕組み」を参照）</li>
     </ul>
     <p><strong>都市レベルのメリット</strong>: 得点（レベル×10）と保管上限（+15/レベル）以外にも、都市レベルの合計に応じて次の効果があります。</p>
     <div class="tbl-wrap">
@@ -497,6 +554,50 @@
     </table>
     </div>
     <p>都市を育てるほど、いろいろな場面でじわじわ有利になっていきます。</p>
+
+    <h3>土地を奪う</h3>
+    <p>信用が50を下回っている人の、自分の領土に隣接しているマスを、同意なしで強制的に奪います。</p>
+    <ul>
+      <li>コストは開拓よりも高め（開拓コストの1.6倍）です</li>
+      <li>開拓と同じく、支払う資源は何も指定しなければ一番多いものから自動で使われます。<code>奪う 12 7 資材</code> のように指定すれば優先できます</li>
+      <li>都市の建っているマスは奪えません</li>
+      <li>本番の行動を1つ消費します</li>
+      <li>平均得点より劣勢・危機的なプレイヤーは、コストが30%〜50%引きになります（「追い上げの仕組み」を参照）</li>
+    </ul>
+    <p>信用がよほど悪化した相手でないと対象にならないので、普段の取引相手が急に奪われる心配はありません。</p>
+
+    <h3>資源を回収する</h3>
+    <p>自分が持っているマスから、指定した資源をまとめて手に入れます（例: <code>回収 資材</code>）。</p>
+    <ul>
+      <li>量: その資源のマスの数 × 3（都市レベル分・称号の報酬分・「豊かな土地」分があれば、それも上乗せされます）</li>
+      <li>コストはかかりません（ただし、その資源のマスを1つも持っていないと使えません）</li>
+      <li>毎ターン自動でもらえる分（マスの数 × 6）とは別枠のボーナスです</li>
+      <li>本番の行動を1つ消費します</li>
+    </ul>
+    <p>建設や開拓ができるほど資源が貯まっていないときの保険として使えます。</p>
+
+    <h3>橋を架ける</h3>
+    <p>自分の土地に隣接する川のマスを指定すると、そこから一番近い陸地（対岸）まで、川が何マス分あっても1回でつながります（例: <code>橋 12 7</code>）。</p>
+    <ul>
+      <li>コスト: 渡る川のマス数 × 50を、3資源のどれでもいいので合計でその数だけ払います（川1マス分なら50、2マス分なら100、というように、川の幅が広いほど高くなります）</li>
+      <li>渡った川のマスはすべて自分の土地になり、資源がランダムに割り当たります。対岸の陸地マスも、元々の資源のまま自分の土地になります</li>
+      <li>誰かの土地に阻まれて対岸まで道がつながらない場合は、橋を架けられません</li>
+      <li><strong>1シーズンに1回だけ</strong>しか使えません</li>
+      <li>本番の行動を1つ消費します</li>
+    </ul>
+    <p>自分の資源地帯だけでは手に入らない資源のために、思い切って別の大陸に進出したいときの手段です。</p>
+
+    <h3>着工する</h3>
+    <p>資材が集まった「共同事業」を、現地（隣接地）で完成させます。詳しくは<a href="#rule-events">「世界のイベント」</a>の「共同事業」を参照してください。</p>
+    <ul>
+      <li>本番の行動を1つ消費します</li>
+      <li>共同事業が資材待ち、または自分がその隣接地を持っていない場合は失敗します</li>
+    </ul>
+
+    <h3>待機する</h3>
+    <p>何もしません。命令を出さなかった場合も、自動でこれと同じ扱いになります（下の「常設命令」を参照）。</p>
+
+    <h4 class="sub-chapter">4-2. 外交・協力の行動</h4>
 
     <h3>取引を提案する</h3>
     <p>誰かに「これをあげるから、これをちょうだい」と持ちかけます。指定した期間（例: 8ターン）、毎ターン自動でその交換が続く契約を申し込む、という意味です。</p>
@@ -530,48 +631,21 @@
       <li>提案してから相手が承諾するまでの間に、自分がそのマスを失っていたら不成立になります</li>
     </ul>
 
-    <h3>土地を奪う</h3>
-    <p>信用が50を下回っている人の、自分の領土に隣接しているマスを、同意なしで強制的に奪います。</p>
-    <ul>
-      <li>コストは開拓よりも高め（開拓コストの1.6倍）です</li>
-      <li>開拓と同じく、支払う資源は何も指定しなければ一番多いものから自動で使われます。<code>奪う 12 7 資材</code> のように指定すれば優先できます</li>
-      <li>都市の建っているマスは奪えません</li>
-      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
-    </ul>
-    <p>信用がよほど悪化した相手でないと対象にならないので、普段の取引相手が急に奪われる心配はありません。</p>
-
-    <h3>資源を回収する</h3>
-    <p>自分が持っているマスから、指定した資源をまとめて手に入れます（例: <code>回収 資材</code>）。</p>
-    <ul>
-      <li>量: その資源のマスの数 × 3（都市レベル分・称号の報酬分があれば、それも上乗せされます）</li>
-      <li>コストはかかりません（ただし、その資源のマスを1つも持っていないと使えません）</li>
-      <li>毎ターン自動でもらえる分（マスの数 × 6）とは別枠のボーナスです</li>
-      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
-    </ul>
-    <p>建設や開拓ができるほど資源が貯まっていないときの保険として使えます。</p>
-
-    <h3>橋を架ける</h3>
-    <p>自分の土地に隣接する川のマスを指定すると、そこから一番近い陸地（対岸）まで、川が何マス分あっても1回でつながります（例: <code>橋 12 7</code>）。</p>
-    <ul>
-      <li>コスト: 渡る川のマス数 × 50を、3資源のどれでもいいので合計でその数だけ払います（川1マス分なら50、2マス分なら100、というように、川の幅が広いほど高くなります）</li>
-      <li>渡った川のマスはすべて自分の土地になり、資源がランダムに割り当たります。対岸の陸地マスも、元々の資源のまま自分の土地になります</li>
-      <li>誰かの土地に阻まれて対岸まで道がつながらない場合は、橋を架けられません</li>
-      <li><strong>1シーズンに1回だけ</strong>しか使えません</li>
-      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
-    </ul>
-    <p>自分の資源地帯だけでは手に入らない資源のために、思い切って別の大陸に進出したいときの手段です。</p>
-
     <h3>援助する</h3>
     <p>誰かに資源を無償で送ります（例: <code>援助 p05 資材 20</code>）。</p>
     <ul>
       <li>距離・信用に関係なく、誰にでも送れます</li>
-      <li>何度でもでき、本番の行動を消費しません（取引の提案などと同じ枠）</li>
+      <li>何度でもでき、本番の行動を消費しません</li>
       <li>送った側は少し信用が上がります（送った量に応じて、最大+5まで）</li>
+      <li><strong>これまでに送った資源の合計量5につき、得点が+1されます（最大+40点）。</strong> 自分の取引と関係ない相手を助けても、最終的な得点にちゃんと反映されます</li>
       <li>特に、誰かが災害に遭ったときの支援に使ってください（「災害」を参照）</li>
     </ul>
 
-    <h3>待機する</h3>
-    <p>何もしません。命令を出さなかった場合も、自動でこれと同じ扱いになります（下の「常設命令」を参照）。</p>
+    <h3>貢献する・輸出する</h3>
+    <p>「世界の脅威」には <code>貢献</code>、「共同事業」には <code>輸出</code> で資源を送れます。どちらも距離に関係なく、誰でも何度でもでき、本番の行動を消費しません。詳しくは<a href="#rule-events">「世界のイベント」</a>を参照してください。</p>
+
+    <h3>掲示板に投稿する</h3>
+    <p><code>掲示 メッセージ</code> で、短いメッセージ（80文字まで）を全員に共有できます（例: <code>掲示 灯台まであと少し、資材ください</code>）。共同事業の呼びかけなど、コマンド以外で誰かに伝えたいことがあるときに使ってください。本番の行動は消費しません。</p>
   </section>
 
   <section class="part" id="rule-trust">
@@ -600,76 +674,156 @@
       <li>持っているマス（都市以外）を、いくつか失う</li>
     </ul>
     <p>被害の大きさは基本50%ですが、都市レベル（1%/レベル）と持っている荒地（2%/マス）で軽減できます。ただし、どれだけ軽減しても被害が10%を下回ることはありません。</p>
+    <p><strong>平均得点より劣勢・危機的なプレイヤーは、災害の対象から完全に外れます</strong>（そもそも発生しません）。追い上げの一環です。</p>
     <p>災害が起きたことは、被害に遭った本人だけでなく全員に共有されます。<strong>援助</strong>（無償で資源を送る行動）で、誰でも被害者を助けられます。困っている人を見かけたら、遠慮なく送ってあげてください。</p>
   </section>
 
+  <section class="part" id="rule-events">
+    <h2 class="chapter"><span class="n">07</span>世界のイベント</h2>
+    <p>個人を狙う「災害」とは別に、プレイヤー全員に関わる3種類のイベントがあります。返信の「現在のイベント」欄に、進行中のものがまとめて表示されます。</p>
+
+    <h3>世界の脅威</h3>
+    <p>罰のあるマイナスのイベントです。誰か1人を狙うものではなく、みんなで資源を出し合って撃退する、協力だけが発生する仕組みです（プレイヤー同士を敵味方に分けることはありません）。</p>
+    <ul>
+      <li>発生確率は毎ターン低確率（5%）です。すでに発生中のときは新しく現れません</li>
+      <li>撃退に必要な資源の合計量は、参加人数 × 20です（例: 12人なら240）</li>
+      <li>発生してから10ターンは猶予期間で、被害は出ません。この間に <code>貢献 資源名 数</code> で全員が出し合った合計が必要量に達すれば撃退成功です</li>
+      <li>撃退に成功すると、貢献した全員の信用が+5されます。また、これまでの貢献の累計量に応じて得点も増えます（4につき+1点、最大+30点）</li>
+      <li><strong>猶予期間を過ぎてもまだ撃退できていない場合、そこから毎ターン被害が発生します。</strong>被害は資源・土地・信用のどれか（ランダム）で、経過ターンが長引くほど少しずつ重くなります（基本8%、経過1ターンにつき+3%、最大35%）。撃退できるまで、このターンごとの被害が続きます</li>
+      <li>平均得点より劣勢・危機的なプレイヤーも、この被害の対象です。ただし通常の被害より軽くなります（劣勢は半分、危機的は5分の1）。まったく被害が無いと貢献する理由が薄れてしまうため、軽くはしつつも対象からは外していません</li>
+    </ul>
+
+    <h3>共同事業</h3>
+    <p>罰のないプラスのイベントです。世界のどこかの空き地に、みんなで資源を出し合う建設プロジェクトが時々現れます。現れなくても何も起きません。</p>
+    <ul>
+      <li>発生確率は毎ターン低確率（4%）です。すでに進行中のときは新しく現れません</li>
+      <li>着工に必要な資源の合計量は、参加人数 × 15です（例: 12人なら180）</li>
+      <li><code>輸出 資源名 数</code> で、誰でも・どこにいても資源を送って協力できます。何度でもでき、本番の行動を消費しません</li>
+      <li>資材が集まると「着工できる」状態になりますが、<strong>実際に着工できるのは、建設地に隣接する土地を持つ人だけ</strong>です（<code>着工</code> コマンド、本番の行動を1つ消費）。現地から離れた人は資源を送って手伝う、という役割分担が生まれます。呼びかけには掲示板が使えます</li>
+      <li>これまでに送った資源の合計量4につき、得点が+1されます（最大+30点）</li>
+      <li>完成すると、種類に応じた恩恵が<strong>全員に恒久的</strong>に付きます。種類はランダムで、次のどれかです</li>
+    </ul>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>種類</th><th>完成時の恩恵</th></tr>
+      <tr><td>灯台</td><td>取引可能距離+1</td></tr>
+      <tr><td>見張り塔</td><td>災害の被害軽減+3%</td></tr>
+      <tr><td>大穀倉</td><td>保管上限+10</td></tr>
+      <tr><td>共同工房</td><td>回収量+1</td></tr>
+    </table>
+    </div>
+
+    <h3>世界目標</h3>
+    <p>罰のないプラスのイベントで、専用のコマンドは不要です。世界全体のいろいろな合計値を見ていて、みんなが普通にプレイしているだけで自然と進みます。1つ達成すると、また別の種類がランダムに選ばれます。</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>種類</th><th>見ている値</th><th>到達幅</th></tr>
+      <tr><td>都市レベル合計</td><td>全員の都市レベルの合計</td><td>40</td></tr>
+      <tr><td>領土合計</td><td>全員の持っているマス数の合計</td><td>60</td></tr>
+      <tr><td>取引成立回数の合計</td><td>全員の取引成立回数の合計</td><td>15</td></tr>
+      <tr><td>資源回収の合計回数</td><td>全員の「回収」を使った回数の合計</td><td>15</td></tr>
+    </table>
+    </div>
+    <p>「領土合計」は序盤からすでに大きい値になっているので、比較的早く最初の到達を迎えやすい種類です。到達すると、全員に資源が各+8贈られます。</p>
+  </section>
+
+  <section class="part" id="rule-underdog">
+    <h2 class="chapter"><span class="n">08</span>追い上げの仕組み</h2>
+    <p>発展すればするほど有利になる要素（都市レベルの恩恵・称号など）がある一方で、序盤の差がそのまま固定されてしまわないように、平均得点より劣勢なプレイヤーには追い上げの手段をいくつか用意しています。劣勢は2段階あり、下にいくほど優遇も強くなります。</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>段階</th><th>基準</th><th>開拓・建設・奪う</th><th>災害</th><th>世界の脅威の被害</th><th>資源ボーナス</th></tr>
+      <tr><td>劣勢</td><td>平均得点の75%未満</td><td>30%引き</td><td>発生しない</td><td>通常の半分</td><td>平均10ターンに4回、1種類につき10</td></tr>
+      <tr><td>危機的</td><td>平均得点の40%未満</td><td>50%引き</td><td>発生しない</td><td>通常の5分の1</td><td>平均10ターンに6回、1種類につき16</td></tr>
+    </table>
+    </div>
+    <ul>
+      <li>コスト割引は都市レベルによる開拓の割引の後に、さらに引かれます</li>
+      <li>資源ボーナスは救援物資と同じ、ランダム抽選の仕組みです</li>
+      <li>これらとは別に、劣勢なプレイヤーほど「開拓」で豊かな土地（産出量3倍）を掘り当てやすくなります（「開拓する」を参照）</li>
+    </ul>
+    <p>コマンドを打つ必要はなく、該当している間は自動的に適用されます。差が縮まれば、通常のルールに戻ります（あるいは危機的から劣勢へ、段階が1つ戻ります）。返信の「次の目安」欄に、対象になっているときはその旨が表示されます。</p>
+  </section>
+
   <section class="part" id="rule-achievements">
-    <h2 class="chapter"><span class="n">07</span>称号</h2>
+    <h2 class="chapter"><span class="n">09</span>称号</h2>
     <p>特定の条件を初めて満たした瞬間に、実績として称号がもらえます。一度取ったら二度と消えません。何かコマンドを打つ必要はなく、条件を満たした次のターン処理で自動的に付与されます。獲得すると、その回の返信に<strong>全員へ</strong>共有され、報酬（信用アップ・資源・永続的な小さいバフなど）がもらえます。「永続」と付く報酬は以後ずっと効き続けます。自分の獲得数は、毎ターンの返信の「今の状況」に表示されます。</p>
 
     <div class="ach-cats">
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-resource)">Resource</span><h4>資源にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>蓄財家</h5><p class="cond">資源の合計保有量が100に到達する</p><span class="reward"><b>報酬</b> 資源を各+5</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>大富豪</h5><p class="cond">資源の合計保有量が300に到達する</p><span class="reward"><b>報酬</b> 保管上限+10（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>採取の達人</h5><p class="cond">資源の回収を10回行う</p><span class="reward"><b>報酬</b> 回収量+1（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>蓄財家</h5><p class="cond">資源の合計保有量が100に到達する</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>大富豪</h5><p class="cond">資源の合計保有量が300に到達する</p><span class="reward"><b>報酬</b> 保管上限+20（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>採取の達人</h5><p class="cond">資源の回収を10回行う</p><span class="reward"><b>報酬</b> 回収量+2（永続）</span></div>
         </div>
       </div>
 
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-trade)">Trade</span><h4>取引・援助にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>商いの一歩</h5><p class="cond">取引を初めて成立させる</p><span class="reward"><b>報酬</b> 信用+5</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>名うての商人</h5><p class="cond">取引を10回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>伝説の商人</h5><p class="cond">取引を50回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>情け深い者</h5><p class="cond">誰かに援助を初めて送る</p><span class="reward"><b>報酬</b> 信用+3</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>聖人</h5><p class="cond">援助を10回送る</p><span class="reward"><b>報酬</b> 信用+10、資源を各+10</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>交易網</h5><p class="cond">同時に3件以上の契約を進行させる</p><span class="reward"><b>報酬</b> 取引可能距離+1（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>誠実な統治者</h5><p class="cond">一度も契約を自分から破棄せずに30ターンを迎える</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>商いの一歩</h5><p class="cond">取引を初めて成立させる</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>名うての商人</h5><p class="cond">取引を10回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>伝説の商人</h5><p class="cond">取引を50回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+4（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>情け深い者</h5><p class="cond">誰かに援助を初めて送る</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>聖人</h5><p class="cond">援助を10回送る</p><span class="reward"><b>報酬</b> 信用+15、資源を各+18</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>交易網</h5><p class="cond">同時に3件以上の契約を進行させる</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>誠実な統治者</h5><p class="cond">一度も契約を自分から破棄せずに30ターンを迎える</p><span class="reward"><b>報酬</b> 信用+12</span></div>
         </div>
       </div>
 
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-territory)">Territory</span><h4>領土にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>開拓者</h5><p class="cond">領土が20マスに到達する</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>大領主</h5><p class="cond">領土が40マスに到達する</p><span class="reward"><b>報酬</b> 保管上限+15（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>架け橋の民</h5><p class="cond">橋を架けて対岸へ進出する</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>荒野の開拓者</h5><p class="cond">荒地を5マス所有する</p><span class="reward"><b>報酬</b> 災害の被害軽減+3%（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>三拍子そろい踏み</h5><p class="cond">食料・資材・知識をそれぞれ5マス以上所有する</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>土地の絆</h5><p class="cond">誰かから土地の提案を初めて受け取る</p><span class="reward"><b>報酬</b> 資源を各+5</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>気前の良い隣人</h5><p class="cond">誰かに土地を初めて譲る</p><span class="reward"><b>報酬</b> 信用+3</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>コンプリート主義者</h5><p class="cond">食料・資材・知識・荒地のすべてを1マス以上所有する</p><span class="reward"><b>報酬</b> 保管上限+5（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>開拓者</h5><p class="cond">領土が20マスに到達する</p><span class="reward"><b>報酬</b> 資源を各+18</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>大領主</h5><p class="cond">領土が40マスに到達する</p><span class="reward"><b>報酬</b> 保管上限+28（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>架け橋の民</h5><p class="cond">橋を架けて対岸へ進出する</p><span class="reward"><b>報酬</b> 資源を各+18</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>荒野の開拓者</h5><p class="cond">荒地を5マス所有する</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>三拍子そろい踏み</h5><p class="cond">食料・資材・知識をそれぞれ5マス以上所有する</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>土地の絆</h5><p class="cond">誰かから土地の提案を初めて受け取る</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>気前の良い隣人</h5><p class="cond">誰かに土地を初めて譲る</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>コンプリート主義者</h5><p class="cond">食料・資材・知識・荒地のすべてを1マス以上所有する</p><span class="reward"><b>報酬</b> 保管上限+10（永続）</span></div>
         </div>
       </div>
 
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-city)">City &amp; Crisis</span><h4>都市・災害にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>若き指導者</h5><p class="cond">都市レベルの合計が5に到達する</p><span class="reward"><b>報酬</b> 信用+5</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>大都市の主</h5><p class="cond">都市レベルの合計が15に到達する</p><span class="reward"><b>報酬</b> 保管上限+20（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不屈の精神</h5><p class="cond">災害を1回生き延びる</p><span class="reward"><b>報酬</b> 災害の被害軽減+3%（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>季節を生き抜いた者</h5><p class="cond">1シーズン（112ターン）を、領土を保ったまま乗り切る</p><span class="reward"><b>報酬</b> 信用+10、保管上限+10（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不撓不屈</h5><p class="cond">土地を奪われた経験がありながら、10マス以上の領土を保っている</p><span class="reward"><b>報酬</b> 災害の被害軽減+2%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>若き指導者</h5><p class="cond">都市レベルの合計が5に到達する</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>大都市の主</h5><p class="cond">都市レベルの合計が15に到達する</p><span class="reward"><b>報酬</b> 保管上限+35（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不屈の精神</h5><p class="cond">災害を1回生き延びる</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>季節を生き抜いた者</h5><p class="cond">1シーズン（112ターン）を、領土を保ったまま乗り切る</p><span class="reward"><b>報酬</b> 信用+15、保管上限+20（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不撓不屈</h5><p class="cond">土地を奪われた経験がありながら、10マス以上の領土を保っている</p><span class="reward"><b>報酬</b> 災害の被害軽減+4%（永続）</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-world)">World</span><h4>世界のイベントにまつわる称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>災厄の英雄</h5><p class="cond">「世界の脅威」の撃退に、初めて貢献する</p><span class="reward"><b>報酬</b> 信用+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>守護者</h5><p class="cond">「世界の脅威」の撃退に、3回貢献する</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>灯台守</h5><p class="cond">「共同事業」を、自分の隣接地で着工して完成させる</p><span class="reward"><b>報酬</b> 資源を各+15</span></div>
         </div>
       </div>
 
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-flavor)">Spirit</span><h4>異名・番外の称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>海賊</h5><p class="cond">土地を3回、力ずくで奪う</p><span class="reward"><b>報酬</b> 回収量+2（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>資源の匠</h5><p class="cond">領土10マス以上のうち、8割以上を単一資源で占める</p><span class="reward"><b>報酬</b> 回収量+2（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>待機の達人</h5><p class="cond">「待機」を10回選ぶ</p><span class="reward"><b>報酬</b> 信用+2</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>覇者</h5><p class="cond">得点（都市Lv×10＋領土）が100に到達する</p><span class="reward"><b>報酬</b> 信用+15</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>第二の人生</h5><p class="cond">信用が55未満まで落ち込んだあと、90まで立て直す</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>海賊</h5><p class="cond">土地を3回、力ずくで奪う</p><span class="reward"><b>報酬</b> 回収量+3（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>資源の匠</h5><p class="cond">領土10マス以上のうち、8割以上を単一資源で占める</p><span class="reward"><b>報酬</b> 回収量+3（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>待機の達人</h5><p class="cond">「待機」を10回選ぶ</p><span class="reward"><b>報酬</b> 信用+4</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>覇者</h5><p class="cond">得点が100に到達する</p><span class="reward"><b>報酬</b> 信用+20</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>第二の人生</h5><p class="cond">信用が55未満まで落ち込んだあと、90まで立て直す</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>下剋上</h5><p class="cond">危機的（平均得点の40%未満）まで沈んだことがありながら、平均得点以上まで這い上がる</p><span class="reward"><b>報酬</b> 信用+15、保管上限+25</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>追い風</h5><p class="cond">一度でも劣勢（平均得点の75%未満）になったことがありながら、劣勢でなくなる</p><span class="reward"><b>報酬</b> 資源を各+12</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>健闘賞</h5><p class="cond">劣勢の状態のまま、称号を5個以上獲得する</p><span class="reward"><b>報酬</b> 保管上限+15</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <section class="part" id="rule-standing">
-    <h2 class="chapter"><span class="n">08</span>命令を出さなかったら？</h2>
+    <h2 class="chapter"><span class="n">10</span>命令を出さなかったら？</h2>
     <p>1日4回も命令を書くのは大変なので、常設命令という仕組みがあります。その回に命令を出さなかった人は、自動的にあらかじめ決めた行動（今は「建設する」）が実行されます。放置していても、最低限は成長し続けます。</p>
   </section>
 

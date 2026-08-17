@@ -182,6 +182,12 @@ export function createWorld(playerIds: string[], seed: number): World {
         landOffersGiven: 0,
         harvestsDone: 0,
         minTrustEver: CONFIG.trustStart,
+        totalAidGiven: 0,
+        worstScoreRatioEver: 1,
+        totalThreatContribution: 0,
+        threatsRepelled: 0,
+        totalExported: 0,
+        projectsBuilt: 0,
       },
       achievements: [],
       achievementBonus: { storage: 0, tradeRange: 0, disasterMitigation: 0, harvestBonus: 0 },
@@ -205,6 +211,8 @@ export function createWorld(playerIds: string[], seed: number): World {
     players,
     contracts: [],
     landOffers: [],
+    threat: null,
+    project: null,
     log: ["世界が生成された。"],
   };
 }

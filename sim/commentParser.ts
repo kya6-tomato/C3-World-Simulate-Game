@@ -1,4 +1,5 @@
 import type { Command, Resource } from "../src/types.ts";
+import { CONFIG } from "../src/config.ts";
 
 /**
  * GitHub Issueのコメント（スマホでも打てる一行形式）を Command に変換する。
@@ -26,6 +27,10 @@ const TYPE_JA: Record<string, Command["type"]> = {
   回収: "harvest",
   橋: "bridge",
   援助: "aid",
+  貢献: "contribute",
+  輸出: "export",
+  着工: "commence",
+  掲示: "post",
 };
 
 const RESOURCE_JA_TO_EN: Record<string, Resource> = {
@@ -51,6 +56,10 @@ const USAGE: Record<string, string> = {
   回収: "回収 資源名（例: 回収 資材）。自分がその資源のマスを持っている必要があります",
   橋: "橋 x y（例: 橋 12 7）。自分の土地に隣接する川のマスだけ指定できます。1シーズンに1回だけ",
   援助: "援助 相手のID 資源名 数（例: 援助 p05 資材 20）",
+  貢献: "貢献 資源名 数（例: 貢献 資材 20）。世界の脅威が発生している間だけ使えます",
+  輸出: "輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます",
+  着工: "着工（引数なし）。共同事業の資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます",
+  掲示: `掲示 メッセージ（例: 掲示 灯台まであと少し、資材ください）。${CONFIG.postMaxLength}文字まで`,
   開拓:
     "開拓（自動選択） / 開拓 資源名（その資源を優先） / 開拓 x y（マスを指定） / " +
     "開拓 x y 食料 数 資材 数 知識 数（マスと支払いを両方指定。例: 開拓 10 8 食料 2 資材 8 知識 10）",
@@ -108,11 +117,11 @@ export function parseComment(player: string, rawText: string): ParseResult {
   if (!kind) {
     return {
       command: null,
-      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助 のどれかを先頭に書いてください）。`,
+      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助/貢献/輸出/着工/掲示 のどれかを先頭に書いてください）。`,
     };
   }
 
-  if (kind === "build" || kind === "pass") {
+  if (kind === "build" || kind === "pass" || kind === "commence") {
     return { command: { type: kind, player }, error: null };
   }
 
@@ -213,6 +222,33 @@ export function parseComment(player: string, rawText: string): ParseResult {
       return { command: null, error: `一番最後に、渡す数を半角数字で書いてください。${usage}` };
     }
     return { command: { type: "aid", player, to, resource, amount }, error: null };
+  }
+
+  if (kind === "contribute" || kind === "export") {
+    const usage = `書き方: ${USAGE[word]}`;
+    const resource = RESOURCE_JA_TO_EN[tokens[1]];
+    if (!resource) {
+      return { command: null, error: `「${word}」の次には 食料・資材・知識 のどれかを書いてください。${usage}` };
+    }
+    const amount = Number(tokens[2]);
+    if (!Number.isInteger(amount) || amount <= 0) {
+      return { command: null, error: `一番最後に、出す数を半角数字で書いてください。${usage}` };
+    }
+    return { command: { type: kind, player, resource, amount }, error: null };
+  }
+
+  if (kind === "post") {
+    const message = rawText.trim().slice(word.length).trim();
+    if (!message) {
+      return { command: null, error: `掲示する内容が書かれていません。書き方: ${USAGE[word]}` };
+    }
+    if (message.length > CONFIG.postMaxLength) {
+      return {
+        command: null,
+        error: `掲示は${CONFIG.postMaxLength}文字までです（今は${message.length}文字）。書き方: ${USAGE[word]}`,
+      };
+    }
+    return { command: { type: "post", player, message }, error: null };
   }
 
   if (kind === "offer") {
