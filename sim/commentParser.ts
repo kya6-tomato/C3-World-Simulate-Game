@@ -40,8 +40,30 @@ const USAGE: Record<string, string> = {
   破棄: "破棄 契約ID（例: 破棄 C5-p00-3）",
   土地提案: "土地提案 相手のID x y もらう 資源名 数（例: 土地提案 p05 12 7 もらう 知識 30）",
   土地承諾: "土地承諾 提案ID（例: 土地承諾 L3-p05-1）",
-  奪う: "奪う x y（例: 奪う 12 7）",
+  奪う: "奪う x y（例: 奪う 12 7）。最後に資源名を書くと、それを優先して使う（例: 奪う 12 7 資材）",
+  開拓:
+    "開拓（自動選択） / 開拓 資源名（その資源を優先） / 開拓 x y（マスを指定） / " +
+    "開拓 x y 食料 数 資材 数 知識 数（マスと支払いを両方指定。例: 開拓 10 8 食料 2 資材 8 知識 10）",
 };
+
+/**
+ * 「食料 2 資材 8 知識 10」のような、資源名と数の並びを読み取る。
+ * 順不同・一部だけの指定にも対応する（書かなかった資源は0扱い）。
+ * 読み取れない部分があれば ok: false を返す。
+ */
+function parseResourcePairs(
+  tokens: string[],
+): { ok: true; payment: Partial<Record<Resource, number>> } | { ok: false } {
+  if (tokens.length === 0 || tokens.length % 2 !== 0) return { ok: false };
+  const payment: Partial<Record<Resource, number>> = {};
+  for (let i = 0; i < tokens.length; i += 2) {
+    const res = RESOURCE_JA_TO_EN[tokens[i]];
+    const amount = Number(tokens[i + 1]);
+    if (!res || !Number.isInteger(amount) || amount < 0) return { ok: false };
+    payment[res] = (payment[res] ?? 0) + amount;
+  }
+  return { ok: true, payment };
+}
 
 /**
  * 末尾の「Nターン」を読み取る。「8ターン」（くっつけ）でも「8 ターン」
@@ -80,8 +102,45 @@ export function parseComment(player: string, rawText: string): ParseResult {
     };
   }
 
-  if (kind === "build" || kind === "expand" || kind === "pass") {
+  if (kind === "build" || kind === "pass") {
     return { command: { type: kind, player }, error: null };
+  }
+
+  if (kind === "expand") {
+    const usage = `書き方: ${USAGE[word]}`;
+
+    // 「開拓」だけ（全自動）
+    if (tokens.length === 1) {
+      return { command: { type: "expand", player }, error: null };
+    }
+
+    // 「開拓 資材」（優先して使う資源だけ指定、マスは自動）
+    if (tokens.length === 2 && RESOURCE_JA_TO_EN[tokens[1]]) {
+      return {
+        command: { type: "expand", player, preferResource: RESOURCE_JA_TO_EN[tokens[1]] },
+        error: null,
+      };
+    }
+
+    // 「開拓 x y ...」（マスを自分で指定）
+    const x = Number(tokens[1]);
+    const y = Number(tokens[2]);
+    if (Number.isInteger(x) && Number.isInteger(y)) {
+      const target = { x, y };
+      const rest = tokens.slice(3);
+      if (rest.length === 0) {
+        // マスだけ指定、支払いは自動
+        return { command: { type: "expand", player, target }, error: null };
+      }
+      // 「開拓 x y 食料 2 資材 8 知識 10」（マスと支払いを両方指定）
+      const parsed = parseResourcePairs(rest);
+      if (!parsed.ok) {
+        return { command: null, error: `支払いの内訳が読み取れませんでした。${usage}` };
+      }
+      return { command: { type: "expand", player, target, payment: parsed.payment }, error: null };
+    }
+
+    return { command: null, error: usage };
   }
 
   if (kind === "accept" || kind === "break") {
@@ -106,7 +165,9 @@ export function parseComment(player: string, rawText: string): ParseResult {
     if (!Number.isInteger(x) || !Number.isInteger(y)) {
       return { command: null, error: `書き方: ${USAGE[word]}` };
     }
-    return { command: { type: "seize", player, x, y }, error: null };
+    // 「奪う 12 7 資材」のように、優先して使いたい資源を指定できる（省略可）。
+    const preferResource = RESOURCE_JA_TO_EN[tokens[3]];
+    return { command: { type: "seize", player, x, y, preferResource }, error: null };
   }
 
   if (kind === "offer") {

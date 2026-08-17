@@ -10,7 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
-import { statusHint, riskHint } from "./statusHint.ts";
+import { statusHint, riskHint, resourceLedger } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -149,6 +149,11 @@ async function main() {
         `都市 Lv${cityLv} ・ 領土 ${land}マス ・ 信用 ${p.trust} ・ 得点 ${score}（都市Lv×10＋領土）`,
         `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
       );
+    }
+
+    const ledger = resourceLedger(world, next, id);
+    if (ledger.length > 0) {
+      lines.push("", "**今回の資源の動き**", ...ledger.map((l) => `- ${l}`));
     }
 
     const risks = riskHint(next, id);

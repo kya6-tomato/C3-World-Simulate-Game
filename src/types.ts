@@ -42,6 +42,8 @@ export interface Player {
    * 「放っておいても最低限は進む」ようにするための仕組み。
    */
   standing: "expand" | "build" | "pass";
+  /** 常設命令が「開拓」のとき、資源を優先して使いたい指定があれば覚えておく。 */
+  standingResource?: Resource;
 }
 
 /** 契約の状態。 */
@@ -107,7 +109,16 @@ export interface World {
 
 /** プレイヤーが1ターンに1つだけ出せる命令。 */
 export type Command =
-  | { type: "expand"; player: string }
+  | {
+      type: "expand";
+      player: string;
+      /** 優先して使いたい資源（指定しなければ一番多い資源から自動で使う）。 */
+      preferResource?: Resource;
+      /** 開拓したい先を自分で指定する場合の座標（指定しなければ自動で選ぶ）。 */
+      target?: { x: number; y: number };
+      /** 支払う資源の内訳を自分で指定する場合（指定しなければ自動で決める）。 */
+      payment?: Partial<Record<Resource, number>>;
+    }
   | { type: "build"; player: string }
   | {
       type: "offer";
@@ -138,6 +149,7 @@ export type Command =
       player: string;
       x: number;
       y: number;
+      preferResource?: Resource;
     }
   | { type: "pass"; player: string };
 

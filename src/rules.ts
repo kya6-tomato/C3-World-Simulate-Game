@@ -6,6 +6,7 @@ import type {
   LandOffer,
   Resource,
   Stock,
+  Tile,
 } from "./types.ts";
 import { RESOURCE_JA, RESOURCES } from "./types.ts";
 import { Rng, turnSeed } from "./rng.ts";
@@ -166,6 +167,9 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
     const p = w.players[c.player];
     if (p && (c.type === "build" || c.type === "expand" || c.type === "pass")) {
       p.standing = c.type;
+      // 開拓の資源優先指定も一緒に覚える。指定がなければ（undefined）、
+      // 前回までの指定は消えて「一番多い資源から」に戻る。
+      p.standingResource = c.type === "expand" ? c.preferResource : undefined;
     }
   }
   // 経済行動を出さなかった人は、常設命令で自動的に補う。
@@ -173,7 +177,11 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
   for (const p of Object.values(w.players)) {
     if (used.has(p.id)) continue;
     autoFilled.add(p.id);
-    economic.push({ type: p.standing, player: p.id } as Command);
+    const auto: Command =
+      p.standing === "expand"
+        ? { type: "expand", player: p.id, preferResource: p.standingResource }
+        : ({ type: p.standing, player: p.id } as Command);
+    economic.push(auto);
   }
 
   // 外交を先に解決してから経済行動。順番の有利不利はシャッフルで消す。
@@ -184,7 +192,7 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
 
     switch (cmd.type) {
       case "expand": {
-        const ok = doExpand(w, p, rng);
+        const ok = doExpand(w, p, rng, cmd.preferResource, cmd.target, cmd.payment);
         // 何も書かなかった人がたまたま開拓できないときは、建設できないか代わりに試す。
         // 「せっかくの自動継続が毎回空振りになる」のを避けるため。
         if (!ok && isAuto) doBuild(w, p);
@@ -215,16 +223,20 @@ function pay(stock: Stock, cost: Partial<Stock>) {
 }
 
 /** 実行できたら true を返す（何も書かなかった人の自動フォールバックの判定に使う）。 */
-function doExpand(w: World, p: Player, rng: Rng): boolean {
+function doExpand(
+  w: World,
+  p: Player,
+  rng: Rng,
+  preferResource?: Resource,
+  manualTarget?: { x: number; y: number },
+  manualPayment?: Partial<Record<Resource, number>>,
+): boolean {
   const owned = w.tiles.filter((t) => t.owner === p.id).length;
   const cost = expandCostTotal(owned);
-  if (totalStock(p.stock) < cost) {
-    w.log.push(`${p.id} は資源が足りず開拓できなかった（要 合計${cost}）。`);
-    return false;
-  }
 
   // 自分の領土に隣接している、誰のものでもないマスを集める
-  const candidates = [];
+  // （自動選択の候補集めにも、指定マスの隣接チェックにも使う）
+  const candidates: Tile[] = [];
   for (const t of w.tiles) {
     if (t.owner !== p.id) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
@@ -233,17 +245,59 @@ function doExpand(w: World, p: Player, rng: Rng): boolean {
         candidates.push(nt);
     }
   }
-  if (candidates.length === 0) {
-    w.log.push(`${p.id} は開拓できる土地がなかった。`);
-    return false;
+
+  let target: Tile;
+  if (manualTarget) {
+    const t = tileAt(w.tiles, w.width, manualTarget.x, manualTarget.y);
+    if (!t) {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が盤面の外なので開拓できなかった。`);
+      return false;
+    }
+    if (t.owner !== null) {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が既に${t.owner}の土地なので開拓できなかった。`);
+      return false;
+    }
+    if (t.kind === "waste" || t.kind === "river") {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) は荒地・川なので開拓できなかった。`);
+      return false;
+    }
+    if (!candidates.includes(t)) {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が自分の土地に隣接していないので開拓できなかった。`);
+      return false;
+    }
+    target = t;
+  } else {
+    if (candidates.length === 0) {
+      w.log.push(`${p.id} は開拓できる土地がなかった。`);
+      return false;
+    }
+    // 一番足りていない資源のマスを優先して取る
+    const scarcest = scarcestResource(p.stock);
+    const preferred = candidates.filter((t) => t.kind === scarcest);
+    target = rng.pick(preferred.length > 0 ? preferred : candidates);
   }
 
-  // 一番足りていない資源のマスを優先して取る
-  const scarcest = scarcestResource(p.stock);
-  const preferred = candidates.filter((t) => t.kind === scarcest);
-  const target = rng.pick(preferred.length > 0 ? preferred : candidates);
+  if (manualPayment) {
+    const total = RESOURCES.reduce((s, r) => s + (manualPayment[r] ?? 0), 0);
+    if (total !== cost) {
+      w.log.push(
+        `${p.id} は指定した支払いの合計が${total}で、必要な${cost}と合わないので開拓できなかった。`,
+      );
+      return false;
+    }
+    if (!canAfford(p.stock, manualPayment)) {
+      w.log.push(`${p.id} は指定した資源が足りず開拓できなかった。`);
+      return false;
+    }
+    pay(p.stock, manualPayment);
+  } else {
+    if (totalStock(p.stock) < cost) {
+      w.log.push(`${p.id} は資源が足りず開拓できなかった（要 合計${cost}）。`);
+      return false;
+    }
+    payAny(p.stock, cost, preferResource);
+  }
 
-  payAny(p.stock, cost);
   target.owner = p.id;
   w.log.push(
     `${p.id} が (${target.x},${target.y}) を開拓した [${RESOURCE_JA[target.kind as Resource]}]。`,
@@ -480,7 +534,7 @@ function doSeize(
     return;
   }
 
-  payAny(p.stock, cost);
+  payAny(p.stock, cost, cmd.preferResource);
   target.owner = p.id;
   w.log.push(
     `【奪取】${p.id} が信用の低い ${victim.id}（信用${victim.trust}）から (${cmd.x},${cmd.y}) を奪った。`,
@@ -538,10 +592,18 @@ export function totalStock(s: Stock): number {
   return s.food + s.material + s.knowledge;
 }
 
-/** 余っている資源から順に、合計 amount ぶん差し引く。 */
-function payAny(stock: Stock, amount: number) {
+/**
+ * 合計 amount ぶんを資源から差し引く。
+ * preferResource が指定されていれば、まずそこから使い、
+ * 足りない分は余っている資源から順に補う。指定がなければ、
+ * これまで通り一番多く持っている資源から順に使う。
+ */
+function payAny(stock: Stock, amount: number, preferResource?: Resource) {
   let left = amount;
-  const order = RESOURCES.slice().sort((a, b) => stock[b] - stock[a]);
+  const rest = RESOURCES.filter((r) => r !== preferResource).sort(
+    (a, b) => stock[b] - stock[a],
+  );
+  const order = preferResource ? [preferResource, ...rest] : rest;
   for (const r of order) {
     const take = Math.min(stock[r], left);
     stock[r] -= take;

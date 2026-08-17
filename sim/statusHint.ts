@@ -226,3 +226,38 @@ export function riskHint(w: World, playerId: string): string[] {
 
   return lines;
 }
+
+/**
+ * 今回のターンで、資源がどれだけ動いたかを一覧にする。
+ * 「生産」は土地・都市からの収入（produce()と同じ式で、ターン開始前の状態から計算）、
+ * 「その他」は建設・開拓・取引・維持費などをまとめた残り、「合計」は差し引き後の増減。
+ */
+export function resourceLedger(before: World, after: World, playerId: string): string[] {
+  const bp = before.players[playerId];
+  const ap = after.players[playerId];
+  if (!bp || !ap) return [];
+
+  const mult = bp.trust < CONFIG.tradeBlockedBelow ? CONFIG.lowTrustYieldPenalty : 1;
+  const totalLevel = bp.cities.reduce((s, c) => s + c.level, 0);
+
+  const production: Record<Resource, number> = { food: 0, material: 0, knowledge: 0 };
+  for (const t of before.tiles) {
+    if (t.owner === playerId && t.kind !== "waste" && t.kind !== "river") {
+      production[t.kind as Resource] += CONFIG.yieldPerTile * mult;
+    }
+  }
+  production.food += CONFIG.cityFoodPerLevel * totalLevel * mult;
+
+  const lines: string[] = [];
+  for (const r of RESOURCES) {
+    const net = ap.stock[r] - bp.stock[r];
+    const prod = Math.round(production[r]);
+    const other = net - prod;
+    if (prod === 0 && net === 0) continue; // 何も動いていない資源は表示しない
+    const fmt = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
+    lines.push(
+      `${RESOURCE_JA[r]}: 生産${fmt(prod)} ・ その他${fmt(other)} ・ 合計${fmt(net)}（今 ${ap.stock[r]}）`,
+    );
+  }
+  return lines;
+}
