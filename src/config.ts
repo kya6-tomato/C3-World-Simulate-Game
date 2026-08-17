@@ -71,7 +71,7 @@ export const CONFIG = {
    * 足がかりを得られる。1シーズンに1回だけ（Player.hasBridged で管理）。
    * 開拓と同じく資源はどれでもいい合計コスト。
    */
-  bridgeCostTotal: 80,
+  bridgeCostTotal: 50,
 
   /**
    * 都市が自力で生む食料（レベル1つあたり）。自給農業のイメージ。

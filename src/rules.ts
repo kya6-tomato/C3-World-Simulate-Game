@@ -723,17 +723,57 @@ function doHarvest(w: World, p: Player, resource: Resource) {
 }
 
 /**
- * 隣接する川のマスに橋を架けて、対岸への足がかりを得る。
- * 橋になったマスは、資源がランダムに割り当たった普通のマスになり、
- * そこを起点に次のターン以降の開拓で対岸に広げていける。1シーズンに1回だけ。
+ * 指定した川マスから、川沿いに（誰の土地でもないマスだけを通って）一番近い
+ * 陸地（川ではないマス）までの経路をBFSで探す。見つかれば、川マス→…→陸地マスの
+ * 順に並んだ配列を返す（先頭は指定した川マス自身、末尾が陸地マス）。
+ * 誰かの土地は通り抜けられないので、そこで行き止まりなら null を返す。
+ */
+function findRiverCrossing(w: World, start: Tile): Tile[] | null {
+  const key = (t: Tile) => `${t.x},${t.y}`;
+  const visited = new Set<string>([key(start)]);
+  const prev = new Map<string, Tile>();
+  const queue: Tile[] = [start];
+
+  for (let qi = 0; qi < queue.length; qi++) {
+    const cur = queue[qi];
+    for (const n of neighbors(cur.x, cur.y, w.width, w.height)) {
+      const nt = tileAt(w.tiles, w.width, n.x, n.y);
+      if (!nt || nt.owner !== null) continue; // 誰かの土地は通れない
+      const k = key(nt);
+      if (visited.has(k)) continue;
+      visited.add(k);
+      prev.set(k, cur);
+
+      if (nt.kind !== "river") {
+        // 陸地に到達。ここまでの経路を復元する。
+        const path = [nt];
+        let c = cur;
+        while (c !== start) {
+          path.push(c);
+          c = prev.get(key(c))!;
+        }
+        path.push(start);
+        return path.reverse();
+      }
+      queue.push(nt);
+    }
+  }
+  return null;
+}
+
+/**
+ * 隣接する川のマスを起点に、そこから一番近い陸地まで橋を架けて、対岸への
+ * 足がかりを得る。川が何マス分あっても、1回の行動で陸地まで届く。
+ * 渡った川マスはすべて自分の土地になり、資源がランダムに割り当たる
+ * （最後の陸地マスは、元々の資源のまま自分の土地になる）。1シーズンに1回だけ。
  */
 function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
   if (p.hasBridged) {
     w.log.push(`${p.id} はこのシーズン、もう橋を架けている。`);
     return;
   }
-  const t = tileAt(w.tiles, w.width, x, y);
-  if (!t || t.kind !== "river") {
+  const start = tileAt(w.tiles, w.width, x, y);
+  if (!start || start.kind !== "river") {
     w.log.push(`${p.id} は (${x},${y}) が川ではないので橋を架けられなかった。`);
     return;
   }
@@ -745,19 +785,33 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
     w.log.push(`${p.id} は自分の領土に隣接していない川には橋を架けられなかった。`);
     return;
   }
-  if (totalStock(p.stock) < CONFIG.bridgeCostTotal) {
-    w.log.push(`${p.id} は資源が足りず橋を架けられなかった（要 合計${CONFIG.bridgeCostTotal}）。`);
+
+  const path = findRiverCrossing(w, start);
+  if (!path) {
+    w.log.push(`${p.id} は (${x},${y}) から対岸へ抜ける道が見つからず、橋を架けられなかった（誰かの土地に阻まれているか、陸地に届きません）。`);
     return;
   }
 
-  payAny(p.stock, CONFIG.bridgeCostTotal);
-  t.kind = rng.pick(RESOURCES);
-  t.owner = p.id;
+  const riverCount = path.length - 1; // 末尾の陸地マスを除いた、渡る川マスの数
+  const cost = CONFIG.bridgeCostTotal * riverCount;
+  if (totalStock(p.stock) < cost) {
+    w.log.push(
+      `${p.id} は資源が足りず橋を架けられなかった（川${riverCount}マス分で合計${cost}必要）。`,
+    );
+    return;
+  }
+
+  payAny(p.stock, cost);
+  for (const t of path) {
+    if (t.kind === "river") t.kind = rng.pick(RESOURCES);
+    t.owner = p.id;
+  }
   p.hasBridged = true;
   p.stats!.bridgesBuilt += 1;
+  const dest = path[path.length - 1];
   w.log.push(
-    `【橋】${p.id} が (${x},${y}) に橋を架けて対岸への足がかりを得た [${RESOURCE_JA[t.kind]}]。` +
-      `このシーズン中はもう橋を架けられない。`,
+    `【橋】${p.id} が (${x},${y}) から対岸の (${dest.x},${dest.y}) まで橋を架けた` +
+      `（川${riverCount}マス分、合計${cost}払った）。このシーズン中はもう橋を架けられない。`,
   );
 }
 
