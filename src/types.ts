@@ -151,7 +151,13 @@ export type Command =
       y: number;
       preferResource?: Resource;
     }
-  | { type: "pass"; player: string };
+  | { type: "pass"; player: string }
+  | {
+      /** 所有マスから、指定した資源をまとめて回収する。手番を消費する。 */
+      type: "harvest";
+      player: string;
+      resource: Resource;
+    };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];
 

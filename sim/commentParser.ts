@@ -21,6 +21,7 @@ const TYPE_JA: Record<string, Command["type"]> = {
   土地提案: "offerLand",
   土地承諾: "acceptLand",
   奪う: "seize",
+  回収: "harvest",
 };
 
 const RESOURCE_JA_TO_EN: Record<string, Resource> = {
@@ -41,6 +42,7 @@ const USAGE: Record<string, string> = {
   土地提案: "土地提案 相手のID x y もらう 資源名 数（例: 土地提案 p05 12 7 もらう 知識 30）",
   土地承諾: "土地承諾 提案ID（例: 土地承諾 L3-p05-1）",
   奪う: "奪う x y（例: 奪う 12 7）。最後に資源名を書くと、それを優先して使う（例: 奪う 12 7 資材）",
+  回収: "回収 資源名（例: 回収 資材）。自分がその資源のマスを持っている必要があります",
   開拓:
     "開拓（自動選択） / 開拓 資源名（その資源を優先） / 開拓 x y（マスを指定） / " +
     "開拓 x y 食料 数 資材 数 知識 数（マスと支払いを両方指定。例: 開拓 10 8 食料 2 資材 8 知識 10）",
@@ -98,7 +100,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
   if (!kind) {
     return {
       command: null,
-      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/土地提案/土地承諾/奪う のどれかを先頭に書いてください）。`,
+      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/土地提案/土地承諾/奪う/回収 のどれかを先頭に書いてください）。`,
     };
   }
 
@@ -168,6 +170,15 @@ export function parseComment(player: string, rawText: string): ParseResult {
     // 「奪う 12 7 資材」のように、優先して使いたい資源を指定できる（省略可）。
     const preferResource = RESOURCE_JA_TO_EN[tokens[3]];
     return { command: { type: "seize", player, x, y, preferResource }, error: null };
+  }
+
+  if (kind === "harvest") {
+    // 「回収 資材」のように、回収する資源は省略できない（自動選択はしない）。
+    const resource = RESOURCE_JA_TO_EN[tokens[1]];
+    if (!resource) {
+      return { command: null, error: `書き方: ${USAGE[word]}` };
+    }
+    return { command: { type: "harvest", player, resource }, error: null };
   }
 
   if (kind === "offer") {

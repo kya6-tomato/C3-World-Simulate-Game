@@ -142,7 +142,7 @@ function executeContracts(w: World) {
 // ------------------------------------------------------- 4. 命令の解決
 
 /** 手番を消費する命令（経済行動）。1ターンに1つだけ。 */
-const ECONOMIC = new Set(["expand", "build", "seize", "pass"]);
+const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest"]);
 
 function applyCommands(w: World, commands: Command[], rng: Rng) {
   // 外交（提案・承諾・破棄）は手番を消費しない。何度でも行える。
@@ -209,6 +209,7 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "offerLand": doOfferLand(w, p, cmd); break;
       case "acceptLand": doAcceptLand(w, p, cmd.landOfferId); break;
       case "seize": doSeize(w, p, cmd); break;
+      case "harvest": doHarvest(w, p, cmd.resource); break;
       case "pass": break;
     }
   }
@@ -538,6 +539,24 @@ function doSeize(
   target.owner = p.id;
   w.log.push(
     `【奪取】${p.id} が信用の低い ${victim.id}（信用${victim.trust}）から (${cmd.x},${cmd.y}) を奪った。`,
+  );
+}
+
+/**
+ * 所有マスから、指定した資源をまとめて回収する。
+ * 毎ターン自動で入る yieldPerTile とは別枠のボーナスで、コストは掛からない
+ * （その資源のマスを1つも持っていないと使えない）。
+ */
+function doHarvest(w: World, p: Player, resource: Resource) {
+  const tiles = w.tiles.filter((t) => t.owner === p.id && t.kind === resource).length;
+  if (tiles === 0) {
+    w.log.push(`${p.id} は ${RESOURCE_JA[resource]}の土地を持っていないので回収できなかった。`);
+    return;
+  }
+  const amount = tiles * CONFIG.resourceHarvestPerTile;
+  p.stock[resource] += amount;
+  w.log.push(
+    `${p.id} が土地から ${RESOURCE_JA[resource]} を${amount}回収した（${tiles}マス分）。`,
   );
 }
 
