@@ -1,0 +1,665 @@
+<title>C3 プレイヤーズガイド</title>
+<style>
+  :root {
+    --bg: #E7E8F0;
+    --surface: #FFFFFF;
+    --surface-2: #DCDEEA;
+    --line: #C7C9DA;
+    --ink: #1B1E2E;
+    --ink-dim: #565A76;
+    --brass: #9C6D22;
+    --brass-strong: #7E5518;
+    --cat-resource: #7A5A9E;
+    --cat-trade: #1F7A6C;
+    --cat-territory: #B0552A;
+    --cat-city: #2B5FA3;
+    --cat-flavor: #9C3B52;
+    --code-bg: #DEDFEC;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12141F;
+      --surface: #1B1E2E;
+      --surface-2: #232739;
+      --line: #333854;
+      --ink: #ECEDF6;
+      --ink-dim: #A2A6C2;
+      --brass: #D8A54B;
+      --brass-strong: #EFC272;
+      --cat-resource: #B295D8;
+      --cat-trade: #5FC9B4;
+      --cat-territory: #E3966A;
+      --cat-city: #7EA8E0;
+      --cat-flavor: #E37F98;
+      --code-bg: #262A3D;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12141F;
+    --surface: #1B1E2E;
+    --surface-2: #232739;
+    --line: #333854;
+    --ink: #ECEDF6;
+    --ink-dim: #A2A6C2;
+    --brass: #D8A54B;
+    --brass-strong: #EFC272;
+    --cat-resource: #B295D8;
+    --cat-trade: #5FC9B4;
+    --cat-territory: #E3966A;
+    --cat-city: #7EA8E0;
+    --cat-flavor: #E37F98;
+    --code-bg: #262A3D;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Meiryo", system-ui, sans-serif;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--brass-strong); }
+
+  .frame {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 20px 100px;
+  }
+
+  .eyebrow {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-style: italic;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--brass);
+  }
+
+  h1 {
+    font-size: clamp(28px, 6vw, 40px);
+    margin: 10px 0 8px;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  .sub {
+    color: var(--ink-dim);
+    font-size: 15px;
+    max-width: 60ch;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .links a {
+    display: inline-block;
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 7px 13px;
+    border-radius: 999px;
+  }
+  .links a:hover { border-color: var(--brass); }
+
+  nav.toc {
+    margin-top: 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  nav.toc .eyebrow { margin-bottom: 8px; display: block; }
+  nav.toc ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    columns: 2;
+    column-gap: 24px;
+    font-size: 14px;
+  }
+  nav.toc li { margin: 4px 0; break-inside: avoid; }
+  nav.toc a { text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  .rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 56px 0 30px;
+  }
+  .rule::before, .rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .rule span {
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--brass);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  section.part { margin-top: 8px; }
+
+  h2.chapter {
+    font-size: 22px;
+    margin: 46px 0 14px;
+    padding-top: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  h2.chapter .n {
+    font-family: Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    color: var(--brass);
+    font-size: 15px;
+  }
+
+  h3 {
+    font-size: 17px;
+    margin: 30px 0 8px;
+    color: var(--ink);
+  }
+
+  p { margin: 10px 0; }
+  ul, ol.plain { margin: 10px 0; padding-left: 1.4em; }
+  li { margin: 4px 0; }
+
+  strong { color: var(--brass-strong); font-weight: 700; }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.92em;
+  }
+
+  pre {
+    background: var(--code-bg);
+    padding: 12px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 13.5px;
+  }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brass);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14.5px;
+  }
+  .callout .lbl {
+    display: block;
+    font-family: Georgia, serif;
+    font-style: italic;
+    color: var(--brass-strong);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    color: var(--ink-dim);
+    font-weight: 600;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tbl-wrap { overflow-x: auto; }
+
+  .cmd-table td:first-child { white-space: nowrap; color: var(--ink-dim); }
+
+  /* 称号カード（ルールブックの中に埋め込み） */
+  .ach-cats { display: flex; flex-direction: column; gap: 28px; margin-top: 18px; }
+  .ach-cat-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .ach-tag {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 9px 3px;
+    border-radius: 999px;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .ach-cat-head h4 { margin: 0; font-size: 15px; }
+  .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .ach-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 14px 12px 16px;
+  }
+  .ach-card .bar { position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 3px; }
+  .ach-card h5 { margin: 0 0 4px; font-size: 14.5px; }
+  .ach-card .cond { font-size: 12.5px; color: var(--ink-dim); margin: 0 0 6px; }
+  .ach-card .reward { font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 5px 8px; display: inline-block; }
+  .ach-card .reward b { color: var(--brass-strong); font-weight: 600; }
+
+  footer {
+    margin-top: 70px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12.5px;
+  }
+
+  @media (max-width: 480px) {
+    .frame { padding: 36px 16px 80px; }
+    nav.toc ul { columns: 1; }
+  }
+</style>
+
+<div class="frame">
+  <p class="eyebrow">C3 World Simulate Game</p>
+  <h1>プレイヤーズガイド</h1>
+  <p class="sub">GitHubのIssueに一言コメントするだけで進む、非同期の陣取り・交易ゲーム。遊び方・コマンドの書き方・ルールの中身を、この1ページにまとめました。</p>
+
+  <div class="links">
+    <a href="https://kya6-tomato.github.io/C3-World-Simulate-Game/">🗺 盤面を見る</a>
+    <a href="https://github.com/kya6-tomato/C3-World-Simulate-Game">📦 リポジトリ</a>
+  </div>
+
+  <nav class="toc">
+    <span class="eyebrow">Contents</span>
+    <ul>
+      <li><a href="#howto">遊び方</a></li>
+      <li><a href="#comment-basic">コメントの基本</a></li>
+      <li><a href="#comment-list">使える命令一覧</a></li>
+      <li><a href="#comment-offer">提案・土地提案の読み方</a></li>
+      <li><a href="#comment-advanced">資源・マスの指定、複数命令</a></li>
+      <li><a href="#rule-goal">1. 目的</a></li>
+      <li><a href="#rule-world">2. 世界の姿</a></li>
+      <li><a href="#rule-resource">3. 資源の意味</a></li>
+      <li><a href="#rule-actions">4. できること（行動）</a></li>
+      <li><a href="#rule-trust">5. 信用について</a></li>
+      <li><a href="#rule-disaster">6. 災害</a></li>
+      <li><a href="#rule-achievements">7. 称号</a></li>
+      <li><a href="#rule-standing">8. 命令を出さなかったら？</a></li>
+    </ul>
+  </nav>
+
+  <div class="rule"><span>遊び方</span></div>
+
+  <section class="part" id="howto">
+    <p>1日4回（9時・13時・17時・21時）、そのときまでの一番新しいコメントが自動で反映されて、結果があなたのIssueに返信されます。何も書かなくても、いつもの行動が自動で続くので、書き忘れても詰みません。</p>
+    <ol class="plain">
+      <li>自分専用のIssueを探す（無ければ運営役に一声かける）</li>
+      <li>今ターンにしたいことを一言コメントで書く</li>
+      <li>あとは待つだけ。次のターンで反映されて、結果もそのIssueに返信される</li>
+    </ol>
+  </section>
+
+  <div class="rule"><span>コメントの書き方</span></div>
+
+  <section class="part" id="comment-basic">
+    <h3>基本</h3>
+    <p>自分専用のIssueに、1行コメントを書いてください。括弧や引用符、カンマは要りません。単語と数字をスペースで区切るだけです。スマホからでも普通に打てるはずです。</p>
+    <p>やりたいことが2つ以上あるときは、改行して複数行に分けて書けます（後述の「複数の命令を同時に出す」を参照）。</p>
+    <p>「誰が」の部分は書かなくて大丈夫です。自分のIssueに書いた時点で、それがあなたの命令だとわかるようになっています。</p>
+    <p>書いたら、次のターン（9時・13時・17時・21時のどれか）で反映されて、同じIssueに結果が返信されます。何も書かなくても、いつもの行動が自動で続くので、書き忘れても平気です。</p>
+  </section>
+
+  <section class="part" id="comment-list">
+    <h3>使える命令。ここからコピーして書き換えてください</h3>
+    <div class="tbl-wrap">
+    <table class="cmd-table">
+      <tr><th>したいこと</th><th>書き方の例</th></tr>
+      <tr><td>都市を発展させる</td><td><code>建設</code></td></tr>
+      <tr><td>土地を広げる</td><td><code>開拓</code>（マスや支払う資源も指定できます。下の「開拓のマス・支払いを指定する」を参照）</td></tr>
+      <tr><td>何もしない</td><td><code>待機</code></td></tr>
+      <tr><td>取引を持ちかける</td><td><code>提案 p05 わたす 資材 9 もらう 知識 9 8ターン</code></td></tr>
+      <tr><td>取引を受け入れる</td><td><code>承諾 C5-p00-3</code></td></tr>
+      <tr><td>取引をやめる</td><td><code>破棄 C5-p00-3</code></td></tr>
+      <tr><td>土地を譲る提案をする</td><td><code>土地提案 p05 12 7 もらう 知識 30</code></td></tr>
+      <tr><td>土地の提案を受け入れる</td><td><code>土地承諾 L3-p05-1</code></td></tr>
+      <tr><td>信用の低い隣人から土地を奪う</td><td><code>奪う 12 7</code>（<code>奪う 12 7 資材</code>のように資源を指定すると、それを優先して使う）</td></tr>
+      <tr><td>自分の土地から資源をまとめて回収する</td><td><code>回収 資材</code>（その資源のマス数×3がもらえる。マスを持っていない資源は回収できません）</td></tr>
+      <tr><td>川に橋を架けて対岸へ進出する</td><td><code>橋 12 7</code>（自分の土地に隣接する川のマスを指定。合計80払う。1シーズンに1回だけ）</td></tr>
+      <tr><td>誰かに資源を無償で送る</td><td><code>援助 p05 資材 20</code>（距離・信用に関係なく送れる。送った側は少し信用が上がる）</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="part" id="comment-offer">
+    <h3>提案の読み方</h3>
+    <p><code>提案 p05 わたす 資材 9 もらう 知識 9 8ターン</code></p>
+    <ul>
+      <li><code>p05</code> … 相手</li>
+      <li><code>わたす 資材 9</code> … 自分が資材を9渡す</li>
+      <li><code>もらう 知識 9</code> … 代わりに知識を9もらう</li>
+      <li><code>8ターン</code> … それを8ターンの間、毎ターン繰り返す</li>
+    </ul>
+
+    <h3>土地提案の読み方</h3>
+    <p><code>土地提案 p05 12 7 もらう 知識 30</code></p>
+    <ul>
+      <li><code>p05</code> … 相手</li>
+      <li><code>12 7</code> … 自分の持っているマスのうち、譲りたいマスの座標（x, y）。座標は盤面のページで確認できます</li>
+      <li><code>もらう 知識 30</code> … 代わりにもらいたい資源と数</li>
+    </ul>
+  </section>
+
+  <section class="part" id="comment-advanced">
+    <h3>開拓・奪うで使う資源を指定する</h3>
+    <p>開拓や奪うは、食料・資材・知識のどれを使ってもいい仕組みです。何も指定しなければ、今一番多く持っている資源から自動的に使われます。</p>
+    <p>もし「この資源は温存しておきたい」というときは、最後に資源名を書いてください。</p>
+    <ul>
+      <li><code>開拓 資材</code> … 資材を優先して使う（他の資源が余っていても、まず資材から減っていきます）</li>
+      <li><code>奪う 12 7 知識</code> … 知識を優先して使う</li>
+    </ul>
+    <p>指定した資源だけで足りない場合は、残りは自動的に他の資源から補われます。また、「開拓」の常設命令（何もコメントしなかったときに自動で続く行動）にも、最後に指定した資源がそのまま引き継がれます。</p>
+
+    <h3>開拓のマス・支払いを指定する</h3>
+    <p><code>開拓</code> はどのマスが選ばれるか、どの資源が使われるかを自動で決めてくれますが、自分で指定することもできます。</p>
+    <div class="tbl-wrap">
+    <table class="cmd-table">
+      <tr><th>したいこと</th><th>書き方の例</th></tr>
+      <tr><td>全自動（おまかせ）</td><td><code>開拓</code></td></tr>
+      <tr><td>使う資源だけ指定</td><td><code>開拓 資材</code></td></tr>
+      <tr><td>開拓するマスだけ指定</td><td><code>開拓 10 8</code></td></tr>
+      <tr><td>マスと支払いを両方指定</td><td><code>開拓 10 8 食料 2 資材 8 知識 10</code></td></tr>
+    </table>
+    </div>
+    <p>マスの座標（x, y）は、自分の土地に隣接しているマスしか指定できません。座標は盤面のページでマスをクリック（スマホはタップ）すると確認できます。</p>
+    <p>支払いを指定する場合は、書いた数の合計が必要コストとぴったり一致していないと失敗します（必要コストは直前の返信の「次の目安」欄に出ています）。一部の資源だけ書いて残りは自動、ということはできません。書くなら全部書いてください。</p>
+
+    <div class="callout">
+      <span class="lbl">契約ID・土地提案IDについて</span>
+      <code>承諾</code>・<code>破棄</code>・<code>土地承諾</code>で使うID（<code>C5-p00-3</code>とか<code>L3-p05-1</code>みたいな文字列）は、自分で考えなくていいです。Botの返信コメントに書いてあるものを、そのままコピペしてください。<br><br>
+      自分宛てにまだ返事をしていない提案があるときは、毎ターンの返信の「あなたへの提案（未返答）」欄に、承諾するためのコメントがそのままコピペできる形で毎回表示されます（<code>承諾 C5-p00-3</code> のように）。提案した側だけでなく、されている側にもきちんと届くので、見落としても次のターンでまた気づけます。
+    </div>
+
+    <h3>援助について</h3>
+    <p><code>援助 p05 資材 20</code> のように書くと、距離や信用に関係なく、誰にでも資源を無償で送れます。何度でもでき、本番の行動（開拓や建設など）は別に1つ使えます。</p>
+    <p>もし誰かが災害に遭ったら、返信に「援助 ○○ 資源名 数」のような案内が出ます。困っている人がいたら、遠慮なく送ってあげてください（送った側にも少し信用が入ります）。</p>
+
+    <h3>「承諾」は1回だけ書けば、あとは自動で続きます</h3>
+    <p><code>承諾</code>した取引は、決めた期間（例: 8ターン）が終わるか、<code>破棄</code>するまで、何もコメントしなくても毎ターン自動的に資源が交換され続けます。承諾のたびに毎回コメントし直す必要はありません。途中でやめたいときだけ <code>破棄 契約ID</code> を書いてください。</p>
+
+    <h3>複数の命令を同時に出す</h3>
+    <p>1つのコメントに、命令を1行1つずつ改行で分けて書けば、まとめて実行されます。</p>
+    <pre>開拓
+承諾 C5-p00-3</pre>
+    <p>このように書くと、「開拓」と「承諾」が両方とも実行されます。取引まわりの命令（提案・承諾・破棄・土地提案・土地承諾）は何行あっても構いません。何度でも行えます。</p>
+    <p>ただし、本番の行動（建設・開拓・奪う・待機）は1ターンに1つだけです。2行以上書いてしまった場合は、一番上に書いたものだけが使われます。</p>
+  </section>
+
+  <div class="rule"><span>ルールブック</span></div>
+
+  <p class="sub">数字はバランス調整で今後変わることがあります。変わったらここも更新します。</p>
+
+  <section class="part" id="rule-goal">
+    <h2 class="chapter"><span class="n">01</span>目的</h2>
+    <p>得点を高くすることを目指します。</p>
+    <pre>得点 = 都市レベルの合計 × 10 + 持っているマスの数</pre>
+    <p>都市を発展させる（レベルを上げる）ことが得点の主軸で、領土の広さはおまけくらいに考えてください。4ターン/日で112ターン（4週間＝1シーズン）進み、その時点の得点で成績が決まります。</p>
+  </section>
+
+  <section class="part" id="rule-world">
+    <h2 class="chapter"><span class="n">02</span>世界の姿</h2>
+    <p>地図は3つの「大陸」に分かれていて、それぞれ食料・資材・知識のどれか1つが多く採れます。大陸の中には同じ資源の小さな飛び地もあって、見た目は少しでこぼこしています。</p>
+    <ul>
+      <li><strong>荒地</strong>: 何も採れませんが、開拓して自分のものにはできます。保管上限が増えたり、災害の被害を軽減したりする効果があります。</li>
+      <li><strong>川</strong>: 違う資源の大陸同士が接する境目に流れています。開拓では絶対に越えられません（橋を架ければ別）。ただし取引は、距離が届けば川の向こうの相手ともできます。</li>
+    </ul>
+    <p>自分の周りを広げるだけでは、3種類の資源はまずそろいません。これがこのゲームの一番の前提です。誰かとの取引が必要になるように、最初からそう作ってあります（ごくまれに、自分の大陸に他の資源が1マスだけ混じっていることがありますが、あてにできる量ではありません）。</p>
+  </section>
+
+  <section class="part" id="rule-resource">
+    <h2 class="chapter"><span class="n">03</span>資源の意味</h2>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>資源</th><th>主な使い道</th></tr>
+      <tr><td>食料</td><td>都市の維持費として毎ターン消費される。無くなると都市が飢えて縮む</td></tr>
+      <tr><td>資材</td><td>都市の建設（発展）に必要</td></tr>
+      <tr><td>知識</td><td>都市の建設（発展）に必要</td></tr>
+    </table>
+    </div>
+    <ul>
+      <li>都市は食料だけ自給できます。ただし維持費はレベルが上がるほど重くなり、Lv4を超えたあたりから自給だけでは足りなくなります</li>
+      <li>食料が尽きると、一番大きい都市がレベル-1されます（飢餓）。育てすぎて赤字になっても自動で釣り合うレベルに戻るので詰みません</li>
+      <li>資源には持てる上限があります（基本45＋都市レベル合計×15）。超えた分は捨てられるので、貯め込みすぎないようにしてください</li>
+    </ul>
+    <p><strong>荒地の使いみち</strong>: 荒地は資源こそ採れませんが、開拓して自分のものにできます。持っている荒地1マスにつき、</p>
+    <ul>
+      <li>保管上限が+5されます</li>
+      <li>災害の被害が2%軽減されます</li>
+    </ul>
+    <p>資源が採れないぶん、資源地帯より優先度は下がりますが、無駄ではありません。</p>
+  </section>
+
+  <section class="part" id="rule-actions">
+    <h2 class="chapter"><span class="n">04</span>できること（行動）</h2>
+    <p>1ターンに使える「本番の行動」（建設・開拓・奪う・回収・橋・待機）は1つだけです。ただし取引の提案・承諾・破棄、土地の提案・承諾、そして援助は何度でもでき、本番の行動を消費しません。</p>
+    <p>これらを同時に行いたいときは、コメントを改行で複数行に分けて、1行に1つずつ書いてください（例: 1行目に「開拓」、2行目に「承諾 C5-p00-3」）。書き方の詳しい例は<a href="#comment-advanced">コメントの書き方</a>を見てください。</p>
+
+    <h3>開拓する</h3>
+    <p>隣接する空き地を1マス、自分のものにします。</p>
+    <ul>
+      <li>コスト: 14 ＋（今持っているマス数 × 5）を、3資源のどれでもいいので合計でその数だけ払います</li>
+      <li>何も指定しなければ、一番多く持っている資源から自動的に使われます。特定の資源を温存したいときは <code>開拓 資材</code> のように書けば、それを優先して使えます</li>
+      <li>どのマスを開拓するかも自分で指定できます（<code>開拓 10 8</code> のように、自分の土地に隣接するマスの座標を書く）。支払う資源の内訳まで指定したいときは <code>開拓 10 8 食料 2 資材 8 知識 10</code> のように書きます（合計が必要コストと一致しないと失敗します）</li>
+      <li>川は取得できません（橋を架ければ別）。荒地は取得できます（「荒地の使いみち」を参照）</li>
+    </ul>
+
+    <h3>建設する</h3>
+    <p>自分の都市をレベル+1します。</p>
+    <ul>
+      <li>コスト: 10 × 目標レベル を、食料・資材・知識それぞれ用意する必要があります（1つでも足りないと失敗します）</li>
+      <li>レベルが上がるほど高くなるので、自給自足だけではいつか必ず頭打ちになります</li>
+    </ul>
+    <p><strong>都市レベルのメリット</strong>: 得点（レベル×10）と保管上限（+15/レベル）以外にも、都市レベルの合計に応じて次の効果があります。</p>
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>効果</th><th>内容</th></tr>
+      <tr><td>取引可能距離が伸びる</td><td>+1マス/レベル</td></tr>
+      <tr><td>開拓が安くなる</td><td>5レベルごとにコスト-1</td></tr>
+      <tr><td>信用の回復が速くなる</td><td>+0.02/ターン/レベル（自然回復の+0.5に上乗せ）</td></tr>
+      <tr><td>奪われにくくなる</td><td>自分を奪おうとする相手のコストが、自分のレベル×5%増しになる</td></tr>
+      <tr><td>回収の量が増える</td><td>「回収」でもらえる量に、レベルがそのまま上乗せされる</td></tr>
+    </table>
+    </div>
+    <p>都市を育てるほど、いろいろな場面でじわじわ有利になっていきます。</p>
+
+    <h3>取引を提案する</h3>
+    <p>誰かに「これをあげるから、これをちょうだい」と持ちかけます。指定した期間（例: 8ターン）、毎ターン自動でその交換が続く契約を申し込む、という意味です。</p>
+    <ul>
+      <li>相手までの距離が28マス以内である必要があります。この距離は都市の位置ではなく、お互いの持っているマスどうしの一番近い組み合わせで測ります。開拓で領土を近づければ、都市が遠くても交渉できるようになります</li>
+      <li>8ターン返事がないと、提案は自動で取り下げられます</li>
+    </ul>
+    <div class="callout">
+      <span class="lbl">救援物資</span>
+      自分が持っていない資源について、その資源を専門にしている相手が交渉範囲内に誰もいない（実質手に入れる手段がない）場合、平均して3ターンに1回くらいの頻度で（毎回ランダムなので周期は不定）、その資源が少し（8）自動で届きます。普段の取引の代わりにはならない量ですが、詰まないための保険です。届いたときは、あなたの結果として返信でお知らせします。
+    </div>
+
+    <h3>取引を承諾する</h3>
+    <p>自分宛ての提案を受け入れると契約が成立します。<strong>そこから先は、決めた期間が終わるか、どちらかが「破棄」するまで、何もコメントしなくても毎ターン自動的に資源が交換され続けます。</strong> 一度承諾したら、そのターンだけの話ではないので注意してください。</p>
+
+    <h3>取引を破棄する</h3>
+    <p>進行中の契約を、期間の途中でも自分から止めたいときに使います。信用が下がり（-45）、残りの約束（最大4ターン分）に応じた違約金も払わされます。破棄しない限り、契約は毎ターン自動で続きます。</p>
+
+    <h3>土地を譲る（合意制）</h3>
+    <p>自分の持っているマスを1つ、資源と引き換えに相手に譲ります。提案・承諾は取引と同じく手番を消費しません。承諾された瞬間に、そのマスの所有者が変わり、資源が支払われます（毎ターン続く契約ではなく、一度きりです）。</p>
+    <ul>
+      <li>都市の建っているマスは譲れません</li>
+      <li>提案してから相手が承諾するまでの間に、自分がそのマスを失っていたら不成立になります</li>
+    </ul>
+
+    <h3>土地を奪う</h3>
+    <p>信用が50を下回っている人の、自分の領土に隣接しているマスを、同意なしで強制的に奪います。</p>
+    <ul>
+      <li>コストは開拓よりも高め（開拓コストの1.6倍）です</li>
+      <li>開拓と同じく、支払う資源は何も指定しなければ一番多いものから自動で使われます。<code>奪う 12 7 資材</code> のように指定すれば優先できます</li>
+      <li>都市の建っているマスは奪えません</li>
+      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
+    </ul>
+    <p>信用がよほど悪化した相手でないと対象にならないので、普段の取引相手が急に奪われる心配はありません。</p>
+
+    <h3>資源を回収する</h3>
+    <p>自分が持っているマスから、指定した資源をまとめて手に入れます（例: <code>回収 資材</code>）。</p>
+    <ul>
+      <li>量: その資源のマスの数 × 3（都市レベル分・称号の報酬分があれば、それも上乗せされます）</li>
+      <li>コストはかかりません（ただし、その資源のマスを1つも持っていないと使えません）</li>
+      <li>毎ターン自動でもらえる分（マスの数 × 6）とは別枠のボーナスです</li>
+      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
+    </ul>
+    <p>建設や開拓ができるほど資源が貯まっていないときの保険として使えます。</p>
+
+    <h3>橋を架ける</h3>
+    <p>自分の土地に隣接する川のマスに橋を架けて、対岸（別の資源地帯）への足がかりを得ます（例: <code>橋 12 7</code>）。</p>
+    <ul>
+      <li>コスト: 合計80を、3資源のどれでもいいので払います</li>
+      <li>橋になったマスは自分の土地になり、資源がランダムに割り当たります。そこを起点に、次のターン以降は普通に開拓で対岸へ広げていけます</li>
+      <li><strong>1シーズンに1回だけ</strong>しか使えません</li>
+      <li>本番の行動を1つ消費します（建設・開拓と同じ枠）</li>
+    </ul>
+    <p>自分の資源地帯だけでは手に入らない資源のために、思い切って別の大陸に進出したいときの手段です。</p>
+
+    <h3>援助する</h3>
+    <p>誰かに資源を無償で送ります（例: <code>援助 p05 資材 20</code>）。</p>
+    <ul>
+      <li>距離・信用に関係なく、誰にでも送れます</li>
+      <li>何度でもでき、本番の行動を消費しません（取引の提案などと同じ枠）</li>
+      <li>送った側は少し信用が上がります（送った量に応じて、最大+5まで）</li>
+      <li>特に、誰かが災害に遭ったときの支援に使ってください（「災害」を参照）</li>
+    </ul>
+
+    <h3>待機する</h3>
+    <p>何もしません。命令を出さなかった場合も、自動でこれと同じ扱いになります（下の「常設命令」を参照）。</p>
+  </section>
+
+  <section class="part" id="rule-trust">
+    <h2 class="chapter"><span class="n">05</span>信用について</h2>
+    <p>信用は0〜100の数値で、みんな100からスタートします。</p>
+    <ul>
+      <li>契約を自分から破棄した: -45（＋違約金）</li>
+      <li>約束を守れず不履行になった（払えなかった）: -12</li>
+      <li>契約の支払いをきちんと守った（毎ターン）: +3</li>
+      <li>何もしなくても毎ターン+0.5ずつ自然に回復します</li>
+    </ul>
+    <p>信用が60を下回ると「低信用」になり、3つの罰則が同時にかかります。</p>
+    <ol class="plain">
+      <li>新しく取引ができない（提案も承諾も拒否されます）</li>
+      <li>生産量が0.65倍に落ちます</li>
+      <li>建設コストが1.7倍になります</li>
+    </ol>
+    <p>うっかりの不履行なら3回まで（100→64）は耐えられますが、意図的な破棄は一度（100→55）で低信用に落ちます。そこから抜け出すには、何もしなければ0.5/ターンの回復ペースで10ターンほどかかりますが、契約をきちんと果たしていけば+3.5/ターンとかなり早く戻れます。裏切りは短期的には得でも、長い目で見ると割に合わないようにしてあります。</p>
+  </section>
+
+  <section class="part" id="rule-disaster">
+    <h2 class="chapter"><span class="n">06</span>災害</h2>
+    <p>毎ターン、各プレイヤーに低い確率（3%）で発生します。発生すると、次のどちらかが起きます（半々）。</p>
+    <ul>
+      <li>一番多く持っている資源を、半分くらい失う</li>
+      <li>持っているマス（都市以外）を、いくつか失う</li>
+    </ul>
+    <p>被害の大きさは基本50%ですが、都市レベル（1%/レベル）と持っている荒地（2%/マス）で軽減できます。ただし、どれだけ軽減しても被害が10%を下回ることはありません。</p>
+    <p>災害が起きたことは、被害に遭った本人だけでなく全員に共有されます。<strong>援助</strong>（無償で資源を送る行動）で、誰でも被害者を助けられます。困っている人を見かけたら、遠慮なく送ってあげてください。</p>
+  </section>
+
+  <section class="part" id="rule-achievements">
+    <h2 class="chapter"><span class="n">07</span>称号</h2>
+    <p>特定の条件を初めて満たした瞬間に、実績として称号がもらえます。一度取ったら二度と消えません。何かコマンドを打つ必要はなく、条件を満たした次のターン処理で自動的に付与されます。獲得すると、その回の返信に<strong>全員へ</strong>共有され、報酬（信用アップ・資源・永続的な小さいバフなど）がもらえます。「永続」と付く報酬は以後ずっと効き続けます。自分の獲得数は、毎ターンの返信の「今の状況」に表示されます。</p>
+
+    <div class="ach-cats">
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-resource)">Resource</span><h4>資源にまつわる称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>蓄財家</h5><p class="cond">資源の合計保有量が100に到達する</p><span class="reward"><b>報酬</b> 資源を各+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>大富豪</h5><p class="cond">資源の合計保有量が300に到達する</p><span class="reward"><b>報酬</b> 保管上限+10（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-resource)"></div><h5>採取の達人</h5><p class="cond">資源の回収を10回行う</p><span class="reward"><b>報酬</b> 回収量+1（永続）</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-trade)">Trade</span><h4>取引・援助にまつわる称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>商いの一歩</h5><p class="cond">取引を初めて成立させる</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>名うての商人</h5><p class="cond">取引を10回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>伝説の商人</h5><p class="cond">取引を50回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>情け深い者</h5><p class="cond">誰かに援助を初めて送る</p><span class="reward"><b>報酬</b> 信用+3</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>聖人</h5><p class="cond">援助を10回送る</p><span class="reward"><b>報酬</b> 信用+10、資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>交易網</h5><p class="cond">同時に3件以上の契約を進行させる</p><span class="reward"><b>報酬</b> 取引可能距離+1（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>誠実な統治者</h5><p class="cond">一度も契約を自分から破棄せずに30ターンを迎える</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-territory)">Territory</span><h4>領土にまつわる称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>開拓者</h5><p class="cond">領土が20マスに到達する</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>大領主</h5><p class="cond">領土が40マスに到達する</p><span class="reward"><b>報酬</b> 保管上限+15（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>架け橋の民</h5><p class="cond">橋を架けて対岸へ進出する</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>荒野の開拓者</h5><p class="cond">荒地を5マス所有する</p><span class="reward"><b>報酬</b> 災害の被害軽減+3%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>三拍子そろい踏み</h5><p class="cond">食料・資材・知識をそれぞれ5マス以上所有する</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>土地の絆</h5><p class="cond">誰かから土地の提案を初めて受け取る</p><span class="reward"><b>報酬</b> 資源を各+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>気前の良い隣人</h5><p class="cond">誰かに土地を初めて譲る</p><span class="reward"><b>報酬</b> 信用+3</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>コンプリート主義者</h5><p class="cond">食料・資材・知識・荒地のすべてを1マス以上所有する</p><span class="reward"><b>報酬</b> 保管上限+5（永続）</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-city)">City &amp; Crisis</span><h4>都市・災害にまつわる称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>若き指導者</h5><p class="cond">都市レベルの合計が5に到達する</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>大都市の主</h5><p class="cond">都市レベルの合計が15に到達する</p><span class="reward"><b>報酬</b> 保管上限+20（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不屈の精神</h5><p class="cond">災害を1回生き延びる</p><span class="reward"><b>報酬</b> 災害の被害軽減+3%（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>季節を生き抜いた者</h5><p class="cond">1シーズン（112ターン）を、領土を保ったまま乗り切る</p><span class="reward"><b>報酬</b> 信用+10、保管上限+10（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不撓不屈</h5><p class="cond">土地を奪われた経験がありながら、10マス以上の領土を保っている</p><span class="reward"><b>報酬</b> 災害の被害軽減+2%（永続）</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-flavor)">Spirit</span><h4>異名・番外の称号</h4></div>
+        <div class="ach-grid">
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>海賊</h5><p class="cond">土地を3回、力ずくで奪う</p><span class="reward"><b>報酬</b> 回収量+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>資源の匠</h5><p class="cond">領土10マス以上のうち、8割以上を単一資源で占める</p><span class="reward"><b>報酬</b> 回収量+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>待機の達人</h5><p class="cond">「待機」を10回選ぶ</p><span class="reward"><b>報酬</b> 信用+2</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>覇者</h5><p class="cond">得点（都市Lv×10＋領土）が100に到達する</p><span class="reward"><b>報酬</b> 信用+15</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>第二の人生</h5><p class="cond">信用が55未満まで落ち込んだあと、90まで立て直す</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="part" id="rule-standing">
+    <h2 class="chapter"><span class="n">08</span>命令を出さなかったら？</h2>
+    <p>1日4回も命令を書くのは大変なので、常設命令という仕組みがあります。その回に命令を出さなかった人は、自動的にあらかじめ決めた行動（今は「建設する」）が実行されます。放置していても、最低限は成長し続けます。</p>
+  </section>
+
+  <footer>
+    このページはコメントの書き方.md・ルールブック.mdの内容をまとめたものです。ソースはリポジトリ内の各Markdownファイルを正としています。数字はバランス調整で変わることがあります。
+  </footer>
+</div>

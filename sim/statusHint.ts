@@ -2,9 +2,14 @@ import type { World, Player, Resource, Tile } from "../src/types.ts";
 import { RESOURCE_JA, RESOURCES } from "../src/types.ts";
 import { CONFIG } from "../src/config.ts";
 import {
+  ACHIEVEMENTS,
   buildCostFor,
+  dominantResourceOf,
+  effectiveTradeRange,
   expandCostTotal,
   seizeCostFor,
+  territoryDistance,
+  totalCityLevel,
   totalStock,
 } from "../src/rules.ts";
 import { tileAt, neighbors } from "../src/worldgen.ts";
@@ -84,7 +89,7 @@ export function statusHint(w: World, playerId: string): string[] {
 
   // 開拓まで、あと合計いくつ足りないか
   const owned = w.tiles.filter((t) => t.owner === playerId).length;
-  const expandCost = expandCostTotal(owned);
+  const expandCost = expandCostTotal(owned, totalCityLevel(p));
   const have = totalStock(p.stock);
   const expandCandidates = adjacentUnowned(w, playerId);
   if (expandCandidates.length === 0) {
@@ -129,7 +134,8 @@ export function statusHint(w: World, playerId: string): string[] {
   if (seizeTargets.length === 0) {
     pointless.push("奪う（隣接して信用の低い相手がいないため）");
   } else {
-    const seizeCost = seizeCostFor(owned);
+    // 相手の都市レベルによる防衛分はここでは考慮しない（対象が複数あり得るため）。
+    const seizeCost = seizeCostFor(owned, totalCityLevel(p));
     if (have < seizeCost) {
       pointless.push(`奪う（資源が足りないため。必要 合計${seizeCost}）`);
     }
@@ -291,4 +297,36 @@ export function pendingOffersHint(w: World, playerId: string): string[] {
   }
 
   return lines;
+}
+
+/**
+ * これまでに獲得した称号（実績）の数を、返信の「今の状況」に添えるための1行。
+ * 新規獲得そのものは resolveTurn の中でログ（【称号】〜）として出るので、
+ * ここでは「今何個持っているか」の要約だけを返す。
+ */
+export function achievementSummaryLine(w: World, playerId: string): string | null {
+  const p = w.players[playerId];
+  if (!p || !p.achievements || p.achievements.length === 0) return null;
+  return `称号 ${p.achievements.length}/${ACHIEVEMENTS.length}個 獲得済み。`;
+}
+
+/**
+ * 他プレイヤーとの距離を、近い順に一覧にする。交渉できるかどうかも添える。
+ */
+export function distanceHint(w: World, playerId: string): string[] {
+  const ids = Object.keys(w.players).filter((id) => id !== playerId);
+  const rows = ids
+    .map((id) => {
+      const d = territoryDistance(w, playerId, id);
+      const kind = dominantResourceOf(w, id);
+      return { id, d, kind };
+    })
+    .filter((r): r is { id: string; d: number; kind: Resource | null } => r.d !== null)
+    .sort((a, b) => a.d - b.d);
+
+  return rows.map((r) => {
+    const kindLabel = r.kind ? RESOURCE_JA[r.kind] : "不明";
+    const inRange = r.d <= effectiveTradeRange(w, playerId, r.id);
+    return `${r.id}（${kindLabel}）: ${r.d}マス ・ ${inRange ? "交渉可能" : "範囲外"}`;
+  });
 }

@@ -30,6 +30,31 @@ export interface City {
   level: number;
 }
 
+/** 称号（実績）の達成条件判定に使う、累積の行動回数。 */
+export interface PlayerStats {
+  tradeExecutions: number;
+  aidsSent: number;
+  disastersSurvived: number;
+  bridgesBuilt: number;
+  seizesDone: number;
+  seizedByOthers: number;
+  passCount: number;
+  breaksDone: number;
+  landOffersAccepted: number;
+  landOffersGiven: number;
+  harvestsDone: number;
+  /** これまでの信用の最低値（信用がどん底から立ち直った、を判定するため）。 */
+  minTrustEver: number;
+}
+
+/** 称号を獲得すると付く、永続的な小さいバフの合計。 */
+export interface AchievementBonus {
+  storage: number;
+  tradeRange: number;
+  disasterMitigation: number;
+  harvestBonus: number;
+}
+
 export interface Player {
   id: string;
   cities: City[];
@@ -46,6 +71,12 @@ export interface Player {
   standingResource?: Resource;
   /** このシーズン中に「橋」を使ったか（1シーズンに1回だけの制限に使う）。 */
   hasBridged?: boolean;
+  /** 称号の達成条件判定に使う累積カウンター。古いセーブデータには無いことがある。 */
+  stats?: PlayerStats;
+  /** 獲得済みの称号ID一覧。 */
+  achievements?: string[];
+  /** 称号の報酬として積み上がった永続バフ。 */
+  achievementBonus?: AchievementBonus;
 }
 
 /** 契約の状態。 */
@@ -166,6 +197,14 @@ export type Command =
       player: string;
       x: number;
       y: number;
+    }
+  | {
+      /** 誰かに資源を無償で送る。手番を消費しない（提案などと同じ枠）。 */
+      type: "aid";
+      player: string;
+      to: string;
+      resource: Resource;
+      amount: number;
     };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];

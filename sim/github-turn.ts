@@ -10,7 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
-import { statusHint, riskHint, resourceLedger, pendingOffersHint } from "./statusHint.ts";
+import { statusHint, riskHint, resourceLedger, pendingOffersHint, distanceHint, achievementSummaryLine } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -124,8 +124,12 @@ async function main() {
 
   // 2人以上のプレイヤーが関わる出来事（取引・土地のやり取り・奪取など）は、
   // 当事者だけでなく全員に共有する。市場の動きが見えないと交渉相手を探しにくいため。
+  // 災害は1人にしか起きない出来事だが、援助を呼びかけるために全員に共有する。
   const interactiveLines = next.log.filter(
-    (l) => ids.filter((pid) => l.includes(pid)).length >= 2,
+    (l) =>
+      l.includes("【災害】") ||
+      l.includes("【称号】") ||
+      ids.filter((pid) => l.includes(pid)).length >= 2,
   );
 
   // 各参加者に、自分に関係する出来事・全体の出来事・今の状況・次の目安を返信する。
@@ -161,11 +165,13 @@ async function main() {
       const land = next.tiles.filter((t) => t.owner === id).length;
       const cityLv = p.cities.reduce((s, c) => s + c.level, 0);
       const score = cityLv * 10 + land;
+      const achLine = achievementSummaryLine(next, id);
       lines.push(
         "",
         "**今の状況**",
         `都市 Lv${cityLv} ・ 領土 ${land}マス ・ 信用 ${p.trust} ・ 得点 ${score}（都市Lv×10＋領土）`,
         `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
+        ...(achLine ? [achLine] : []),
       );
     }
 
@@ -182,6 +188,11 @@ async function main() {
     const hints = statusHint(next, id);
     if (hints.length > 0) {
       lines.push("", "**次の目安**", ...hints.map((h) => `- ${h}`));
+    }
+
+    const distances = distanceHint(next, id);
+    if (distances.length > 0) {
+      lines.push("", "**他プレイヤーとの距離（近い順）**", ...distances.map((d) => `- ${d}`));
     }
 
     lines.push(

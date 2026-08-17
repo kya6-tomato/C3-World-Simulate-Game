@@ -169,6 +169,22 @@ export function createWorld(playerIds: string[], seed: number): World {
       stock: { food: 20, material: 20, knowledge: 10 },
       trust: CONFIG.trustStart,
       standing: "build",
+      stats: {
+        tradeExecutions: 0,
+        aidsSent: 0,
+        disastersSurvived: 0,
+        bridgesBuilt: 0,
+        seizesDone: 0,
+        seizedByOthers: 0,
+        passCount: 0,
+        breaksDone: 0,
+        landOffersAccepted: 0,
+        landOffersGiven: 0,
+        harvestsDone: 0,
+        minTrustEver: CONFIG.trustStart,
+      },
+      achievements: [],
+      achievementBonus: { storage: 0, tradeRange: 0, disasterMitigation: 0, harvestBonus: 0 },
     };
 
     // 初期領土として隣接1マスも与える

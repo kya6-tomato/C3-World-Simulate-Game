@@ -2,6 +2,7 @@ import type {
   World,
   Command,
   Player,
+  PlayerStats,
   Contract,
   LandOffer,
   Resource,
@@ -29,16 +30,47 @@ export function resolveTurn(world: World, commands: Command[]): World {
   w.log = [];
   const rng = new Rng(turnSeed(CONFIG.simSeed, w.turn));
 
+  ensurePlayerDefaults(w);
   produce(w);
-  provideRelief(w);
+  triggerDisasters(w, rng);
+  provideRelief(w, rng);
   upkeep(w);
   executeContracts(w);
   applyCommands(w, commands, rng);
+  checkAchievements(w);
   recoverTrust(w);
   clampAllStocks(w);
 
   w.turn += 1;
   return w;
+}
+
+/**
+ * 称号（実績）まわりのフィールドは後から追加したので、それより前に
+ * 作られたセーブデータには無いことがある。無ければここで初期化する。
+ */
+function ensurePlayerDefaults(w: World) {
+  for (const p of Object.values(w.players)) {
+    if (!p.stats) p.stats = {} as PlayerStats;
+    const s = p.stats!;
+    s.tradeExecutions ??= 0;
+    s.aidsSent ??= 0;
+    s.disastersSurvived ??= 0;
+    s.bridgesBuilt ??= 0;
+    s.seizesDone ??= 0;
+    s.seizedByOthers ??= 0;
+    s.passCount ??= 0;
+    s.breaksDone ??= 0;
+    s.landOffersAccepted ??= 0;
+    s.landOffersGiven ??= 0;
+    s.harvestsDone ??= 0;
+    s.minTrustEver ??= p.trust;
+
+    if (!p.achievements) p.achievements = [];
+    if (!p.achievementBonus) {
+      p.achievementBonus = { storage: 0, tradeRange: 0, disasterMitigation: 0, harvestBonus: 0 };
+    }
+  }
 }
 
 // ---------------------------------------------------------------- 1. 生産
@@ -63,8 +95,13 @@ function produce(w: World) {
   }
 }
 
+/** 都市レベルの合計。都市レベルに紐づく各種報酬の計算に使う。 */
+export function totalCityLevel(p: Player): number {
+  return p.cities.reduce((s, c) => s + c.level, 0);
+}
+
 /** そのプレイヤーが一番多く持っている資源（土地の種類ベース）。誰の土地も無ければ null。 */
-function dominantResourceOf(w: World, playerId: string): Resource | null {
+export function dominantResourceOf(w: World, playerId: string): Resource | null {
   const counts: Record<Resource, number> = { food: 0, material: 0, knowledge: 0 };
   for (const t of w.tiles) {
     if (t.owner === playerId && t.kind !== "waste" && t.kind !== "river") {
@@ -80,9 +117,49 @@ function dominantResourceOf(w: World, playerId: string): Resource | null {
  * 専門にしている相手が誰もいなければ、実質的に取引で手に入らないので、
  * 数ターンに1回、少しだけ自動で補給する。
  */
-function provideRelief(w: World) {
-  if (w.turn % CONFIG.reliefIntervalTurns !== 0) return;
+/**
+ * 災害。低確率で誰かに発生し、資源か土地の一部を失う。
+ * 都市レベルと荒地の所有数で被害を軽減できる（詰みを防ぐ最低ラインはある）。
+ * 発生したことは、当事者だけでなく全員に共有する
+ * （github-turn.ts 側で【災害】ログを特別扱いして全員に配信している）。
+ */
+function triggerDisasters(w: World, rng: Rng) {
+  for (const p of Object.values(w.players)) {
+    if (rng.next() >= CONFIG.disasterChancePerTurn) continue;
 
+    const wasteTiles = w.tiles.filter((t) => t.owner === p.id && t.kind === "waste").length;
+    const mitigation =
+      totalCityLevel(p) * CONFIG.cityLevelDisasterMitigation +
+      wasteTiles * CONFIG.wasteDisasterMitigationPerTile +
+      (p.achievementBonus?.disasterMitigation ?? 0);
+    const severity = Math.max(CONFIG.minDisasterSeverity, CONFIG.disasterSeverity - mitigation);
+    p.stats!.disastersSurvived += 1;
+
+    if (rng.next() < 0.5) {
+      // 資源の被害：一番多く持っている資源を失う
+      const hitResource = RESOURCES.slice().sort((a, b) => p.stock[b] - p.stock[a])[0];
+      const lost = Math.round(p.stock[hitResource] * severity);
+      p.stock[hitResource] -= lost;
+      w.log.push(
+        `【災害】${p.id} の土地で災害が発生し、${RESOURCE_JA[hitResource]}を${lost}失った` +
+          `（被害${Math.round(severity * 100)}%）。援助 ${p.id} 資源名 数 で誰でも助けられます。`,
+      );
+    } else {
+      // 土地の被害：都市のあるマスを除いて、一部を失う
+      const owned = w.tiles.filter((t) => t.owner === p.id && !hasCityAt(w, t.x, t.y));
+      if (owned.length === 0) continue;
+      const lossCount = Math.max(1, Math.round(owned.length * severity));
+      const targets = rng.shuffle(owned).slice(0, Math.min(lossCount, owned.length));
+      for (const t of targets) t.owner = null;
+      w.log.push(
+        `【災害】${p.id} の土地で災害が発生し、${targets.length}マスを失った` +
+          `（被害${Math.round(severity * 100)}%）。援助 ${p.id} 資源名 数 で誰でも助けられます。`,
+      );
+    }
+  }
+}
+
+function provideRelief(w: World, rng: Rng) {
   const ids = Object.keys(w.players);
   const dominant = new Map(ids.map((id) => [id, dominantResourceOf(w, id)]));
 
@@ -91,10 +168,12 @@ function provideRelief(w: World) {
     const mine = dominant.get(id);
     for (const r of RESOURCES) {
       if (r === mine) continue;
+      // 固定周期ではなく確率で抽選する（平均すると数ターンに1回程度になる）。
+      if (rng.next() >= CONFIG.reliefChancePerTurn) continue;
       const reachable = ids.some((o) => {
         if (o === id) return false;
         const d = territoryDistance(w, id, o);
-        return d !== null && d <= CONFIG.tradeRange && dominant.get(o) === r;
+        return d !== null && d <= effectiveTradeRange(w, id, o) && dominant.get(o) === r;
       });
       if (!reachable) {
         p.stock[r] += CONFIG.reliefAmount;
@@ -175,6 +254,8 @@ function executeContracts(w: World) {
     // 守り続けても何も報われないのは不公平なため。
     from.trust += CONFIG.trustOnFulfill;
     to.trust += CONFIG.trustOnFulfill;
+    from.stats!.tradeExecutions += 1;
+    to.stats!.tradeExecutions += 1;
 
     c.turnsLeft -= 1;
     if (c.turnsLeft <= 0) {
@@ -256,7 +337,8 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "seize": doSeize(w, p, cmd); break;
       case "harvest": doHarvest(w, p, cmd.resource); break;
       case "bridge": doBridge(w, p, cmd.x, cmd.y, rng); break;
-      case "pass": break;
+      case "aid": doAid(w, p, cmd); break;
+      case "pass": p.stats!.passCount += 1; break;
     }
   }
 }
@@ -279,16 +361,18 @@ function doExpand(
   manualPayment?: Partial<Record<Resource, number>>,
 ): boolean {
   const owned = w.tiles.filter((t) => t.owner === p.id).length;
-  const cost = expandCostTotal(owned);
+  const cost = expandCostTotal(owned, totalCityLevel(p));
 
   // 自分の領土に隣接している、誰のものでもないマスを集める
-  // （自動選択の候補集めにも、指定マスの隣接チェックにも使う）
+  // （自動選択の候補集めにも、指定マスの隣接チェックにも使う）。
+  // 荒地は資源こそ採れないが、保管上限や災害対策になるので開拓の対象にできる。
+  // 川だけは橋を架けない限り越えられない。
   const candidates: Tile[] = [];
   for (const t of w.tiles) {
     if (t.owner !== p.id) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
       const nt = tileAt(w.tiles, w.width, n.x, n.y);
-      if (nt && nt.owner === null && nt.kind !== "waste" && nt.kind !== "river")
+      if (nt && nt.owner === null && nt.kind !== "river")
         candidates.push(nt);
     }
   }
@@ -304,8 +388,8 @@ function doExpand(
       w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が既に${t.owner}の土地なので開拓できなかった。`);
       return false;
     }
-    if (t.kind === "waste" || t.kind === "river") {
-      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) は荒地・川なので開拓できなかった。`);
+    if (t.kind === "river") {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) は川なので開拓できなかった（橋が必要）。`);
       return false;
     }
     if (!candidates.includes(t)) {
@@ -346,8 +430,9 @@ function doExpand(
   }
 
   target.owner = p.id;
+  const kindLabel = target.kind === "waste" ? "荒地" : RESOURCE_JA[target.kind as Resource];
   w.log.push(
-    `${p.id} が (${target.x},${target.y}) を開拓した [${RESOURCE_JA[target.kind as Resource]}]。`,
+    `${p.id} が (${target.x},${target.y}) を開拓した [${kindLabel}]。`,
   );
   return true;
 }
@@ -390,8 +475,9 @@ function doOffer(
 
   // 遠すぎる相手とは契約できない。人間関係を近所に閉じ込めるための制限。
   const d = territoryDistance(w, p.id, cmd.to);
-  if (d === null || d > CONFIG.tradeRange) {
-    w.log.push(`${p.id} は ${cmd.to} まで遠すぎて交渉できない（距離${d}）。`);
+  const range = effectiveTradeRange(w, p.id, cmd.to);
+  if (d === null || d > range) {
+    w.log.push(`${p.id} は ${cmd.to} まで遠すぎて交渉できない（距離${d}、範囲${range}）。`);
     return;
   }
   const id = `C${w.turn}-${p.id}-${w.contracts.length}`;
@@ -440,6 +526,7 @@ function doBreak(w: World, p: Player, contractId: string) {
   if (c.from !== p.id && c.to !== p.id) return;
   c.status = "broken";
   p.trust += CONFIG.trustOnBreak;
+  p.stats!.breaksDone += 1;
   const otherId = c.from === p.id ? c.to : c.from;
   const other = w.players[otherId];
 
@@ -492,8 +579,9 @@ function doOfferLand(
     return;
   }
   const d = territoryDistance(w, p.id, cmd.to);
-  if (d === null || d > CONFIG.tradeRange) {
-    w.log.push(`${p.id} は ${cmd.to} まで遠すぎて土地の話ができない（距離${d}）。`);
+  const range = effectiveTradeRange(w, p.id, cmd.to);
+  if (d === null || d > range) {
+    w.log.push(`${p.id} は ${cmd.to} まで遠すぎて土地の話ができない（距離${d}、範囲${range}）。`);
     return;
   }
 
@@ -541,6 +629,8 @@ function doAcceptLand(w: World, p: Player, landOfferId: string) {
   proposer.stock[lo.wantResource] += lo.wantAmount;
   tile.owner = p.id;
   lo.status = "accepted";
+  p.stats!.landOffersAccepted += 1;
+  proposer.stats!.landOffersGiven += 1;
   w.log.push(
     `${p.id} が ${lo.from} から土地 (${lo.x},${lo.y}) を受け取った（${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を支払い）。`,
   );
@@ -575,7 +665,7 @@ function doSeize(
   }
 
   const owned = w.tiles.filter((t) => t.owner === p.id).length;
-  const cost = seizeCostFor(owned);
+  const cost = seizeCostFor(owned, totalCityLevel(p), totalCityLevel(victim));
   if (totalStock(p.stock) < cost) {
     w.log.push(`${p.id} は資源が足りず土地を奪えなかった（要 合計${cost}）。`);
     return;
@@ -583,6 +673,8 @@ function doSeize(
 
   payAny(p.stock, cost, cmd.preferResource);
   target.owner = p.id;
+  p.stats!.seizesDone += 1;
+  victim.stats!.seizedByOthers += 1;
   w.log.push(
     `【奪取】${p.id} が信用の低い ${victim.id}（信用${victim.trust}）から (${cmd.x},${cmd.y}) を奪った。`,
   );
@@ -599,10 +691,14 @@ function doHarvest(w: World, p: Player, resource: Resource) {
     w.log.push(`${p.id} は ${RESOURCE_JA[resource]}の土地を持っていないので回収できなかった。`);
     return;
   }
-  const amount = tiles * CONFIG.resourceHarvestPerTile;
+  const levelBonus = totalCityLevel(p) * CONFIG.cityLevelHarvestBonus;
+  const achBonus = p.achievementBonus?.harvestBonus ?? 0;
+  const amount = tiles * CONFIG.resourceHarvestPerTile + levelBonus + achBonus;
   p.stock[resource] += amount;
+  p.stats!.harvestsDone += 1;
   w.log.push(
-    `${p.id} が土地から ${RESOURCE_JA[resource]} を${amount}回収した（${tiles}マス分）。`,
+    `${p.id} が土地から ${RESOURCE_JA[resource]} を${amount}回収した` +
+      `（${tiles}マス分${levelBonus > 0 ? ` + 都市レベル分${levelBonus}` : ""}${achBonus > 0 ? ` + 称号ボーナス${achBonus}` : ""}）。`,
   );
 }
 
@@ -638,10 +734,325 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
   t.kind = rng.pick(RESOURCES);
   t.owner = p.id;
   p.hasBridged = true;
+  p.stats!.bridgesBuilt += 1;
   w.log.push(
     `【橋】${p.id} が (${x},${y}) に橋を架けて対岸への足がかりを得た [${RESOURCE_JA[t.kind]}]。` +
       `このシーズン中はもう橋を架けられない。`,
   );
+}
+
+/**
+ * 誰かに資源を無償で送る。距離・信用に関係なく、何度でもできる（提案と同じ枠）。
+ * 送った側は少し信用が上がる（バラマキで稼げないよう、量に応じた上限つき）。
+ */
+function doAid(
+  w: World,
+  p: Player,
+  cmd: Extract<Command, { type: "aid" }>,
+) {
+  const recipient = w.players[cmd.to];
+  if (!recipient || cmd.to === p.id) {
+    w.log.push(`${p.id} は ${cmd.to} に援助しようとしたが、相手が見つからなかった。`);
+    return;
+  }
+  if (p.stock[cmd.resource] < cmd.amount) {
+    w.log.push(`${p.id} は資源が足りず ${cmd.to} を援助できなかった。`);
+    return;
+  }
+  p.stock[cmd.resource] -= cmd.amount;
+  recipient.stock[cmd.resource] += cmd.amount;
+  const trustGain = Math.round(
+    Math.min(CONFIG.aidTrustBonusCap, cmd.amount * CONFIG.aidTrustBonusRate),
+  );
+  p.trust += trustGain;
+  p.stats!.aidsSent += 1;
+  w.log.push(
+    `${p.id} が ${cmd.to} に ${RESOURCE_JA[cmd.resource]}を${cmd.amount}援助した` +
+      `（${p.id}の信用+${trustGain}）。`,
+  );
+}
+
+// --------------------------------------------------------------- 称号
+
+/** 称号（実績）1つ分の定義。 */
+export interface Achievement {
+  id: string;
+  title: string;
+  /** 達成条件の説明（ドキュメント・獲得時のログに使う）。 */
+  desc: string;
+  /** 報酬の説明（ドキュメント・獲得時のログに使う）。 */
+  rewardDesc: string;
+  condition: (w: World, p: Player) => boolean;
+  reward: (p: Player) => void;
+}
+
+function ownedTileCount(w: World, playerId: string, kind?: Resource): number {
+  return w.tiles.filter(
+    (t) => t.owner === playerId && (kind === undefined || t.kind === kind),
+  ).length;
+}
+
+/** 今この瞬間、進行中の契約がいくつあるか（提案中は含まない）。 */
+function activeContractCount(w: World, playerId: string): number {
+  return w.contracts.filter(
+    (c) => c.status === "active" && (c.from === playerId || c.to === playerId),
+  ).length;
+}
+
+/**
+ * 称号の一覧。今の状態やこれまでの累積行動が条件を満たすと、
+ * その場で一度だけ達成扱いになり、報酬が入る。一度取った称号は失われない。
+ */
+export const ACHIEVEMENTS: Achievement[] = [
+  {
+    id: "stock_100",
+    title: "蓄財家",
+    desc: "資源の合計保有量が100に到達する",
+    rewardDesc: "資源を各+5",
+    condition: (_w, p) => totalStock(p.stock) >= 100,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 5; },
+  },
+  {
+    id: "stock_300",
+    title: "大富豪",
+    desc: "資源の合計保有量が300に到達する",
+    rewardDesc: "保管上限+10（永続）",
+    condition: (_w, p) => totalStock(p.stock) >= 300,
+    reward: (p) => { p.achievementBonus!.storage += 10; },
+  },
+  {
+    id: "trade_first",
+    title: "商いの一歩",
+    desc: "取引を初めて成立させる",
+    rewardDesc: "信用+5",
+    condition: (_w, p) => p.stats!.tradeExecutions >= 1,
+    reward: (p) => { p.trust += 5; },
+  },
+  {
+    id: "trade_10",
+    title: "名うての商人",
+    desc: "取引を10回成立させる",
+    rewardDesc: "取引可能距離+2（永続）",
+    condition: (_w, p) => p.stats!.tradeExecutions >= 10,
+    reward: (p) => { p.achievementBonus!.tradeRange += 2; },
+  },
+  {
+    id: "trade_50",
+    title: "伝説の商人",
+    desc: "取引を50回成立させる",
+    rewardDesc: "取引可能距離+3（永続）",
+    condition: (_w, p) => p.stats!.tradeExecutions >= 50,
+    reward: (p) => { p.achievementBonus!.tradeRange += 3; },
+  },
+  {
+    id: "land_20",
+    title: "開拓者",
+    desc: "領土が20マスに到達する",
+    rewardDesc: "資源を各+10",
+    condition: (w, p) => ownedTileCount(w, p.id) >= 20,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 10; },
+  },
+  {
+    id: "land_40",
+    title: "大領主",
+    desc: "領土が40マスに到達する",
+    rewardDesc: "保管上限+15（永続）",
+    condition: (w, p) => ownedTileCount(w, p.id) >= 40,
+    reward: (p) => { p.achievementBonus!.storage += 15; },
+  },
+  {
+    id: "city_level_5",
+    title: "若き指導者",
+    desc: "都市レベルの合計が5に到達する",
+    rewardDesc: "信用+5",
+    condition: (_w, p) => totalCityLevel(p) >= 5,
+    reward: (p) => { p.trust += 5; },
+  },
+  {
+    id: "city_level_15",
+    title: "大都市の主",
+    desc: "都市レベルの合計が15に到達する",
+    rewardDesc: "保管上限+20（永続）",
+    condition: (_w, p) => totalCityLevel(p) >= 15,
+    reward: (p) => { p.achievementBonus!.storage += 20; },
+  },
+  {
+    id: "bridge_first",
+    title: "架け橋の民",
+    desc: "橋を架けて対岸へ進出する",
+    rewardDesc: "資源を各+10",
+    condition: (_w, p) => p.stats!.bridgesBuilt >= 1,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 10; },
+  },
+  {
+    id: "waste_5",
+    title: "荒野の開拓者",
+    desc: "荒地を5マス所有する",
+    rewardDesc: "災害の被害軽減+3%（永続）",
+    condition: (w, p) => ownedTileCount(w, p.id, "waste") >= 5,
+    reward: (p) => { p.achievementBonus!.disasterMitigation += 0.03; },
+  },
+  {
+    id: "disaster_survive",
+    title: "不屈の精神",
+    desc: "災害を1回生き延びる",
+    rewardDesc: "災害の被害軽減+3%（永続）",
+    condition: (_w, p) => p.stats!.disastersSurvived >= 1,
+    reward: (p) => { p.achievementBonus!.disasterMitigation += 0.03; },
+  },
+  {
+    id: "aid_first",
+    title: "情け深い者",
+    desc: "誰かに援助を初めて送る",
+    rewardDesc: "信用+3",
+    condition: (_w, p) => p.stats!.aidsSent >= 1,
+    reward: (p) => { p.trust += 3; },
+  },
+  {
+    id: "aid_10",
+    title: "聖人",
+    desc: "援助を10回送る",
+    rewardDesc: "信用+10、資源を各+10",
+    condition: (_w, p) => p.stats!.aidsSent >= 10,
+    reward: (p) => { p.trust += 10; for (const r of RESOURCES) p.stock[r] += 10; },
+  },
+  {
+    id: "seize_3",
+    title: "海賊",
+    desc: "土地を3回、力ずくで奪う",
+    rewardDesc: "回収量+2（永続）",
+    condition: (_w, p) => p.stats!.seizesDone >= 3,
+    reward: (p) => { p.achievementBonus!.harvestBonus += 2; },
+  },
+  {
+    id: "tri_resource",
+    title: "三拍子そろい踏み",
+    desc: "食料・資材・知識を、それぞれ5マス以上所有する",
+    rewardDesc: "取引可能距離+2（永続）",
+    condition: (w, p) =>
+      RESOURCES.every((r) => ownedTileCount(w, p.id, r) >= 5),
+    reward: (p) => { p.achievementBonus!.tradeRange += 2; },
+  },
+  {
+    id: "specialist",
+    title: "資源の匠",
+    desc: "領土10マス以上のうち、8割以上を単一の資源で占める",
+    rewardDesc: "回収量+2（永続）",
+    condition: (w, p) => {
+      const land = ownedTileCount(w, p.id);
+      if (land < 10) return false;
+      const best = Math.max(...RESOURCES.map((r) => ownedTileCount(w, p.id, r)));
+      return best / land >= 0.8;
+    },
+    reward: (p) => { p.achievementBonus!.harvestBonus += 2; },
+  },
+  {
+    id: "pass_10",
+    title: "待機の達人",
+    desc: "「待機」を10回選ぶ",
+    rewardDesc: "信用+2",
+    condition: (_w, p) => p.stats!.passCount >= 10,
+    reward: (p) => { p.trust += 2; },
+  },
+  {
+    id: "score_100",
+    title: "覇者",
+    desc: "得点（都市Lv×10＋領土）が100に到達する",
+    rewardDesc: "信用+15",
+    condition: (w, p) => totalCityLevel(p) * 10 + ownedTileCount(w, p.id) >= 100,
+    reward: (p) => { p.trust += 15; },
+  },
+  {
+    id: "land_gift_received",
+    title: "土地の絆",
+    desc: "誰かから土地の提案を初めて受け取る（土地承諾）",
+    rewardDesc: "資源を各+5",
+    condition: (_w, p) => p.stats!.landOffersAccepted >= 1,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 5; },
+  },
+  {
+    id: "land_gift_given",
+    title: "気前の良い隣人",
+    desc: "誰かに土地を初めて譲る（土地提案が承諾される）",
+    rewardDesc: "信用+3",
+    condition: (_w, p) => p.stats!.landOffersGiven >= 1,
+    reward: (p) => { p.trust += 3; },
+  },
+  {
+    id: "network_3",
+    title: "交易網",
+    desc: "同時に3件以上の契約を進行させる",
+    rewardDesc: "取引可能距離+1（永続）",
+    condition: (w, p) => activeContractCount(w, p.id) >= 3,
+    reward: (p) => { p.achievementBonus!.tradeRange += 1; },
+  },
+  {
+    id: "clean_record_30",
+    title: "誠実な統治者",
+    desc: "一度も契約を自分から破棄せずに30ターンを迎える",
+    rewardDesc: "信用+8",
+    condition: (w, p) => w.turn >= 30 && p.stats!.breaksDone === 0,
+    reward: (p) => { p.trust += 8; },
+  },
+  {
+    id: "comeback",
+    title: "第二の人生",
+    desc: "信用が55未満まで落ち込んだあと、90まで立て直す",
+    rewardDesc: "信用+5",
+    condition: (_w, p) => p.stats!.minTrustEver < CONFIG.seizeBelowTrust && p.trust >= 90,
+    reward: (p) => { p.trust += 5; },
+  },
+  {
+    id: "full_set",
+    title: "コンプリート主義者",
+    desc: "食料・資材・知識・荒地のすべてを1マス以上所有する",
+    rewardDesc: "保管上限+5（永続）",
+    condition: (w, p) =>
+      ownedTileCount(w, p.id, "food") >= 1 &&
+      ownedTileCount(w, p.id, "material") >= 1 &&
+      ownedTileCount(w, p.id, "knowledge") >= 1 &&
+      ownedTileCount(w, p.id, "waste") >= 1,
+    reward: (p) => { p.achievementBonus!.storage += 5; },
+  },
+  {
+    id: "survive_season",
+    title: "季節を生き抜いた者",
+    desc: "1シーズン（112ターン）を、領土を保ったまま乗り切る",
+    rewardDesc: "信用+10、保管上限+10（永続）",
+    condition: (w, p) => w.turn >= 112 && ownedTileCount(w, p.id) > 0,
+    reward: (p) => { p.trust += 10; p.achievementBonus!.storage += 10; },
+  },
+  {
+    id: "seized_survivor",
+    title: "不撓不屈",
+    desc: "土地を奪われた経験がありながら、それでも10マス以上の領土を保っている",
+    rewardDesc: "災害の被害軽減+2%（永続）",
+    condition: (w, p) => p.stats!.seizedByOthers >= 1 && ownedTileCount(w, p.id) >= 10,
+    reward: (p) => { p.achievementBonus!.disasterMitigation += 0.02; },
+  },
+  {
+    id: "harvest_lover",
+    title: "採取の達人",
+    desc: "資源の回収を10回行う",
+    rewardDesc: "回収量+1（永続）",
+    condition: (_w, p) => p.stats!.harvestsDone >= 10,
+    reward: (p) => { p.achievementBonus!.harvestBonus += 1; },
+  },
+];
+
+function checkAchievements(w: World) {
+  for (const p of Object.values(w.players)) {
+    p.stats!.minTrustEver = Math.min(p.stats!.minTrustEver, p.trust);
+    for (const ach of ACHIEVEMENTS) {
+      if (p.achievements!.includes(ach.id)) continue;
+      if (!ach.condition(w, p)) continue;
+      p.achievements!.push(ach.id);
+      ach.reward(p);
+      w.log.push(
+        `【称号】${p.id} が称号「${ach.title}」を獲得した（${ach.desc}）。報酬: ${ach.rewardDesc}。`,
+      );
+    }
+  }
 }
 
 // --------------------------------------------------------- 5. 信用の回復
@@ -650,7 +1061,8 @@ function recoverTrust(w: World) {
   for (const p of Object.values(w.players)) {
     // 時間が経てば少しずつ許される。ただし回復は遅いので、
     // 一度の破棄で数十ターン取引できなくなる。これが「前科」の重み。
-    p.trust += CONFIG.trustRecoverPerTurn;
+    // 都市が育っているほど、信頼の回復も少し早くなる。
+    p.trust += CONFIG.trustRecoverPerTurn + totalCityLevel(p) * CONFIG.cityLevelTrustRecoverBonus;
     p.trust = Math.round(
       Math.max(CONFIG.trustMin, Math.min(CONFIG.trustMax, p.trust)) * 10,
     ) / 10;
@@ -661,8 +1073,13 @@ function recoverTrust(w: World) {
 
 function clampAllStocks(w: World) {
   for (const p of Object.values(w.players)) {
-    const totalLevel = p.cities.reduce((s, c) => s + c.level, 0);
-    const cap = CONFIG.storageBase + CONFIG.storagePerCityLevel * totalLevel;
+    const totalLevel = totalCityLevel(p);
+    const wasteTiles = w.tiles.filter((t) => t.owner === p.id && t.kind === "waste").length;
+    const cap =
+      CONFIG.storageBase +
+      CONFIG.storagePerCityLevel * totalLevel +
+      CONFIG.wasteStorageBonusPerTile * wasteTiles +
+      (p.achievementBonus?.storage ?? 0);
     for (const r of RESOURCES) {
       p.stock[r] = Math.max(0, Math.min(cap, Math.round(p.stock[r])));
     }
@@ -681,13 +1098,23 @@ export function buildCostFor(targetLevel: number, trust = 100): Stock {
 }
 
 /** 領土が広いほど開拓は高くつく。無限拡張を防ぐ。 */
-export function expandCostTotal(ownedTiles: number): number {
-  return CONFIG.expandCostBase + CONFIG.expandCostPerTile * ownedTiles;
+export function expandCostTotal(ownedTiles: number, cityLevel = 0): number {
+  const base = CONFIG.expandCostBase + CONFIG.expandCostPerTile * ownedTiles;
+  const discount =
+    Math.floor(cityLevel / CONFIG.cityLevelExpandDiscountEvery) *
+    CONFIG.cityLevelExpandDiscountAmount;
+  return Math.max(1, base - discount);
 }
 
 /** 強制的に奪う（seize）ときのコスト。開拓コストの割増し版。 */
-export function seizeCostFor(ownedTiles: number): number {
-  return Math.round(expandCostTotal(ownedTiles) * CONFIG.seizeCostMultiplier);
+export function seizeCostFor(
+  ownedTiles: number,
+  attackerCityLevel = 0,
+  victimCityLevel = 0,
+): number {
+  const base = expandCostTotal(ownedTiles, attackerCityLevel) * CONFIG.seizeCostMultiplier;
+  const defense = 1 + victimCityLevel * CONFIG.citySeizeDefenseRate;
+  return Math.round(base * defense);
 }
 
 /** 手持ち資源の合計。 */
@@ -737,6 +1164,19 @@ export function territoryDistance(
     }
   }
   return min;
+}
+
+/**
+ * 2人の間で有効な交渉可能距離。都市が大きいほど届く範囲が伸びるので、
+ * どちらか片方の都市が育っていれば、その分だけ遠くまで交渉できる。
+ */
+export function effectiveTradeRange(w: World, a: string, b: string): number {
+  const levelA = w.players[a] ? totalCityLevel(w.players[a]) : 0;
+  const levelB = w.players[b] ? totalCityLevel(w.players[b]) : 0;
+  const bonus = Math.max(levelA, levelB) * CONFIG.cityLevelTradeRangeBonus;
+  const achBonusA = w.players[a]?.achievementBonus?.tradeRange ?? 0;
+  const achBonusB = w.players[b]?.achievementBonus?.tradeRange ?? 0;
+  return CONFIG.tradeRange + bonus + Math.max(achBonusA, achBonusB);
 }
 
 /** 一番足りていない資源を返す。ボットの判断にも使う。 */
