@@ -606,13 +606,13 @@
       contractsEl.innerHTML = '<p class="empty-note">今のところありません</p>';
     } else {
       var groups = "";
-      if (proposedContracts.length > 0) {
-        groups += '<div class="contract-group"><div class="contract-group-head">提案中・返事待ち<span class="count">' + proposedContracts.length + '</span></div>' +
-          '<ul class="contracts">' + proposedContracts.map(contractRow).join("") + '</ul></div>';
-      }
       if (activeContracts.length > 0) {
         groups += '<div class="contract-group"><div class="contract-group-head">進行中・自動更新中<span class="count">' + activeContracts.length + '</span></div>' +
           '<ul class="contracts">' + activeContracts.map(contractRow).join("") + '</ul></div>';
+      }
+      if (proposedContracts.length > 0) {
+        groups += '<div class="contract-group"><div class="contract-group-head">提案中・返事待ち<span class="count">' + proposedContracts.length + '</span></div>' +
+          '<ul class="contracts">' + proposedContracts.map(contractRow).join("") + '</ul></div>';
       }
       contractsEl.innerHTML = groups;
     }
