@@ -59,6 +59,19 @@ async function main() {
   const since = lastRun.processedAt;
   const now = new Date().toISOString();
 
+  // 手動実行と、遅れて発火した定時実行が近い時間に重なると、ターンが
+  // 2回分連続で進んでしまう（実際に一度起きた）。前回の処理からまだ
+  // 十分な間隔が空いていなければ、今回は何もせず終了する。
+  const hoursSinceLastRun =
+    (new Date(now).getTime() - new Date(since).getTime()) / 3600000;
+  if (hoursSinceLastRun < CONFIG.minTurnGapHours) {
+    console.log(
+      `前回の処理（${since}）からまだ${hoursSinceLastRun.toFixed(1)}時間しか経っていないので、` +
+        `今回は何もせず終了します（最低${CONFIG.minTurnGapHours}時間空ける設定）。`,
+    );
+    return;
+  }
+
   const commands: Command[] = [];
   const errorsByPlayer: Record<string, string[]> = {};
 
