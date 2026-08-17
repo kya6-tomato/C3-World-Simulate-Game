@@ -157,3 +157,72 @@ export function statusHint(w: World, playerId: string): string[] {
 
   return lines;
 }
+
+/**
+ * 「今のまま何もしなければ、この先どんな危険があるか」を、プレイヤーへの
+ * 返信に添えるための行を作る。実際に何かが起きるとは限らない、事前の注意喚起。
+ */
+export function riskHint(w: World, playerId: string): string[] {
+  const p = w.players[playerId];
+  if (!p) return [];
+
+  const lines: string[] = [];
+  const mult = p.trust < CONFIG.tradeBlockedBelow ? CONFIG.lowTrustYieldPenalty : 1;
+  const totalLevel = p.cities.reduce((s, c) => s + c.level, 0);
+
+  // 食料が尽きて都市が縮む危険（次のターンの収支を先読みする）
+  const foodTiles = w.tiles.filter(
+    (t) => t.owner === playerId && t.kind === "food",
+  ).length;
+  const foodIncome =
+    CONFIG.yieldPerTile * foodTiles * mult + CONFIG.cityFoodPerLevel * totalLevel * mult;
+  const upkeep =
+    CONFIG.upkeepPerCityLevel * totalLevel +
+    CONFIG.upkeepGrowthPerLevel * totalLevel * totalLevel;
+  const nextFood = p.stock.food + foodIncome - upkeep;
+  if (nextFood < 0) {
+    lines.push(
+      `このままだと次のターンで食料が尽きて、都市が飢えて縮んでしまう可能性があります（食料の収支が${Math.round(foodIncome - upkeep)}）。`,
+    );
+  }
+
+  // 進行中の契約の支払いが、今の手持ちでは足りない危険
+  const owed = new Map<Resource, number>();
+  for (const c of w.contracts) {
+    if (c.status !== "active") continue;
+    if (c.from === playerId) owed.set(c.give, (owed.get(c.give) ?? 0) + c.giveAmount);
+    if (c.to === playerId) owed.set(c.take, (owed.get(c.take) ?? 0) + c.takeAmount);
+  }
+  const shortfalls = [...owed.entries()].filter(([r, amt]) => p.stock[r] < amt);
+  if (shortfalls.length > 0) {
+    const parts = shortfalls.map(
+      ([r, amt]) => `${RESOURCE_JA[r]}があと${amt - p.stock[r]}足りません`,
+    );
+    lines.push(
+      `進行中の契約の支払いが、今の手持ちでは足りません: ${parts.join("、")}。次のターンで払えないと不履行になり、信用が下がります（-12）。`,
+    );
+  }
+
+  // 信用が下がっていて、あと少しで新規取引ができなくなる危険
+  const blockGap = CONFIG.tradeBlockedBelow - p.trust;
+  if (blockGap >= 0) {
+    // すでに取引不可の場合は pointless 側で案内済みなのでここでは触れない
+  } else if (blockGap > -15) {
+    lines.push(
+      `信用が${p.trust}まで下がっています。あと少し（不履行1回など）で信用${CONFIG.tradeBlockedBelow}を下回り、新しい取引ができなくなります。`,
+    );
+  }
+
+  // 信用が低く、隣人から土地を奪われる危険
+  if (p.trust < CONFIG.seizeBelowTrust) {
+    lines.push(
+      `信用が${p.trust}まで下がっていて、隣接している人から土地を同意なく奪われる対象になっています。`,
+    );
+  } else if (p.trust < CONFIG.seizeBelowTrust + 15) {
+    lines.push(
+      `信用が${p.trust}まで下がっています。あと少しでさらに悪化すると、隣接している人から土地を奪われる対象（信用${CONFIG.seizeBelowTrust}未満）になります。`,
+    );
+  }
+
+  return lines;
+}

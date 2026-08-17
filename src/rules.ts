@@ -66,7 +66,9 @@ function produce(w: World) {
 function upkeep(w: World) {
   for (const p of Object.values(w.players)) {
     const totalLevel = p.cities.reduce((s, c) => s + c.level, 0);
-    const cost = CONFIG.upkeepPerCityLevel * totalLevel;
+    const cost =
+      CONFIG.upkeepPerCityLevel * totalLevel +
+      CONFIG.upkeepGrowthPerLevel * totalLevel * totalLevel;
     p.stock.food -= cost;
     if (p.stock.food < 0) {
       // 食料が尽きたら都市が縮む（飢餓）

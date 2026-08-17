@@ -10,7 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
-import { statusHint } from "./statusHint.ts";
+import { statusHint, riskHint } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -134,6 +134,11 @@ async function main() {
         `都市 Lv${cityLv} ・ 領土 ${land}マス ・ 信用 ${p.trust} ・ 得点 ${score}（都市Lv×10＋領土）`,
         `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
       );
+    }
+
+    const risks = riskHint(next, id);
+    if (risks.length > 0) {
+      lines.push("", "**このままだと起きるかもしれない危険**", ...risks.map((r) => `- ${r}`));
     }
 
     const hints = statusHint(next, id);
