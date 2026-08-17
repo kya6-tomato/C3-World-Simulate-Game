@@ -37,6 +37,7 @@ export function resolveTurn(world: World, commands: Command[]): World {
   provideUnderdogBonus(w, rng);
   resolveWorldThreat(w, rng);
   resolveWorldProject(w, rng);
+  resolveFactionBattle(w, rng);
   upkeep(w);
   executeContracts(w);
   applyCommands(w, commands, rng);
@@ -56,6 +57,7 @@ export function resolveTurn(world: World, commands: Command[]): World {
 function ensurePlayerDefaults(w: World) {
   if (w.threat === undefined) w.threat = null;
   if (w.project === undefined) w.project = null;
+  if (w.faction === undefined) w.faction = null;
   // 世界目標の初期化は resolveWorldGoal 側で行う（種類ごとに現在値を見て決めるため）。
   for (const p of Object.values(w.players)) {
     if (!p.stats) p.stats = {} as PlayerStats;
@@ -78,6 +80,9 @@ function ensurePlayerDefaults(w: World) {
     s.threatsRepelled ??= 0;
     s.totalExported ??= 0;
     s.projectsBuilt ??= 0;
+    s.totalFactionWagered ??= 0;
+    s.totalFactionWon ??= 0;
+    s.factionBattlesWon ??= 0;
 
     if (!p.achievements) p.achievements = [];
     if (!p.achievementBonus) {
@@ -137,6 +142,16 @@ export function projectContributionScore(p: Player): number {
 }
 
 /**
+ * 「陣営戦」で勝った陣営に投入していた量から、得点への貢献分を計算する
+ * （考え方は援助・脅威・事業と同じ）。負けた陣営への投入分はここに乗らない
+ * （掛け捨てで終わる）。報酬が得点型でなかった陣営戦の投入分も乗らない。
+ */
+export function factionContributionScore(p: Player): number {
+  const won = p.stats?.totalFactionWon ?? 0;
+  return Math.min(CONFIG.factionScoreCap, Math.floor(won / CONFIG.factionScoreDivisor));
+}
+
+/**
  * 都市レベルと領土だけで見た、基礎の経済力。援助・脅威・事業への貢献分は含めない。
  * 劣勢かどうかの判定は、常にこちらを使う（totalScoreではない）。
  * もしtotalScore（貢献点込み）で判定すると、経済的には弱いプレイヤーが無理して
@@ -149,13 +164,14 @@ export function baseScore(w: World, playerId: string): number {
   return totalCityLevel(p) * 10 + land;
 }
 
-/** 得点。基礎の経済力に加えて、援助・世界の脅威・共同事業への貢献分も加算する。最終順位に使う。 */
+/** 得点。基礎の経済力に加えて、援助・世界の脅威・共同事業・陣営戦への貢献分も加算する。最終順位に使う。 */
 export function totalScore(w: World, playerId: string): number {
   const p = w.players[playerId];
   if (!p) return 0;
   return (
     baseScore(w, playerId) +
-    aidContributionScore(p) + threatContributionScore(p) + projectContributionScore(p)
+    aidContributionScore(p) + threatContributionScore(p) + projectContributionScore(p) +
+    factionContributionScore(p)
   );
 }
 
@@ -454,6 +470,20 @@ function currentWorldGoalType(w: World) {
 }
 
 /**
+ * 現在の世界目標の状態（表示用）: ラベル・現在値・次の到達ライン。
+ * 世界目標は種類が複数あって達成のたびに切り替わるので、表示側で
+ * 種類を知らなくてもこの1関数を呼べば正しい内容が取れるようにしてある。
+ */
+export function worldGoalProgress(w: World): { label: string; current: number; threshold: number } {
+  const type = currentWorldGoalType(w);
+  return {
+    label: type.label,
+    current: type.metric(w),
+    threshold: w.worldGoalNextThreshold ?? type.metric(w) + type.step,
+  };
+}
+
+/**
  * 世界目標（プラス版の共通目標）。脅威と違って罰は無く、みんなが普通に
  * プレイしていく中で、いろいろな世界全体の合計値が育っていくだけで、
  * 時々全員に資源が贈られる。専用のコマンドは無い、完全に受け身の仕組み。
@@ -530,6 +560,128 @@ function resolveWorldProject(w: World, rng: Rng) {
   w.log.push(
     `【事業】(${site.x},${site.y}) で「${type.name}」の建設地が見つかった！（完成すると全員に${type.rewardDesc}） ` +
       `合計${requirement}の資源が集まれば、現地（隣接地）を持つ人が着工できる。\`輸出 資源名 数\` で誰でも資源を送って協力できる。`,
+  );
+}
+
+const FACTION_BATTLE_NAMES = [
+  "覇権争い", "資源争奪戦", "威信をかけた競り合い", "陣取り合戦", "意地の張り合い", "国境紛争",
+];
+
+/** 陣営戦の勝利報酬の種類。発生のたびにランダムに決まる。 */
+const FACTION_REWARD_TYPES: { key: "score" | "resource" | "trust"; label: string }[] = [
+  { key: "score", label: "得点への貢献" },
+  { key: "resource", label: "資源" },
+  { key: "trust", label: "信用" },
+];
+
+/**
+ * 全員を陣営A・Bに振り分ける。実力（基礎点）が偏らないように、
+ * 基礎点が高い順に並べてからスネークドラフト（A→B→B→A→A→B…）で割り振る。
+ * 同点の場合の並びが常に同じにならないよう、ソート前にシャッフルしておく。
+ */
+function assignFactions(w: World, rng: Rng): Record<string, "A" | "B"> {
+  const shuffled = rng.shuffle(Object.keys(w.players));
+  const sorted = shuffled
+    .slice()
+    .sort((a, b) => baseScore(w, b) - baseScore(w, a));
+
+  const members: Record<string, "A" | "B"> = {};
+  for (let i = 0; i < sorted.length; i++) {
+    const roundEven = Math.floor(i / 2) % 2 === 0;
+    const firstOfPair = i % 2 === 0;
+    const label: "A" | "B" = roundEven === firstOfPair ? "A" : "B";
+    members[sorted[i]] = label;
+  }
+  return members;
+}
+
+/**
+ * 陣営戦。世界の脅威・共同事業とは別の、プレイヤー同士が2陣営に分かれて
+ * 競い合うイベント。参加は任意で、投入しなければ何も損しない（降りる＝
+ * ノーリスク・ノーリターン）。投入した資源は勝敗に関わらずその場で消費
+ * される（掛け捨て）。勝った陣営で実際に投入した人だけが、投入量に応じた
+ * 報酬を受け取る。
+ */
+function resolveFactionBattle(w: World, rng: Rng) {
+  if (w.faction) {
+    const battle = w.faction;
+    if (w.turn < battle.deadlineTurn) return; // まだ決着ターンではない
+
+    if (battle.pooled.A === battle.pooled.B) {
+      w.log.push(
+        `【陣営戦】「${battle.name}」は陣営A・Bともに投入量${battle.pooled.A}で引き分けに終わった。投入した資源は戻らない。`,
+      );
+      w.faction = null;
+      return;
+    }
+
+    const winnerLabel: "A" | "B" = battle.pooled.A > battle.pooled.B ? "A" : "B";
+    const winnerIds = Object.entries(battle.members)
+      .filter(([, label]) => label === winnerLabel)
+      .map(([pid]) => pid)
+      .filter((pid) => (battle.contributions[pid] ?? 0) > 0);
+
+    const results: string[] = [];
+    for (const pid of winnerIds) {
+      const player = w.players[pid];
+      if (!player) continue;
+      const amount = battle.contributions[pid] ?? 0;
+      player.stats!.factionBattlesWon += 1;
+
+      if (battle.rewardKind === "score") {
+        player.stats!.totalFactionWon += amount;
+        results.push(`${pid}(投入${amount}が得点に)`);
+      } else if (battle.rewardKind === "resource") {
+        const gained = Math.round(amount * CONFIG.factionResourceRate);
+        const each = Math.max(0, Math.round(gained / RESOURCES.length));
+        for (const r of RESOURCES) player.stock[r] += each;
+        results.push(`${pid}(資源各+${each})`);
+      } else {
+        const gained = Math.min(CONFIG.factionTrustCap, Math.round(amount * CONFIG.factionTrustRate));
+        player.trust = Math.min(CONFIG.trustMax, player.trust + gained);
+        results.push(`${pid}(信用+${gained})`);
+      }
+    }
+
+    w.log.push(
+      `【陣営戦】「${battle.name}」は陣営${winnerLabel}の勝利（${battle.pooled.A} 対 ${battle.pooled.B}）！ ` +
+        `勝った陣営で投入していた人には${battle.rewardDesc}が贈られた: ` +
+        `${results.length > 0 ? results.join("、") : "（投入していた人がいなかった）"}。`,
+    );
+    w.faction = null;
+    return;
+  }
+
+  if (rng.next() >= CONFIG.factionChancePerTurn) return;
+
+  const ids = Object.keys(w.players);
+  if (ids.length < 2) return; // 2人未満では陣営が組めない
+
+  const members = assignFactions(w, rng);
+  const name = rng.pick(FACTION_BATTLE_NAMES);
+  const type = rng.pick(FACTION_REWARD_TYPES);
+
+  w.faction = {
+    id: `F${w.turn}`,
+    name,
+    spawnedAt: w.turn,
+    deadlineTurn: w.turn + CONFIG.factionDeadlineTurns,
+    rewardKind: type.key,
+    rewardDesc: type.label,
+    members,
+    pooled: { A: 0, B: 0 },
+    contributions: {},
+  };
+
+  const teamA = Object.entries(members).filter(([, l]) => l === "A").map(([pid]) => pid);
+  const teamB = Object.entries(members).filter(([, l]) => l === "B").map(([pid]) => pid);
+
+  w.log.push(
+    `【陣営戦】世界が陣営A・Bに分かれて競い合う「${name}」が始まった！ ` +
+      `陣営A: ${teamA.join("、")} / 陣営B: ${teamB.join("、")}。` +
+      `${CONFIG.factionDeadlineTurns}ターン以内に、より多く資源を投入した陣営の勝ち。` +
+      `\`賭ける 資源名 数\` で投入できる（勝っても負けても投入した資源は戻らない。投入しなければノーリスク）。` +
+      `勝った陣営で投入していた人には、投入量に応じて${type.label}が贈られる。`,
   );
 }
 
@@ -699,6 +851,7 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "export": doExport(w, p, cmd); break;
       case "commence": doCommence(w, p); break;
       case "post": doPost(w, p, cmd); break;
+      case "wager": doWager(w, p, cmd); break;
       case "pass": p.stats!.passCount += 1; break;
     }
   }
@@ -1341,6 +1494,37 @@ function doCommence(w: World, p: Player): boolean {
 /** 掲示板に短いメッセージを投稿する。全員に共有される。手番は消費しない。 */
 function doPost(w: World, p: Player, cmd: Extract<Command, { type: "post" }>) {
   w.log.push(`【掲示板】${p.id}: ${cmd.message}`);
+}
+
+/**
+ * 「陣営戦」に資源を投入する（賭ける）。陣営戦が発生している間、自分の
+ * 所属する陣営に何度でも投入できる（手番は消費しない）。投入した資源は
+ * 勝敗に関わらずその場で消費される（掛け捨て）。投入しなければ何も
+ * 損しない（降りる＝ノーリスク・ノーリターン）。
+ */
+function doWager(w: World, p: Player, cmd: Extract<Command, { type: "wager" }>) {
+  const battle = w.faction;
+  if (!battle) {
+    w.log.push(`${p.id} は陣営戦に賭けようとしたが、今は陣営戦が発生していない。`);
+    return;
+  }
+  const label = battle.members[p.id];
+  if (!label) {
+    w.log.push(`${p.id} は陣営戦に賭けようとしたが、どちらの陣営にも属していない。`);
+    return;
+  }
+  if (p.stock[cmd.resource] < cmd.amount) {
+    w.log.push(`${p.id} は資源が足りず陣営戦に賭けられなかった。`);
+    return;
+  }
+  p.stock[cmd.resource] -= cmd.amount;
+  battle.pooled[label] += cmd.amount;
+  battle.contributions[p.id] = (battle.contributions[p.id] ?? 0) + cmd.amount;
+  p.stats!.totalFactionWagered += cmd.amount;
+  w.log.push(
+    `【陣営戦】${p.id}（陣営${label}）が「${battle.name}」に ${RESOURCE_JA[cmd.resource]}を${cmd.amount}投入した` +
+      `（陣営A ${battle.pooled.A} 対 陣営B ${battle.pooled.B}）。`,
+  );
 }
 
 // --------------------------------------------------------------- 称号

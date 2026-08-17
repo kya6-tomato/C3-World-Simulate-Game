@@ -31,6 +31,7 @@ const TYPE_JA: Record<string, Command["type"]> = {
   輸出: "export",
   着工: "commence",
   掲示: "post",
+  賭ける: "wager",
 };
 
 const RESOURCE_JA_TO_EN: Record<string, Resource> = {
@@ -60,6 +61,7 @@ const USAGE: Record<string, string> = {
   輸出: "輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます",
   着工: "着工（引数なし）。共同事業の資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます",
   掲示: `掲示 メッセージ（例: 掲示 灯台まであと少し、資材ください）。${CONFIG.postMaxLength}文字まで`,
+  賭ける: "賭ける 資源名 数（例: 賭ける 資材 20）。陣営戦が発生している間だけ使えます",
   開拓:
     "開拓（自動選択） / 開拓 資源名（その資源を優先） / 開拓 x y（マスを指定） / " +
     "開拓 x y 食料 数 資材 数 知識 数（マスと支払いを両方指定。例: 開拓 10 8 食料 2 資材 8 知識 10）",
@@ -117,7 +119,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
   if (!kind) {
     return {
       command: null,
-      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助/貢献/輸出/着工/掲示 のどれかを先頭に書いてください）。`,
+      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助/貢献/輸出/着工/掲示/賭ける のどれかを先頭に書いてください）。`,
     };
   }
 
@@ -224,7 +226,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
     return { command: { type: "aid", player, to, resource, amount }, error: null };
   }
 
-  if (kind === "contribute" || kind === "export") {
+  if (kind === "contribute" || kind === "export" || kind === "wager") {
     const usage = `書き方: ${USAGE[word]}`;
     const resource = RESOURCE_JA_TO_EN[tokens[1]];
     if (!resource) {

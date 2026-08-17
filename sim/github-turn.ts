@@ -4,7 +4,7 @@ import { existsSync as fileExists } from "node:fs";
 if (fileExists(".env")) process.loadEnvFile(".env");
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { resolveTurn, totalScore, aidContributionScore, threatContributionScore, projectContributionScore } from "../src/rules.ts";
+import { resolveTurn, totalScore, aidContributionScore, threatContributionScore, projectContributionScore, factionContributionScore } from "../src/rules.ts";
 import { renderMapSvg } from "../src/render.ts";
 import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
@@ -125,7 +125,7 @@ async function main() {
   // 2人以上のプレイヤーが関わる出来事（取引・土地のやり取り・奪取など）は、
   // 当事者だけでなく全員に共有する。市場の動きが見えないと交渉相手を探しにくいため。
   // 災害は1人にしか起きない出来事だが、援助を呼びかけるために全員に共有する。
-  // 世界の脅威・共同事業・世界目標・掲示板は全員に関わる出来事なので、すべて共有する。
+  // 世界の脅威・共同事業・世界目標・陣営戦・掲示板は全員に関わる出来事なので、すべて共有する。
   const interactiveLines = next.log.filter(
     (l) =>
       l.includes("【災害】") ||
@@ -133,6 +133,7 @@ async function main() {
       l.includes("【脅威】") ||
       l.includes("【事業】") ||
       l.includes("【世界目標】") ||
+      l.includes("【陣営戦】") ||
       l.includes("【掲示板】") ||
       ids.filter((pid) => l.includes(pid)).length >= 2,
   );
@@ -178,13 +179,15 @@ async function main() {
       const aidScore = aidContributionScore(p);
       const threatScore = threatContributionScore(p);
       const projectScore = projectContributionScore(p);
+      const factionScore = factionContributionScore(p);
       const achLine = achievementSummaryLine(next, id);
       lines.push(
         "",
         "**今の状況**",
         `都市 Lv${cityLv} ・ 領土 ${land}マス ・ 信用 ${p.trust} ・ 得点 ${score}` +
           `（都市Lv×10＋領土${aidScore > 0 ? `＋援助貢献${aidScore}` : ""}` +
-          `${threatScore > 0 ? `＋脅威貢献${threatScore}` : ""}${projectScore > 0 ? `＋事業貢献${projectScore}` : ""}）`,
+          `${threatScore > 0 ? `＋脅威貢献${threatScore}` : ""}${projectScore > 0 ? `＋事業貢献${projectScore}` : ""}` +
+          `${factionScore > 0 ? `＋陣営戦貢献${factionScore}` : ""}）`,
         `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
         ...(achLine ? [achLine] : []),
       );

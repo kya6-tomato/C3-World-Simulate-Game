@@ -10,11 +10,10 @@ import {
   isUnderdog,
   seizeCostFor,
   territoryDistance,
-  totalCityLevel,
-  totalScore,
   totalStock,
   underdogCostDiscount,
   underdogTier,
+  worldGoalProgress,
 } from "../src/rules.ts";
 import { tileAt, neighbors } from "../src/worldgen.ts";
 
@@ -363,20 +362,38 @@ export function projectHint(w: World, playerId: string): string | null {
 }
 
 /**
- * 世界目標（世界全体の都市レベル合計）の、次の到達ラインまでの進捗を1行にする。
- * 罰の無いプラスの目標なので、専用コマンドは無く常に進行中。
+ * 世界目標（種類は複数あり、達成のたびに切り替わる）の、次の到達ラインまでの
+ * 進捗を1行にする。罰の無いプラスの目標なので、専用コマンドは無く常に進行中。
  */
 export function worldGoalHint(w: World): string {
-  const totalWorldLevel = Object.values(w.players).reduce((s, p) => s + totalCityLevel(p), 0);
-  const threshold = w.worldGoalNextThreshold ?? CONFIG.worldGoalStep;
+  const { label, current, threshold } = worldGoalProgress(w);
   return (
-    `世界全体の都市レベル合計 ${totalWorldLevel}/${threshold} に到達すると、全員に資源が贈られます` +
-    `（誰かが建設すれば自然に進みます。専用の操作は不要です）。`
+    `${label} ${current}/${threshold} に到達すると、全員に資源が贈られます` +
+    `（みんなが普通にプレイしているだけで自然に進みます。専用の操作は不要です）。`
   );
 }
 
 /**
- * 今起きている世界規模のイベント（世界の脅威・共同事業・世界目標）を、
+ * 進行中の「陣営戦」の状況（自分の陣営・投入状況・締切）を1行にする。
+ * 発生していない、または自分がどちらの陣営にも属していなければ null。
+ */
+export function factionHint(w: World, playerId: string): string | null {
+  if (!w.faction) return null;
+  const f = w.faction;
+  const label = f.members[playerId];
+  if (!label) return null;
+  const left = f.deadlineTurn - w.turn;
+  const deadlineLabel = left > 0 ? `あと${left}ターンで決着` : "決着間近";
+  const myWager = f.contributions[playerId] ?? 0;
+  return (
+    `「${f.name}」進行中: あなたは陣営${label}（陣営A ${f.pooled.A} 対 陣営B ${f.pooled.B}・${deadlineLabel}）。` +
+    `あなたの投入量 ${myWager}。` +
+    `\`賭ける 資源名 数\` で投入できます（投入しなければノーリスク。勝った陣営の投入者には${f.rewardDesc}が贈られます）。`
+  );
+}
+
+/**
+ * 今起きている世界規模のイベント（世界の脅威・共同事業・世界目標・陣営戦）を、
  * まとめて一覧にする。返信の「現在のイベント」欄に使う。
  */
 export function worldEventsHint(w: World, playerId: string): string[] {
@@ -386,6 +403,8 @@ export function worldEventsHint(w: World, playerId: string): string[] {
   const project = projectHint(w, playerId);
   if (project) lines.push(`【共同事業】${project}`);
   lines.push(`【世界目標】${worldGoalHint(w)}`);
+  const faction = factionHint(w, playerId);
+  if (faction) lines.push(`【陣営戦】${faction}`);
   return lines;
 }
 

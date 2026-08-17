@@ -59,6 +59,12 @@ export interface PlayerStats {
   totalExported: number;
   /** 自分が着工して完成させた「共同事業」の数。 */
   projectsBuilt: number;
+  /** これまでに「陣営戦」へ投入した資源の合計量（勝敗に関わらず）。 */
+  totalFactionWagered: number;
+  /** これまでに「陣営戦」で勝った陣営に投入していた資源の合計量。得点型の報酬のときだけ、得点への貢献度の計算に使う。 */
+  totalFactionWon: number;
+  /** 自分が所属した陣営が勝利した「陣営戦」の数（投入していた場合のみ）。 */
+  factionBattlesWon: number;
 }
 
 /** 称号を獲得すると付く、永続的な小さいバフの合計。 */
@@ -192,6 +198,31 @@ export interface WorldProject {
   ready: boolean;
 }
 
+/**
+ * 陣営戦。全員を陣営A・Bに自動で振り分け（基礎点が均等になるように）、
+ * 期間中に多く資源を投入した陣営が勝つ。投入は任意（降りてもいい）で、
+ * 投入した資源は勝敗に関わらずその場で消費される。勝った陣営で実際に
+ * 投入した人だけが、投入量に応じた報酬を受け取る。
+ */
+export interface WorldFactionBattle {
+  id: string;
+  /** 見た目の名前（例: 「覇権争い」）。ゲーム的な意味はない、雰囲気づけ。 */
+  name: string;
+  spawnedAt: number;
+  /** このターンに決着する。 */
+  deadlineTurn: number;
+  /** 勝った陣営の報酬の種類。 */
+  rewardKind: "score" | "resource" | "trust";
+  /** 報酬の説明（ログ・表示用）。 */
+  rewardDesc: string;
+  /** プレイヤーIDごとの所属陣営。 */
+  members: Record<string, "A" | "B">;
+  /** 陣営ごとの、これまでの投入量の合計。 */
+  pooled: { A: number; B: number };
+  /** プレイヤーごとの投入量（自分の陣営への合計）。 */
+  contributions: Record<string, number>;
+}
+
 /** 世界まるごと。このオブジェクトがそのまま state.json になる。 */
 export interface World {
   turn: number;
@@ -205,6 +236,8 @@ export interface World {
   threat?: WorldThreat | null;
   /** 現在進行中の「共同事業」。無ければ null。 */
   project?: WorldProject | null;
+  /** 現在進行中の「陣営戦」。無ければ null。 */
+  faction?: WorldFactionBattle | null;
   /** 現在の世界目標の種類（例: "land"）。達成すると別の種類にランダムで切り替わる。 */
   worldGoalType?: string;
   /** 現在の世界目標の、次の到達ライン。 */
@@ -305,6 +338,13 @@ export type Command =
       type: "post";
       player: string;
       message: string;
+    }
+  | {
+      /** 「陣営戦」に資源を投入する（賭ける）。手番を消費しない。降りる（投入しない）場合は何もしなくていい。 */
+      type: "wager";
+      player: string;
+      resource: Resource;
+      amount: number;
     };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];

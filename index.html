@@ -10,6 +10,7 @@
     --ink: #3D3D3A; --ink-soft: #74716A; --line: #E2E0D8;
     --food: #C0DD97; --material: #FAC775; --knowledge: #CECBF6; --river: #8FB8D9;
     --active: #1D9E75; --warn: #E24B4A; --accent: #D85A30; --accent-soft: #E9C2AE;
+    --faction: #7B5FC7; --faction-a: #4C6FE0; --faction-b: #C2478A;
     --shadow: 0 1px 2px rgba(61,53,40,0.06), 0 6px 20px -8px rgba(61,53,40,0.18);
   }
   @media (prefers-color-scheme: dark) {
@@ -18,6 +19,7 @@
       --ink: #ECE8DF; --ink-soft: #A39D8F; --line: #362F24;
       --food: #8FBF66; --material: #D99A3C; --knowledge: #A79FE0; --river: #5C93C4;
       --active: #2BBE8E; --warn: #FF6B5E; --accent: #E8834F; --accent-soft: #4A2E1E;
+      --faction: #A98EE8; --faction-a: #7C97F0; --faction-b: #E37BB3;
       --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 28px -10px rgba(0,0,0,0.55);
     }
   }
@@ -110,6 +112,25 @@
   .goal-banner .threat-bar-fill { background: var(--accent); }
   .project-ready-badge {
     display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--active);
+    padding: 2px 9px; border-radius: 100px; margin-left: 8px;
+  }
+
+  .faction-banner { border-color: var(--faction); }
+  .faction-banner h3::before { background: var(--faction); }
+  .faction-vs-bar {
+    display: flex; height: 10px; border-radius: 100px; overflow: hidden;
+    border: 1px solid var(--line); background: var(--paper-sunken);
+  }
+  .faction-vs-bar .seg-a { background: var(--faction-a); }
+  .faction-vs-bar .seg-b { background: var(--faction-b); }
+  .faction-teams {
+    display: flex; justify-content: space-between; margin-top: 6px;
+    font-size: 12.5px; font-family: ui-monospace, monospace;
+  }
+  .faction-team-a { color: var(--faction-a); font-weight: 700; }
+  .faction-team-b { color: var(--faction-b); font-weight: 700; }
+  .faction-mine-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; color: #fff; background: var(--faction);
     padding: 2px 9px; border-radius: 100px; margin-left: 8px;
   }
 
@@ -250,6 +271,11 @@
       <div id="goal-body"></div>
     </div>
 
+    <div class="panel faction-banner" id="faction-banner" style="display:none;">
+      <h3>陣営戦</h3>
+      <div id="faction-body"></div>
+    </div>
+
     <div class="contracts-row">
       <div class="panel">
         <h3>進行中の交渉</h3>
@@ -362,6 +388,10 @@
   var AID_SCORE_CAP = 40;
   var THREAT_SCORE_DIVISOR = 4;
   var THREAT_SCORE_CAP = 30;
+  var PROJECT_SCORE_DIVISOR = 4;
+  var PROJECT_SCORE_CAP = 30;
+  var FACTION_SCORE_DIVISOR = 3;
+  var FACTION_SCORE_CAP = 30;
   function aidContributionScore(p) {
     var given = (p.stats && p.stats.totalAidGiven) || 0;
     return Math.min(AID_SCORE_CAP, Math.floor(given / AID_SCORE_DIVISOR));
@@ -370,12 +400,21 @@
     var given = (p.stats && p.stats.totalThreatContribution) || 0;
     return Math.min(THREAT_SCORE_CAP, Math.floor(given / THREAT_SCORE_DIVISOR));
   }
+  function projectContributionScore(p) {
+    var given = (p.stats && p.stats.totalExported) || 0;
+    return Math.min(PROJECT_SCORE_CAP, Math.floor(given / PROJECT_SCORE_DIVISOR));
+  }
+  function factionContributionScore(p) {
+    var won = (p.stats && p.stats.totalFactionWon) || 0;
+    return Math.min(FACTION_SCORE_CAP, Math.floor(won / FACTION_SCORE_DIVISOR));
+  }
   function score(world, playerId) {
     var p = world.players[playerId];
     if (!p) return 0;
     var levels = p.cities.reduce(function (s, c) { return s + c.level; }, 0);
     var land = world.tiles.filter(function (t) { return t.owner === playerId; }).length;
-    return levels * 10 + land + aidContributionScore(p) + threatContributionScore(p);
+    return levels * 10 + land + aidContributionScore(p) + threatContributionScore(p) +
+      projectContributionScore(p) + factionContributionScore(p);
   }
 
   function nextTurnMs() {
@@ -548,19 +587,76 @@
       projectBanner.style.display = "none";
     }
 
-    // 世界目標（罰の無いプラスの目標。常に進行中で、専用コマンドは無い）
-    var WORLD_GOAL_STEP = 40;
-    var totalWorldLevel = Object.keys(state.players).reduce(function (s, id) {
-      return s + state.players[id].cities.reduce(function (s2, c) { return s2 + c.level; }, 0);
-    }, 0);
-    var goalThreshold = state.worldGoalNextThreshold || WORLD_GOAL_STEP;
-    var goalPct = Math.min(100, Math.round((totalWorldLevel / goalThreshold) * 100));
+    // 世界目標（罰の無いプラスの目標。種類は複数あって達成のたびに切り替わる。
+    // src/rules.ts の WORLD_GOAL_TYPES と同じ内容をここでも持つ必要がある
+    // （サーバー側の型をそのままクライアントに渡す仕組みが無いため）。
+    var GOAL_TYPES = {
+      cityLevel: {
+        label: "世界全体の都市レベル合計",
+        step: 40,
+        metric: function (s) {
+          return Object.keys(s.players).reduce(function (sum, id) {
+            return sum + s.players[id].cities.reduce(function (s2, c) { return s2 + c.level; }, 0);
+          }, 0);
+        },
+      },
+      land: {
+        label: "世界全体の領土合計",
+        step: 60,
+        metric: function (s) { return s.tiles.filter(function (t) { return t.owner !== null; }).length; },
+      },
+      trades: {
+        label: "世界全体の取引成立回数の合計",
+        step: 15,
+        metric: function (s) {
+          return Object.keys(s.players).reduce(function (sum, id) {
+            return sum + ((s.players[id].stats && s.players[id].stats.tradeExecutions) || 0);
+          }, 0);
+        },
+      },
+      harvests: {
+        label: "世界全体の資源回収の合計回数",
+        step: 15,
+        metric: function (s) {
+          return Object.keys(s.players).reduce(function (sum, id) {
+            return sum + ((s.players[id].stats && s.players[id].stats.harvestsDone) || 0);
+          }, 0);
+        },
+      },
+    };
+    var currentGoalType = GOAL_TYPES[state.worldGoalType] || GOAL_TYPES.cityLevel;
+    var goalCurrent = currentGoalType.metric(state);
+    var goalThreshold = state.worldGoalNextThreshold || (goalCurrent + currentGoalType.step);
+    var goalPct = Math.min(100, Math.round((goalCurrent / goalThreshold) * 100));
     document.getElementById("goal-body").innerHTML =
-      '<div class="threat-top"><span class="threat-name">世界全体の都市レベル合計</span>' +
+      '<div class="threat-top"><span class="threat-name">' + esc(currentGoalType.label) + '</span>' +
         '<span class="threat-deadline">次の到達で全員に資源</span></div>' +
       '<div class="threat-bar-track"><div class="threat-bar-fill" style="width:' + goalPct + '%"></div></div>' +
-      '<div class="threat-progress-label">' + totalWorldLevel + ' / ' + goalThreshold + '（' + goalPct + '%）</div>' +
-      '<div class="threat-hint">誰かが都市を発展させるたびに自然と進みます。専用の操作は不要です。</div>';
+      '<div class="threat-progress-label">' + goalCurrent + ' / ' + goalThreshold + '（' + goalPct + '%）</div>' +
+      '<div class="threat-hint">みんなが普通にプレイしているだけで自然と進みます。専用の操作は不要です。</div>';
+
+    // 陣営戦（発生中なら、陣営A・Bの投入量を並べて表示する）
+    var factionBanner = document.getElementById("faction-banner");
+    if (state.faction) {
+      var f = state.faction;
+      var fTotal = f.pooled.A + f.pooled.B;
+      var fPctA = fTotal > 0 ? Math.round((f.pooled.A / fTotal) * 100) : 50;
+      var fLeft = f.deadlineTurn - state.turn;
+      var fDeadlineLabel = fLeft > 0 ? "あと" + fLeft + "ターンで決着" : "決着間近";
+      document.getElementById("faction-body").innerHTML =
+        '<div class="threat-top"><span class="threat-name">' + esc(f.name) + '</span>' +
+          '<span class="threat-deadline">' + fDeadlineLabel + '</span></div>' +
+        '<div class="faction-vs-bar"><div class="seg-a" style="width:' + fPctA + '%"></div>' +
+          '<div class="seg-b" style="width:' + (100 - fPctA) + '%"></div></div>' +
+        '<div class="faction-teams"><span class="faction-team-a">陣営A ' + f.pooled.A + '</span>' +
+          '<span class="faction-team-b">陣営B ' + f.pooled.B + '</span></div>' +
+        '<div class="threat-hint">全員が陣営A・Bに分かれ、より多く資源を投入した陣営が勝ちます。' +
+          '<code>賭ける 資源名 数</code> で投入できます（投入しなければノーリスク。掛け捨てなので勝敗に関わらず戻りません）。' +
+          '勝った陣営の投入者には、投入量に応じて' + esc(f.rewardDesc) + 'が贈られます。</div>';
+      factionBanner.style.display = "";
+    } else {
+      factionBanner.style.display = "none";
+    }
 
     // 掲示板（【掲示板】タグの付いたログを、新しい順に拾い集める）
     var boardPosts = [];
