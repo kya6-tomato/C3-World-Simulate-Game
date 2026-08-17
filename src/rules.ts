@@ -1304,10 +1304,14 @@ function doCommence(w: World, p: Player): boolean {
   for (const other of Object.values(w.players)) {
     other.achievementBonus![project.rewardKind] += project.rewardAmount;
   }
+  // 着工は本番の行動を1つ使う行為なので、実行した本人にはその見返りとして
+  // 資源を追加で贈る（全員がもらう永続効果とは別枠）。
+  for (const r of RESOURCES) p.stock[r] += CONFIG.projectCommenceBonus;
 
   const contributorIds = Object.keys(project.contributions);
   w.log.push(
-    `【事業】${p.id} が「${project.name}」を着工し、完成させた！ 全員に永続的に${project.rewardDesc}された。` +
+    `【事業】${p.id} が「${project.name}」を着工し、完成させた！（着工した本人には資源が各+${CONFIG.projectCommenceBonus}贈られた） ` +
+      `全員に永続的に${project.rewardDesc}された。` +
       `資源を出して手伝った人: ${contributorIds.length > 0 ? contributorIds.join("、") : "（いなかった）"}。`,
   );
   w.project = null;
