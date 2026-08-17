@@ -5,7 +5,7 @@
 <filter id="grain" x="0%" y="0%" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.22  0 0 0 0 0.18  0 0 0 0.05 0"/></filter>
 </defs>
 <rect width="904" height="518" fill="url(#bg)"/>
-<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 1</text>
+<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 2</text>
 <rect x="41.6" y="65.6" width="18.8" height="18.8" rx="1.5" fill="#ebb663"/>
 <path d="M 44.41608 78.2138 L 48.616080000000004 69.7138 L 51.01608 73.5138 L 53.41608 70.41380000000001 L 56.41608 78.2138 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 47.51608 71.7138 L 48.616080000000004 69.7138 L 49.71608 71.8138 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -222,6 +222,7 @@
 <path d="M 150 120 Q 159 117.29334 168 120" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="167.6" y="101.6" width="18.8" height="18.8" rx="1.5" fill="#ecb865"/>
 <path d="M 168 120 Q 177 120.91266 186 120" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="169.5" y="103.5" width="15" height="15" rx="1" fill="none" stroke="#b12f2f" stroke-width="1.5" opacity="0.85"/>
 <rect x="185.6" y="101.6" width="18.8" height="18.8" rx="1.5" fill="#ecb764"/>
 <path d="M 189.9363 115.96340000000001 L 194.13629999999998 107.46340000000001 L 196.53629999999998 111.2634 L 198.9363 108.16340000000001 L 201.9363 115.96340000000001 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 193.03629999999998 109.46340000000001 L 194.13629999999998 107.46340000000001 L 195.2363 109.5634 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -340,6 +341,7 @@
 <path d="M 262.5765 134.88506 L 266.7765 126.38506000000001 L 269.17650000000003 130.18506000000002 L 271.5765 127.08506000000001 L 274.5765 134.88506 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 265.67650000000003 128.38506 L 266.7765 126.38506000000001 L 267.8765 128.48506 Z" fill="#FFFFFF" opacity="0.75"/>
 <rect x="275.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#edb966"/>
+<rect x="277.5" y="121.5" width="15" height="15" rx="1" fill="none" stroke="#6d3286" stroke-width="1.5" opacity="0.85"/>
 <rect x="293.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#edb865"/>
 <path d="M 298.09794 134.86238 L 302.29794 126.36238 L 304.69794 130.16238 L 307.09794 127.06238 L 310.09794 134.86238 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 301.19794 128.36238 L 302.29794 126.36238 L 303.39794 128.46238 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -548,6 +550,7 @@
 <rect x="239.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#ecb764"/>
 <path d="M 245.47248 166.9586 L 249.67247999999998 158.4586 L 252.07247999999998 162.2586 L 254.47248 159.15859999999998 L 257.47248 166.9586 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 248.57247999999998 160.4586 L 249.67247999999998 158.4586 L 250.77248 160.55859999999998 Z" fill="#FFFFFF" opacity="0.75"/>
+<rect x="241.5" y="157.5" width="15" height="15" rx="1" fill="none" stroke="#b1972f" stroke-width="1.5" opacity="0.85"/>
 <rect x="257.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#ecb865"/>
 <path d="M 259.96872 168.78014 L 264.16872 160.28014 L 266.56872000000004 164.08014 L 268.96872 160.98013999999998 L 271.96872 168.78014 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 263.06872000000004 162.28014 L 264.16872 160.28014 L 265.26872000000003 162.38013999999998 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -986,6 +989,7 @@
 <path d="M 603.9735000000001 235.50078000000002 L 606.3735 230.70078 L 608.7735 235.50078000000002 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <rect x="617.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <path d="M 618 246 Q 627 244.7055 636 246" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="619.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#3eafcc" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <rect x="644.89432" y="235.17174" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 644.1943200000001 235.17174 L 646.59432 230.37174 L 648.99432 235.17174 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1030,6 +1034,7 @@
 <path d="M 225.63502 251.25738 L 226.73502 249.25738 L 227.83502000000001 251.35738 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 240 246 Q 238.82466 255 240 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 222 264 Q 231 262.94982 240 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="223.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#863253" stroke-width="1.5" opacity="0.85"/>
 <rect x="239.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#dbd9d0"/>
 <ellipse cx="246.90056" cy="253.6381" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="250.10056" cy="252.7381" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
@@ -1264,6 +1269,7 @@
 <path d="M 445.06572 287.98596000000003 L 447.46572 283.18596 L 449.86571999999995 287.98596000000003 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <rect x="455.6" y="281.6" width="18.8" height="18.8" rx="1.5" fill="#bdb8eb"/>
 <path d="M 456 300 Q 465 302.94192 474 300" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="457.5" y="283.5" width="15" height="15" rx="1" fill="none" stroke="#90bd4c" stroke-width="1.5" opacity="0.85"/>
 <rect x="473.6" y="281.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <path d="M 492 282 Q 490.48926 291 492 300" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="491.6" y="281.6" width="18.8" height="18.8" rx="1.5" fill="#dad7ce"/>
@@ -1882,6 +1888,7 @@
 <rect x="77.6" y="407.6" width="18.8" height="18.8" rx="1.5" fill="#b0d087"/>
 <circle cx="86.64024" cy="412.42064" r="2.9" fill="#93B96A" stroke="#5B7A3F" stroke-width="0.4" opacity="0.92"/>
 <rect x="86.04024000000001" y="414.02064" width="1.2" height="2.4" fill="#6B4B2E" opacity="0.85"/>
+<rect x="79.5" y="409.5" width="15" height="15" rx="1" fill="none" stroke="#3ecc3e" stroke-width="1.5" opacity="0.85"/>
 <rect x="95.6" y="407.6" width="18.8" height="18.8" rx="1.5" fill="#adce84"/>
 <circle cx="105.38694" cy="413.76914" r="2.9" fill="#93B96A" stroke="#5B7A3F" stroke-width="0.4" opacity="0.92"/>
 <rect x="104.78694" y="415.36914" width="1.2" height="2.4" fill="#6B4B2E" opacity="0.85"/>
@@ -2123,6 +2130,7 @@
 <path d="M 276 444 Q 277.22874 453 276 462" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 258 462 Q 267 464.502 276 462" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="275.6" y="443.6" width="18.8" height="18.8" rx="1.5" fill="#aece85"/>
+<rect x="277.5" y="445.5" width="15" height="15" rx="1" fill="none" stroke="#328653" stroke-width="1.5" opacity="0.85"/>
 <rect x="293.6" y="443.6" width="18.8" height="18.8" rx="1.5" fill="#aece85"/>
 <circle cx="305.66496" cy="451.11325999999997" r="2.9" fill="#93B96A" stroke="#5B7A3F" stroke-width="0.4" opacity="0.92"/>
 <rect x="305.06496" y="452.71326" width="1.2" height="2.4" fill="#6B4B2E" opacity="0.85"/>
@@ -2277,6 +2285,7 @@
 <rect x="617.6" y="461.6" width="18.8" height="18.8" rx="1.5" fill="#bdb8ea"/>
 <rect x="625.07218" y="469.76484" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 624.3721800000001 469.76484 L 626.77218 464.96484 L 629.17218 469.76484 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
+<rect x="619.5" y="463.5" width="15" height="15" rx="1" fill="none" stroke="#3e3ecc" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="461.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <rect x="641.2950999999999" y="468.94038" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 640.5951 468.94038 L 642.9951 464.14038 L 645.3951 468.94038 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -2510,15 +2519,15 @@
 <circle cx="684" cy="270" r="6" fill="#865c32"/>
 <text x="698" y="274" font-size="12" fill="#3D3D3A">shinya · Lv2 · 領土2 · 信用100</text>
 <circle cx="684" cy="290" r="6" fill="#b12f2f"/>
-<text x="698" y="294" font-size="12" fill="#3D3D3A">keitan · Lv1 · 領土3 · 信用100</text>
+<text x="698" y="294" font-size="12" fill="#3D3D3A">keitan · Lv1 · 領土4 · 信用100</text>
 <circle cx="684" cy="310" r="6" fill="#3ecc3e"/>
-<text x="698" y="314" font-size="12" fill="#3D3D3A">Zomba · Lv1 · 領土3 · 信用100</text>
+<text x="698" y="314" font-size="12" fill="#3D3D3A">Zomba · Lv1 · 領土4 · 信用100</text>
 <circle cx="684" cy="330" r="6" fill="#3e3ecc"/>
-<text x="698" y="334" font-size="12" fill="#3D3D3A">saku · Lv1 · 領土3 · 信用100</text>
+<text x="698" y="334" font-size="12" fill="#3D3D3A">saku · Lv1 · 領土4 · 信用100</text>
 <circle cx="684" cy="350" r="6" fill="#3eafcc"/>
-<text x="698" y="354" font-size="12" fill="#3D3D3A">SAN · Lv1 · 領土3 · 信用100</text>
+<text x="698" y="354" font-size="12" fill="#3D3D3A">SAN · Lv1 · 領土4 · 信用100</text>
 <circle cx="684" cy="370" r="6" fill="#b1972f"/>
-<text x="698" y="374" font-size="12" fill="#3D3D3A">getey · Lv1 · 領土3 · 信用100</text>
+<text x="698" y="374" font-size="12" fill="#3D3D3A">getey · Lv1 · 領土4 · 信用100</text>
 <g>
 <rect class="tile-hit" data-x="0" data-y="0" x="42" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
 <rect class="tile-hit" data-x="1" data-y="0" x="60" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>

@@ -1,5 +1,5 @@
 {
-  "turn": 1,
+  "turn": 2,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -457,7 +457,7 @@
       "x": 7,
       "y": 2,
       "kind": "material",
-      "owner": null
+      "owner": "keitan"
     },
     {
       "x": 8,
@@ -697,7 +697,7 @@
       "x": 13,
       "y": 3,
       "kind": "material",
-      "owner": null
+      "owner": "kya6"
     },
     {
       "x": 14,
@@ -1093,7 +1093,7 @@
       "x": 11,
       "y": 5,
       "kind": "material",
-      "owner": null
+      "owner": "getey"
     },
     {
       "x": 12,
@@ -2035,7 +2035,7 @@
       "x": 32,
       "y": 9,
       "kind": "knowledge",
-      "owner": null
+      "owner": "SAN"
     },
     {
       "x": 33,
@@ -2107,7 +2107,7 @@
       "x": 10,
       "y": 10,
       "kind": "material",
-      "owner": null
+      "owner": "鍵原∀原鍵"
     },
     {
       "x": 11,
@@ -2593,7 +2593,7 @@
       "x": 23,
       "y": 12,
       "kind": "knowledge",
-      "owner": null
+      "owner": "zama"
     },
     {
       "x": 24,
@@ -3895,7 +3895,7 @@
       "x": 2,
       "y": 19,
       "kind": "food",
-      "owner": null
+      "owner": "Zomba"
     },
     {
       "x": 3,
@@ -4369,7 +4369,7 @@
       "x": 13,
       "y": 21,
       "kind": "food",
-      "owner": null
+      "owner": "CoffeeDa"
     },
     {
       "x": 14,
@@ -4687,7 +4687,7 @@
       "x": 32,
       "y": 22,
       "kind": "knowledge",
-      "owner": null
+      "owner": "saku"
     },
     {
       "x": 33,
@@ -4911,12 +4911,12 @@
         }
       ],
       "stock": {
-        "food": 21,
-        "material": 8,
+        "food": 18,
+        "material": 0,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "Zomba": {
       "id": "Zomba",
@@ -4928,8 +4928,8 @@
         }
       ],
       "stock": {
-        "food": 9,
-        "material": 20,
+        "food": 0,
+        "material": 18,
         "knowledge": 10
       },
       "trust": 100,
@@ -4945,9 +4945,9 @@
         }
       ],
       "stock": {
-        "food": 19,
-        "material": 20,
-        "knowledge": 0
+        "food": 10,
+        "material": 0,
+        "knowledge": 18
       },
       "trust": 100,
       "standing": "expand"
@@ -4962,9 +4962,9 @@
         }
       ],
       "stock": {
-        "food": 19,
-        "material": 20,
-        "knowledge": 0
+        "food": 10,
+        "material": 0,
+        "knowledge": 18
       },
       "trust": 100,
       "standing": "expand"
@@ -4979,12 +4979,12 @@
         }
       ],
       "stock": {
-        "food": 21,
-        "material": 8,
+        "food": 18,
+        "material": 0,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "たにゅ": {
       "id": "たにゅ",
@@ -4998,7 +4998,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 2
+        "knowledge": 14
       },
       "trust": 100,
       "standing": "build"
@@ -5013,8 +5013,8 @@
         }
       ],
       "stock": {
-        "food": 9,
-        "material": 20,
+        "food": 0,
+        "material": 18,
         "knowledge": 10
       },
       "trust": 100,
@@ -5032,7 +5032,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 2
+        "knowledge": 14
       },
       "trust": 100,
       "standing": "build"
@@ -5047,12 +5047,12 @@
         }
       ],
       "stock": {
-        "food": 21,
-        "material": 8,
+        "food": 18,
+        "material": 0,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "shinya": {
       "id": "shinya",
@@ -5066,7 +5066,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 2
+        "knowledge": 14
       },
       "trust": 100,
       "standing": "build"
@@ -5081,9 +5081,9 @@
         }
       ],
       "stock": {
-        "food": 19,
-        "material": 20,
-        "knowledge": 0
+        "food": 10,
+        "material": 0,
+        "knowledge": 18
       },
       "trust": 100,
       "standing": "expand"
@@ -5098,9 +5098,9 @@
         }
       ],
       "stock": {
-        "food": 21,
-        "material": 8,
-        "knowledge": 10
+        "food": 0,
+        "material": 12,
+        "knowledge": 16
       },
       "trust": 100,
       "standing": "expand"
@@ -5109,17 +5109,17 @@
   "contracts": [],
   "landOffers": [],
   "log": [
-    "buridaikon が都市を Lv2 に発展させた。",
-    "shinya が都市を Lv2 に発展させた。",
-    "saku が (33,22) を開拓した [知識]。",
-    "鍵原∀原鍵 が (10,8) を開拓した [資材]。",
-    "getey が (10,4) を開拓した [資材]。",
-    "たにゅ が都市を Lv2 に発展させた。",
-    "kya6 が (12,1) を開拓した [知識]。",
-    "keitan が (7,1) を開拓した [資材]。",
-    "SAN が (32,8) を開拓した [知識]。",
-    "CoffeeDa が (13,22) を開拓した [食料]。",
-    "zama が (25,11) を開拓した [知識]。",
-    "Zomba が (1,19) を開拓した [食料]。"
+    "CoffeeDa が (13,21) を開拓した [食料]。",
+    "keitan が (7,2) を開拓した [資材]。",
+    "shinya は資源が足りず開拓できなかった（要 合計24）。",
+    "kya6 が (13,3) を開拓した [資材]。",
+    "saku が (32,22) を開拓した [知識]。",
+    "たにゅ は資源が足りず開拓できなかった（要 合計24）。",
+    "Zomba が (2,19) を開拓した [食料]。",
+    "buridaikon は資源が足りず開拓できなかった（要 合計24）。",
+    "zama が (23,12) を開拓した [知識]。",
+    "getey が (11,5) を開拓した [資材]。",
+    "SAN が (32,9) を開拓した [知識]。",
+    "鍵原∀原鍵 が (10,10) を開拓した [資材]。"
   ]
 }
