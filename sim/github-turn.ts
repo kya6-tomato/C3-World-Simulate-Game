@@ -70,12 +70,27 @@ async function main() {
     if (comments.length === 0) continue;
 
     // 前回の処理より後に書かれたコメントのうち、一番新しいものだけを今ターンの命令にする。
+    // 1行に1つずつ命令を書けば、複数行で複数の命令を出せる
+    // （例: 1行目に「開拓」、2行目に「承諾 C5-p00-3」）。
+    // 本番の行動（建設・開拓・奪う・待機）は1ターンに1つだけ有効になるが、
+    // 取引まわり（提案・承諾・破棄・土地提案・土地承諾）はそもそも何行あっても構わない。
     const last = comments[comments.length - 1];
-    const { command, error } = parseComment(id, last.body);
-    if (command) {
-      commands.push(command);
-    } else if (error) {
-      errorsByPlayer[id] = [error];
+    const lines = last.body
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+
+    const errs: string[] = [];
+    for (const line of lines) {
+      const { command, error } = parseComment(id, line);
+      if (command) {
+        commands.push(command);
+      } else if (error) {
+        errs.push(error);
+      }
+    }
+    if (errs.length > 0) {
+      errorsByPlayer[id] = errs;
     }
   }
 
