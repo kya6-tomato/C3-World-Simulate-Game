@@ -123,6 +123,11 @@ function executeContracts(w: World) {
     to.stock[c.take] -= c.takeAmount;
     from.stock[c.take] += c.takeAmount;
 
+    // 約束通り払えた回は、両者に少しだけ信用を返す。裏切りだけが罰され、
+    // 守り続けても何も報われないのは不公平なため。
+    from.trust += CONFIG.trustOnFulfill;
+    to.trust += CONFIG.trustOnFulfill;
+
     c.turnsLeft -= 1;
     if (c.turnsLeft <= 0) {
       c.status = "expired";
