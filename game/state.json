@@ -1,5 +1,5 @@
 {
-  "turn": 2,
+  "turn": 3,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -1423,7 +1423,7 @@
       "x": 32,
       "y": 6,
       "kind": "knowledge",
-      "owner": null
+      "owner": "たにゅ"
     },
     {
       "x": 33,
@@ -1489,7 +1489,7 @@
       "x": 9,
       "y": 7,
       "kind": "material",
-      "owner": null
+      "owner": "getey"
     },
     {
       "x": 10,
@@ -1693,7 +1693,7 @@
       "x": 9,
       "y": 8,
       "kind": "material",
-      "owner": null
+      "owner": "鍵原∀原鍵"
     },
     {
       "x": 10,
@@ -2155,7 +2155,7 @@
       "x": 18,
       "y": 10,
       "kind": "material",
-      "owner": null
+      "owner": "buridaikon"
     },
     {
       "x": 19,
@@ -2185,7 +2185,7 @@
       "x": 23,
       "y": 10,
       "kind": "knowledge",
-      "owner": null
+      "owner": "zama"
     },
     {
       "x": 24,
@@ -2851,7 +2851,7 @@
       "x": 32,
       "y": 13,
       "kind": "food",
-      "owner": null
+      "owner": "shinya"
     },
     {
       "x": 33,
@@ -4567,7 +4567,7 @@
       "x": 12,
       "y": 22,
       "kind": "food",
-      "owner": null
+      "owner": "CoffeeDa"
     },
     {
       "x": 13,
@@ -4885,7 +4885,7 @@
       "x": 31,
       "y": 23,
       "kind": "knowledge",
-      "owner": null
+      "owner": "saku"
     },
     {
       "x": 32,
@@ -4912,11 +4912,11 @@
       ],
       "stock": {
         "food": 18,
-        "material": 0,
+        "material": 24,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "expand"
+      "standing": "pass"
     },
     "Zomba": {
       "id": "Zomba",
@@ -4928,12 +4928,12 @@
         }
       ],
       "stock": {
-        "food": 0,
+        "food": 24,
         "material": 18,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "expand"
+      "standing": "pass"
     },
     "saku": {
       "id": "saku",
@@ -4947,7 +4947,7 @@
       "stock": {
         "food": 10,
         "material": 0,
-        "knowledge": 18
+        "knowledge": 8
       },
       "trust": 100,
       "standing": "expand"
@@ -4964,10 +4964,10 @@
       "stock": {
         "food": 10,
         "material": 0,
-        "knowledge": 18
+        "knowledge": 42
       },
       "trust": 100,
-      "standing": "expand"
+      "standing": "pass"
     },
     "getey": {
       "id": "getey",
@@ -4979,7 +4979,7 @@
         }
       ],
       "stock": {
-        "food": 18,
+        "food": 8,
         "material": 0,
         "knowledge": 10
       },
@@ -4998,7 +4998,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 14
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5014,7 +5014,7 @@
       ],
       "stock": {
         "food": 0,
-        "material": 18,
+        "material": 8,
         "knowledge": 10
       },
       "trust": 100,
@@ -5032,7 +5032,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 14
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5047,7 +5047,7 @@
         }
       ],
       "stock": {
-        "food": 18,
+        "food": 8,
         "material": 0,
         "knowledge": 10
       },
@@ -5066,7 +5066,7 @@
       "stock": {
         "food": 1,
         "material": 0,
-        "knowledge": 14
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5083,7 +5083,7 @@
       "stock": {
         "food": 10,
         "material": 0,
-        "knowledge": 18
+        "knowledge": 8
       },
       "trust": 100,
       "standing": "expand"
@@ -5099,8 +5099,8 @@
       ],
       "stock": {
         "food": 0,
-        "material": 12,
-        "knowledge": 16
+        "material": 39,
+        "knowledge": 22
       },
       "trust": 100,
       "standing": "expand"
@@ -5117,23 +5117,76 @@
       "takeAmount": 2,
       "turnsLeft": 8,
       "proposedAt": 1,
+      "status": "active"
+    },
+    {
+      "id": "C2-たにゅ-1",
+      "from": "たにゅ",
+      "to": "zama",
+      "give": "knowledge",
+      "giveAmount": 2,
+      "take": "knowledge",
+      "takeAmount": 3,
+      "turnsLeft": 8,
+      "proposedAt": 2,
+      "status": "proposed"
+    },
+    {
+      "id": "C2-たにゅ-2",
+      "from": "たにゅ",
+      "to": "鍵原∀原鍵",
+      "give": "knowledge",
+      "giveAmount": 2,
+      "take": "food",
+      "takeAmount": 2,
+      "turnsLeft": 8,
+      "proposedAt": 2,
+      "status": "proposed"
+    },
+    {
+      "id": "C2-たにゅ-3",
+      "from": "たにゅ",
+      "to": "getey",
+      "give": "knowledge",
+      "giveAmount": 2,
+      "take": "material",
+      "takeAmount": 3,
+      "turnsLeft": 8,
+      "proposedAt": 2,
+      "status": "proposed"
+    },
+    {
+      "id": "C2-keitan-4",
+      "from": "keitan",
+      "to": "Zomba",
+      "give": "material",
+      "giveAmount": 5,
+      "take": "food",
+      "takeAmount": 5,
+      "turnsLeft": 50,
+      "proposedAt": 2,
       "status": "proposed"
     }
   ],
   "landOffers": [],
   "log": [
-    "たにゅ が kya6 に提案 [C1-たにゅ-0]: 知識2を渡す代わりに、資材2をもらう（毎ターン・8ターン間）",
-    "kya6 が (12,3) を開拓した [資材]。",
-    "keitan が (7,2) を開拓した [資材]。",
-    "たにゅ は資源が足りず開拓できなかった（要 合計24）。",
-    "shinya は資源が足りず開拓できなかった（要 合計24）。",
-    "CoffeeDa が (12,23) を開拓した [食料]。",
-    "zama が (22,11) を開拓した [知識]。",
-    "getey が (9,6) を開拓した [資材]。",
-    "saku が (32,22) を開拓した [知識]。",
-    "buridaikon は資源が足りず開拓できなかった（要 合計24）。",
-    "Zomba が (1,20) を開拓した [食料]。",
-    "鍵原∀原鍵 が (9,9) を開拓した [資材]。",
-    "SAN が (32,7) を開拓した [知識]。"
+    "keitan は SAN まで遠すぎて交渉できない（距離31）。",
+    "たにゅ が zama に提案 [`C2-たにゅ-1`]: 知識2を渡す代わりに、知識3をもらう（毎ターン・8ターン間）",
+    "kya6 が たにゅ の契約 [`C1-たにゅ-0`] を承諾した。取引が始まる: kya6は知識2をもらい、資材2を渡す（毎ターン・8ターン間）。",
+    "たにゅ が 鍵原∀原鍵 に提案 [`C2-たにゅ-2`]: 知識2を渡す代わりに、食料2をもらう（毎ターン・8ターン間）",
+    "たにゅ は keitan まで遠すぎて交渉できない（距離31）。",
+    "たにゅ が getey に提案 [`C2-たにゅ-3`]: 知識2を渡す代わりに、資材3をもらう（毎ターン・8ターン間）",
+    "たにゅ は CoffeeDa まで遠すぎて交渉できない（距離38）。",
+    "saku は Zomba まで遠すぎて交渉できない（距離38）。",
+    "keitan が Zomba に提案 [`C2-keitan-4`]: 資材5を渡す代わりに、食料5をもらう（毎ターン・50ターン間）",
+    "buridaikon が (18,10) を開拓した [資材]。",
+    "CoffeeDa が (12,22) を開拓した [食料]。",
+    "鍵原∀原鍵 が (9,8) を開拓した [資材]。",
+    "kya6 が土地から 資材 を9回収した（3マス分）。",
+    "たにゅ が (32,6) を開拓した [知識]。",
+    "zama が (23,10) を開拓した [知識]。",
+    "shinya が (32,13) を開拓した [食料]。",
+    "saku が (31,23) を開拓した [知識]。",
+    "getey が (9,7) を開拓した [資材]。"
   ]
 }
