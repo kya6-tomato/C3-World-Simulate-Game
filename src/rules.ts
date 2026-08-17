@@ -209,6 +209,49 @@ function upkeep(w: World) {
 
 // --------------------------------------------------- 3. 契約の自動執行
 
+/**
+ * 進行中の契約1件ぶんの資源交換を実行する。払えなければ不履行にする。
+ * 毎ターンの一括処理（executeContracts）と、承諾したその場での1回目の
+ * 取引（doAccept）の両方から呼ぶ共通処理。
+ */
+function settleContract(w: World, c: Contract) {
+  const from = w.players[c.from];
+  const to = w.players[c.to];
+  if (!from || !to) return;
+
+  const fromCanPay = from.stock[c.give] >= c.giveAmount;
+  const toCanPay = to.stock[c.take] >= c.takeAmount;
+
+  if (!fromCanPay || !toCanPay) {
+    // 払えなかった側が不履行。信用が下がる。
+    const guilty = !fromCanPay ? from : to;
+    c.status = "defaulted";
+    guilty.trust += CONFIG.trustOnDefault;
+    w.log.push(
+      `【不履行】${guilty.id} は契約 ${c.id} の支払いができず、契約が失効した。`,
+    );
+    return;
+  }
+
+  from.stock[c.give] -= c.giveAmount;
+  to.stock[c.give] += c.giveAmount;
+  to.stock[c.take] -= c.takeAmount;
+  from.stock[c.take] += c.takeAmount;
+
+  // 約束通り払えた回は、両者に少しだけ信用を返す。裏切りだけが罰され、
+  // 守り続けても何も報われないのは不公平なため。
+  from.trust += CONFIG.trustOnFulfill;
+  to.trust += CONFIG.trustOnFulfill;
+  from.stats!.tradeExecutions += 1;
+  to.stats!.tradeExecutions += 1;
+
+  c.turnsLeft -= 1;
+  if (c.turnsLeft <= 0) {
+    c.status = "expired";
+    w.log.push(`【満了】${c.from} と ${c.to} の契約 ${c.id} が正常に完了した。`);
+  }
+}
+
 function executeContracts(w: World) {
   // 返事のない提案を失効させる。これがないと交渉が詰まる。
   for (const c of w.contracts) {
@@ -226,42 +269,7 @@ function executeContracts(w: World) {
 
   for (const c of w.contracts) {
     if (c.status !== "active") continue;
-
-    const from = w.players[c.from];
-    const to = w.players[c.to];
-    if (!from || !to) continue;
-
-    const fromCanPay = from.stock[c.give] >= c.giveAmount;
-    const toCanPay = to.stock[c.take] >= c.takeAmount;
-
-    if (!fromCanPay || !toCanPay) {
-      // 払えなかった側が不履行。信用が下がる。
-      const guilty = !fromCanPay ? from : to;
-      c.status = "defaulted";
-      guilty.trust += CONFIG.trustOnDefault;
-      w.log.push(
-        `【不履行】${guilty.id} は契約 ${c.id} の支払いができず、契約が失効した。`,
-      );
-      continue;
-    }
-
-    from.stock[c.give] -= c.giveAmount;
-    to.stock[c.give] += c.giveAmount;
-    to.stock[c.take] -= c.takeAmount;
-    from.stock[c.take] += c.takeAmount;
-
-    // 約束通り払えた回は、両者に少しだけ信用を返す。裏切りだけが罰され、
-    // 守り続けても何も報われないのは不公平なため。
-    from.trust += CONFIG.trustOnFulfill;
-    to.trust += CONFIG.trustOnFulfill;
-    from.stats!.tradeExecutions += 1;
-    to.stats!.tradeExecutions += 1;
-
-    c.turnsLeft -= 1;
-    if (c.turnsLeft <= 0) {
-      c.status = "expired";
-      w.log.push(`【満了】${c.from} と ${c.to} の契約 ${c.id} が正常に完了した。`);
-    }
+    settleContract(w, c);
   }
 }
 
@@ -520,6 +528,7 @@ function doAccept(w: World, p: Player, contractId: string) {
       `${p.id}は${RESOURCE_JA[c.give]}${c.giveAmount}をもらい、` +
       `${RESOURCE_JA[c.take]}${c.takeAmount}を渡す（毎ターン・${c.turnsLeft}ターン間）。`,
   );
+  settleContract(w, c); // 承諾したその場で1回目の取引を行う
 }
 
 /** 自分宛ての提案を、期限切れを待たずにその場で断る。手番は消費しない。 */
