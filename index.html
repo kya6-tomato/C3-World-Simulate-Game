@@ -163,6 +163,7 @@
 
   <div class="notice">
     <b>このページはURLを知っている人なら誰でも見られます。</b> 命令の書き込みはGitHubのIssue（ログインが必要）で行います。
+    入力期限（9/13/17/21時）を過ぎても、反映まで1時間ほど余裕を見てください。
   </div>
 
   <header class="status">
@@ -179,8 +180,8 @@
     </div>
     <div class="vitals">
       <div class="vital"><span class="label">現在</span><span class="value mono" id="turn-value">-</span></div>
-      <div class="vital"><span class="label">本日の予定</span><span class="value mono">09:30/13:30/17:30/21:30</span></div>
-      <div class="vital countdown-vital"><span class="label">次のターンまで</span><span class="value mono" id="countdown">--:--:--</span></div>
+      <div class="vital"><span class="label">入力期限</span><span class="value mono">09/13/17/21時</span></div>
+      <div class="vital countdown-vital"><span class="label">次の締め切りまで</span><span class="value mono" id="countdown">--:--:--</span></div>
     </div>
   </header>
 
@@ -256,7 +257,8 @@
 <script>
   var RESOURCE_JA = { food: "食料", material: "資材", knowledge: "知識" };
   var TURN_TIMES_JST = [9, 13, 17, 21];
-  var TURN_MINUTE_JST = 30;
+  // これは「入力期限」（プレイヤーへの案内用）。実際の反映はここから1時間ほど余裕がある。
+  var TURN_MINUTE_JST = 0;
 
   // 参加者の数に関係なく、1人に1色が必ず割り当たるようにする。
   // 黄金角ずつ色相をずらすと、何人分作っても隣り合う色が均等に離れて見分けやすい。
