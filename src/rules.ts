@@ -332,8 +332,10 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "offer": doOffer(w, p, cmd); break;
       case "accept": doAccept(w, p, cmd.contractId); break;
       case "break": doBreak(w, p, cmd.contractId); break;
+      case "reject": doReject(w, p, cmd.contractId); break;
       case "offerLand": doOfferLand(w, p, cmd); break;
       case "acceptLand": doAcceptLand(w, p, cmd.landOfferId); break;
+      case "rejectLand": doRejectLand(w, p, cmd.landOfferId); break;
       case "seize": doSeize(w, p, cmd); break;
       case "harvest": doHarvest(w, p, cmd.resource); break;
       case "bridge": doBridge(w, p, cmd.x, cmd.y, rng); break;
@@ -520,6 +522,15 @@ function doAccept(w: World, p: Player, contractId: string) {
   );
 }
 
+/** 自分宛ての提案を、期限切れを待たずにその場で断る。手番は消費しない。 */
+function doReject(w: World, p: Player, contractId: string) {
+  const c = w.contracts.find((x) => x.id === contractId);
+  if (!c || c.status !== "proposed") return;
+  if (c.to !== p.id) return; // 自分宛て以外は拒否できない
+  c.status = "declined";
+  w.log.push(`${p.id} が ${c.from} からの提案 [\`${c.id}\`] を断った。`);
+}
+
 function doBreak(w: World, p: Player, contractId: string) {
   const c = w.contracts.find((x) => x.id === contractId);
   if (!c || c.status !== "active") return;
@@ -634,6 +645,15 @@ function doAcceptLand(w: World, p: Player, landOfferId: string) {
   w.log.push(
     `${p.id} が ${lo.from} から土地 (${lo.x},${lo.y}) を受け取った（${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を支払い）。`,
   );
+}
+
+/** 自分宛ての土地提案を、期限切れを待たずにその場で断る。手番は消費しない。 */
+function doRejectLand(w: World, p: Player, landOfferId: string) {
+  const lo = w.landOffers.find((x) => x.id === landOfferId);
+  if (!lo || lo.status !== "proposed") return;
+  if (lo.to !== p.id) return; // 自分宛て以外は拒否できない
+  lo.status = "declined";
+  w.log.push(`${p.id} が ${lo.from} からの土地提案 [\`${lo.id}\`] を断った。`);
 }
 
 function doSeize(

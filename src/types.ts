@@ -85,6 +85,7 @@ export type ContractStatus =
   | "active"     // 発効中。毎ターン自動で資源が動く
   | "broken"     // 意図的に破棄された
   | "defaulted"  // 資源不足で払えなかった
+  | "declined"   // 相手に明示的に断られた
   | "expired";   // 期間満了で正常終了
 
 /**
@@ -108,6 +109,7 @@ export interface Contract {
 export type LandOfferStatus =
   | "proposed"  // 提示したがまだ相手が承諾していない
   | "accepted"  // 承諾されて、土地が実際に移動した
+  | "declined"  // 相手に明示的に断られた
   | "expired"   // 返事のないまま期限切れ
   | "invalid";  // 承諾はされたが、その時点で条件が崩れていて不成立だった
 
@@ -165,6 +167,7 @@ export type Command =
     }
   | { type: "accept"; player: string; contractId: string }
   | { type: "break"; player: string; contractId: string }
+  | { type: "reject"; player: string; contractId: string }
   | {
       /** 自分が持つ (x,y) のマスを、相手に資源と引き換えに譲る提案。手番は消費しない。 */
       type: "offerLand";
@@ -176,6 +179,7 @@ export type Command =
       wantAmount: number;
     }
   | { type: "acceptLand"; player: string; landOfferId: string }
+  | { type: "rejectLand"; player: string; landOfferId: string }
   | {
       /** 信用が著しく低い隣人から、隣接するマスを1つ強制的に奪う。手番を消費する。 */
       type: "seize";

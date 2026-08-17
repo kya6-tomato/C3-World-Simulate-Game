@@ -18,8 +18,10 @@ const TYPE_JA: Record<string, Command["type"]> = {
   提案: "offer",
   承諾: "accept",
   破棄: "break",
+  拒否: "reject",
   土地提案: "offerLand",
   土地承諾: "acceptLand",
+  土地拒否: "rejectLand",
   奪う: "seize",
   回収: "harvest",
   橋: "bridge",
@@ -41,8 +43,10 @@ const USAGE: Record<string, string> = {
   提案: "提案 相手のID わたす 資源名 数 もらう 資源名 数 期間ターン（例: 提案 p05 わたす 資材 9 もらう 知識 9 8ターン）",
   承諾: "承諾 契約ID（例: 承諾 C5-p00-3）",
   破棄: "破棄 契約ID（例: 破棄 C5-p00-3）",
+  拒否: "拒否 契約ID（例: 拒否 C5-p00-3）。自分宛ての、まだ返事をしていない提案だけ断れます",
   土地提案: "土地提案 相手のID x y もらう 資源名 数（例: 土地提案 p05 12 7 もらう 知識 30）",
   土地承諾: "土地承諾 提案ID（例: 土地承諾 L3-p05-1）",
+  土地拒否: "土地拒否 提案ID（例: 土地拒否 L3-p05-1）。自分宛ての、まだ返事をしていない土地提案だけ断れます",
   奪う: "奪う x y（例: 奪う 12 7）。最後に資源名を書くと、それを優先して使う（例: 奪う 12 7 資材）",
   回収: "回収 資源名（例: 回収 資材）。自分がその資源のマスを持っている必要があります",
   橋: "橋 x y（例: 橋 12 7）。自分の土地に隣接する川のマスだけ指定できます。1シーズンに1回だけ",
@@ -104,7 +108,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
   if (!kind) {
     return {
       command: null,
-      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/土地提案/土地承諾/奪う/回収/橋/援助 のどれかを先頭に書いてください）。`,
+      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助 のどれかを先頭に書いてください）。`,
     };
   }
 
@@ -149,7 +153,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
     return { command: null, error: usage };
   }
 
-  if (kind === "accept" || kind === "break") {
+  if (kind === "accept" || kind === "break" || kind === "reject") {
     const contractId = tokens[1];
     if (!contractId) {
       return { command: null, error: `書き方: ${USAGE[word]}` };
@@ -157,7 +161,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
     return { command: { type: kind, player, contractId }, error: null };
   }
 
-  if (kind === "acceptLand") {
+  if (kind === "acceptLand" || kind === "rejectLand") {
     const landOfferId = tokens[1];
     if (!landOfferId) {
       return { command: null, error: `書き方: ${USAGE[word]}` };
