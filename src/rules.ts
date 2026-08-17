@@ -136,18 +136,38 @@ export function projectContributionScore(p: Player): number {
   return Math.min(CONFIG.projectScoreCap, Math.floor(given / CONFIG.projectScoreDivisor));
 }
 
-/** 得点。都市レベル・領土に加えて、援助・世界の脅威・共同事業への貢献分も加算する。 */
-export function totalScore(w: World, playerId: string): number {
+/**
+ * 都市レベルと領土だけで見た、基礎の経済力。援助・脅威・事業への貢献分は含めない。
+ * 劣勢かどうかの判定は、常にこちらを使う（totalScoreではない）。
+ * もしtotalScore（貢献点込み）で判定すると、経済的には弱いプレイヤーが無理して
+ * 援助や脅威に貢献した結果、劣勢の優遇から外れてしまう逆効果が起きるため。
+ */
+export function baseScore(w: World, playerId: string): number {
   const p = w.players[playerId];
   if (!p) return 0;
   const land = w.tiles.filter((t) => t.owner === playerId).length;
+  return totalCityLevel(p) * 10 + land;
+}
+
+/** 得点。基礎の経済力に加えて、援助・世界の脅威・共同事業への貢献分も加算する。最終順位に使う。 */
+export function totalScore(w: World, playerId: string): number {
+  const p = w.players[playerId];
+  if (!p) return 0;
   return (
-    totalCityLevel(p) * 10 + land +
+    baseScore(w, playerId) +
     aidContributionScore(p) + threatContributionScore(p) + projectContributionScore(p)
   );
 }
 
-/** 全プレイヤーの得点の平均。劣勢かどうかの判定基準に使う。 */
+/** 全プレイヤーの基礎経済力の平均。劣勢かどうかの判定基準に使う。 */
+export function averageBaseScore(w: World): number {
+  const ids = Object.keys(w.players);
+  if (ids.length === 0) return 0;
+  const sum = ids.reduce((s, id) => s + baseScore(w, id), 0);
+  return sum / ids.length;
+}
+
+/** 全プレイヤーの得点の平均。称号「覇者」など、最終得点そのものを基準にしたい場面で使う。 */
 export function averageScore(w: World): number {
   const ids = Object.keys(w.players);
   if (ids.length === 0) return 0;
@@ -156,14 +176,14 @@ export function averageScore(w: World): number {
 }
 
 /**
- * 全員の平均得点に対して、自分の得点が一定割合を下回っているかどうか。
+ * 全員の平均基礎経済力に対して、自分の基礎経済力が一定割合を下回っているかどうか。
  * 開拓・建設コストの割引、災害の被害軽減、格差ボーナスの対象判定に使う。
  */
 /** 0=通常、1=劣勢、2=危機的（劣勢よりさらに深刻）。数字が大きいほど優遇も強くなる。 */
 export function underdogTier(w: World, playerId: string): 0 | 1 | 2 {
-  const avg = averageScore(w);
+  const avg = averageBaseScore(w);
   if (avg <= 0) return 0;
-  const score = totalScore(w, playerId);
+  const score = baseScore(w, playerId);
   if (score < avg * CONFIG.criticalScoreRatio) return 2;
   if (score < avg * CONFIG.underdogScoreRatio) return 1;
   return 0;
@@ -182,14 +202,14 @@ export function underdogCostDiscount(w: World, playerId: string): number {
 }
 
 /**
- * 平均得点に対して、どれだけ劣勢かを0〜1の連続値で表す
- * （平均以上なら0、得点0なら1）。「豊かな土地」の確率など、
+ * 平均基礎経済力に対して、どれだけ劣勢かを0〜1の連続値で表す
+ * （平均以上なら0、基礎点0なら1）。「豊かな土地」の確率など、
  * 段階（劣勢/危機的）ではなく度合いで滑らかに変えたいときに使う。
  */
 export function underdogDeficitRatio(w: World, playerId: string): number {
-  const avg = averageScore(w);
+  const avg = averageBaseScore(w);
   if (avg <= 0) return 0;
-  const score = totalScore(w, playerId);
+  const score = baseScore(w, playerId);
   return Math.max(0, Math.min(1, 1 - score / avg));
 }
 
@@ -1594,7 +1614,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: "下剋上",
     desc: "危機的（平均得点の40%未満）まで沈んだことがありながら、平均得点以上まで這い上がる",
     rewardDesc: "信用+15、保管上限+25（永続）",
-    condition: (w, p) => p.stats!.worstScoreRatioEver <= CONFIG.criticalScoreRatio && totalScore(w, p.id) >= averageScore(w),
+    condition: (w, p) => p.stats!.worstScoreRatioEver <= CONFIG.criticalScoreRatio && !isUnderdog(w, p.id),
     reward: (p) => { p.trust += 15; p.achievementBonus!.storage += 25; },
   },
   {
@@ -1640,11 +1660,12 @@ export const ACHIEVEMENTS: Achievement[] = [
 ];
 
 function checkAchievements(w: World) {
-  const avg = averageScore(w);
+  // 劣勢・危機的の概念と揃えるため、貢献点を含まない基礎経済力で追跡する。
+  const avg = averageBaseScore(w);
   for (const p of Object.values(w.players)) {
     p.stats!.minTrustEver = Math.min(p.stats!.minTrustEver, p.trust);
     if (avg > 0) {
-      const ratio = totalScore(w, p.id) / avg;
+      const ratio = baseScore(w, p.id) / avg;
       p.stats!.worstScoreRatioEver = Math.min(p.stats!.worstScoreRatioEver, ratio);
     }
     for (const ach of ACHIEVEMENTS) {
