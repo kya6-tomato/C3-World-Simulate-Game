@@ -1,6 +1,6 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { createWorld } from "../src/worldgen.ts";
-import { resolveTurn, score, capitalDistance } from "../src/rules.ts";
+import { resolveTurn, score, territoryDistance } from "../src/rules.ts";
 import { renderMapSvg } from "../src/render.ts";
 import { CONFIG } from "../src/config.ts";
 import { Rng } from "../src/rng.ts";
@@ -147,7 +147,7 @@ function report(
   const isolated = Object.keys(w.players).filter((id) => {
     return !Object.keys(w.players).some((o) => {
       if (o === id) return false;
-      const d = capitalDistance(w, id, o);
+      const d = territoryDistance(w, id, o);
       return d !== null && d <= CONFIG.tradeRange;
     });
   });

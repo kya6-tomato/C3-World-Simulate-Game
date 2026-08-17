@@ -7,7 +7,7 @@ import {
   expandCostTotal,
   seizeCostFor,
   totalStock,
-  capitalDistance,
+  territoryDistance,
 } from "../src/rules.ts";
 import { neighbors, tileAt } from "../src/worldgen.ts";
 import { CONFIG } from "../src/config.ts";
@@ -197,7 +197,7 @@ function findPartner(
   for (const other of Object.values(w.players)) {
     if (other.id === me) continue;
     if (other.trust < CONFIG.tradeBlockedBelow) continue; // 信用のない相手には持ちかけない
-    const d = capitalDistance(w, me, other.id);
+    const d = territoryDistance(w, me, other.id);
     if (d === null || d > CONFIG.tradeRange) continue; // 遠すぎる
     if (other.stock[need] <= 15) continue;
 

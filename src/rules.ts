@@ -343,7 +343,7 @@ function doOffer(
   }
 
   // 遠すぎる相手とは契約できない。人間関係を近所に閉じ込めるための制限。
-  const d = capitalDistance(w, p.id, cmd.to);
+  const d = territoryDistance(w, p.id, cmd.to);
   if (d === null || d > CONFIG.tradeRange) {
     w.log.push(`${p.id} は ${cmd.to} まで遠すぎて交渉できない（距離${d}）。`);
     return;
@@ -445,7 +445,7 @@ function doOfferLand(
     w.log.push(`${p.id} は信用が低すぎて（${p.trust}）誰とも取引できない。`);
     return;
   }
-  const d = capitalDistance(w, p.id, cmd.to);
+  const d = territoryDistance(w, p.id, cmd.to);
   if (d === null || d > CONFIG.tradeRange) {
     w.log.push(`${p.id} は ${cmd.to} まで遠すぎて土地の話ができない（距離${d}）。`);
     return;
@@ -631,16 +631,28 @@ function payAny(stock: Stock, amount: number, preferResource?: Resource) {
   }
 }
 
-/** 2人の首都どうしのマス距離。交易できるかの判定に使う。 */
-export function capitalDistance(
+/**
+ * 2人の領土どうしの最短マス距離。交易できるかの判定に使う。
+ * 都市の位置ではなく、持っているマス同士の一番近い組み合わせで測る
+ * （都市が遠くても、領土を広げて近づけば交渉できるようにするため）。
+ */
+export function territoryDistance(
   w: World,
   a: string,
   b: string,
 ): number | null {
-  const pa = w.players[a]?.cities[0];
-  const pb = w.players[b]?.cities[0];
-  if (!pa || !pb) return null;
-  return Math.abs(pa.x - pb.x) + Math.abs(pa.y - pb.y);
+  const tilesA = w.tiles.filter((t) => t.owner === a);
+  const tilesB = w.tiles.filter((t) => t.owner === b);
+  if (tilesA.length === 0 || tilesB.length === 0) return null;
+
+  let min = Infinity;
+  for (const ta of tilesA) {
+    for (const tb of tilesB) {
+      const d = Math.abs(ta.x - tb.x) + Math.abs(ta.y - tb.y);
+      if (d < min) min = d;
+    }
+  }
+  return min;
 }
 
 /** 一番足りていない資源を返す。ボットの判断にも使う。 */
