@@ -1,5 +1,5 @@
 {
-  "turn": 0,
+  "turn": 1,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -253,7 +253,7 @@
       "x": 7,
       "y": 1,
       "kind": "material",
-      "owner": null
+      "owner": "keitan"
     },
     {
       "x": 8,
@@ -283,7 +283,7 @@
       "x": 12,
       "y": 1,
       "kind": "knowledge",
-      "owner": null
+      "owner": "kya6"
     },
     {
       "x": 13,
@@ -883,7 +883,7 @@
       "x": 10,
       "y": 4,
       "kind": "material",
-      "owner": null
+      "owner": "getey"
     },
     {
       "x": 11,
@@ -1699,7 +1699,7 @@
       "x": 10,
       "y": 8,
       "kind": "material",
-      "owner": null
+      "owner": "鍵原∀原鍵"
     },
     {
       "x": 11,
@@ -1831,7 +1831,7 @@
       "x": 32,
       "y": 8,
       "kind": "knowledge",
-      "owner": null
+      "owner": "SAN"
     },
     {
       "x": 33,
@@ -2401,7 +2401,7 @@
       "x": 25,
       "y": 11,
       "kind": "knowledge",
-      "owner": null
+      "owner": "zama"
     },
     {
       "x": 26,
@@ -3889,7 +3889,7 @@
       "x": 1,
       "y": 19,
       "kind": "food",
-      "owner": null
+      "owner": "Zomba"
     },
     {
       "x": 2,
@@ -4573,7 +4573,7 @@
       "x": 13,
       "y": 22,
       "kind": "food",
-      "owner": null
+      "owner": "CoffeeDa"
     },
     {
       "x": 14,
@@ -4693,7 +4693,7 @@
       "x": 33,
       "y": 22,
       "kind": "knowledge",
-      "owner": null
+      "owner": "saku"
     },
     {
       "x": 0,
@@ -4911,8 +4911,8 @@
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
+        "food": 21,
+        "material": 8,
         "knowledge": 10
       },
       "trust": 100,
@@ -4928,7 +4928,7 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 9,
         "material": 20,
         "knowledge": 10
       },
@@ -4945,12 +4945,12 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 19,
         "material": 20,
-        "knowledge": 10
+        "knowledge": 0
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "SAN": {
       "id": "SAN",
@@ -4962,12 +4962,12 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 19,
         "material": 20,
-        "knowledge": 10
+        "knowledge": 0
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "getey": {
       "id": "getey",
@@ -4979,8 +4979,8 @@
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
+        "food": 21,
+        "material": 8,
         "knowledge": 10
       },
       "trust": 100,
@@ -4992,13 +4992,13 @@
         {
           "x": 33,
           "y": 5,
-          "level": 1
+          "level": 2
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
-        "knowledge": 10
+        "food": 1,
+        "material": 0,
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5013,7 +5013,7 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 9,
         "material": 20,
         "knowledge": 10
       },
@@ -5026,13 +5026,13 @@
         {
           "x": 19,
           "y": 9,
-          "level": 1
+          "level": 2
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
-        "knowledge": 10
+        "food": 1,
+        "material": 0,
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5047,8 +5047,8 @@
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
+        "food": 21,
+        "material": 8,
         "knowledge": 10
       },
       "trust": 100,
@@ -5060,13 +5060,13 @@
         {
           "x": 33,
           "y": 12,
-          "level": 1
+          "level": 2
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
-        "knowledge": 10
+        "food": 1,
+        "material": 0,
+        "knowledge": 2
       },
       "trust": 100,
       "standing": "build"
@@ -5081,12 +5081,12 @@
         }
       ],
       "stock": {
-        "food": 20,
+        "food": 19,
         "material": 20,
-        "knowledge": 10
+        "knowledge": 0
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     },
     "kya6": {
       "id": "kya6",
@@ -5098,17 +5098,28 @@
         }
       ],
       "stock": {
-        "food": 20,
-        "material": 20,
+        "food": 21,
+        "material": 8,
         "knowledge": 10
       },
       "trust": 100,
-      "standing": "build"
+      "standing": "expand"
     }
   },
   "contracts": [],
   "landOffers": [],
   "log": [
-    "世界が生成された。"
+    "buridaikon が都市を Lv2 に発展させた。",
+    "shinya が都市を Lv2 に発展させた。",
+    "saku が (33,22) を開拓した [知識]。",
+    "鍵原∀原鍵 が (10,8) を開拓した [資材]。",
+    "getey が (10,4) を開拓した [資材]。",
+    "たにゅ が都市を Lv2 に発展させた。",
+    "kya6 が (12,1) を開拓した [知識]。",
+    "keitan が (7,1) を開拓した [資材]。",
+    "SAN が (32,8) を開拓した [知識]。",
+    "CoffeeDa が (13,22) を開拓した [食料]。",
+    "zama が (25,11) を開拓した [知識]。",
+    "Zomba が (1,19) を開拓した [食料]。"
   ]
 }
