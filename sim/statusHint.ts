@@ -10,6 +10,7 @@ import {
   isUnderdog,
   seizeCostFor,
   territoryDistance,
+  totalCityLevel,
   totalStock,
   underdogCostDiscount,
   underdogTier,
