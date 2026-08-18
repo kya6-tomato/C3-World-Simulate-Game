@@ -654,11 +654,12 @@
     var goalCurrent = currentGoalType.metric(state);
     var goalThreshold = state.worldGoalNextThreshold || (goalCurrent + currentGoalType.step);
     var goalPct = Math.min(100, Math.round((goalCurrent / goalThreshold) * 100));
+    var goalRemaining = Math.max(0, goalThreshold - goalCurrent);
     document.getElementById("goal-body").innerHTML =
       '<div class="threat-top"><span class="threat-name">' + esc(currentGoalType.label) + '</span>' +
         '<span class="threat-deadline">次の到達で全員に資源</span></div>' +
       '<div class="threat-bar-track"><div class="threat-bar-fill" style="width:' + goalPct + '%"></div></div>' +
-      '<div class="threat-progress-label">' + goalCurrent + ' / ' + goalThreshold + '（' + goalPct + '%）</div>' +
+      '<div class="threat-progress-label">' + goalCurrent + ' / ' + goalThreshold + '（' + goalPct + '%・あと' + goalRemaining + '）</div>' +
       '<div class="threat-hint">みんなが普通にプレイしているだけで自然と進みます。専用の操作は不要です。</div>';
 
     // 陣営戦（発生中なら、陣営A・Bの投入量を並べて表示する）

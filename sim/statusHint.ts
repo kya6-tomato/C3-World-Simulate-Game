@@ -454,8 +454,9 @@ export function projectHint(w: World, playerId: string): string | null {
  */
 export function worldGoalHint(w: World): string {
   const { label, current, threshold } = worldGoalProgress(w);
+  const remaining = Math.max(0, threshold - current);
   return (
-    `${label} ${current}/${threshold} に到達すると、全員に資源が贈られます` +
+    `${label} ${current}/${threshold}（あと${remaining}）に到達すると、全員に資源が贈られます` +
     `（みんなが普通にプレイしているだけで自然に進みます。専用の操作は不要です）。`
   );
 }
