@@ -1122,20 +1122,41 @@ function doOfferLand(
   }
 
   const id = `L${w.turn}-${p.id}-${w.landOffers.length}`;
-  const offer: LandOffer = {
-    id,
-    from: p.id,
-    to: cmd.to,
-    x: cmd.x,
-    y: cmd.y,
-    wantResource: cmd.wantResource,
-    wantAmount: cmd.wantAmount,
-    proposedAt: w.turn,
-    status: "proposed",
-  };
+  let offer: LandOffer;
+  let wantDesc: string;
+
+  if (cmd.wantX !== undefined && cmd.wantY !== undefined) {
+    // 土地と土地の交換。相手が今その土地を持っているかを提案時点でも確認しておく
+    // （承諾できない提案を出させないため。最終確認は承諾時にもう一度行う）。
+    const wantTile = tileAt(w.tiles, w.width, cmd.wantX, cmd.wantY);
+    if (!wantTile || wantTile.owner !== cmd.to) {
+      w.log.push(`${p.id} は ${cmd.to} が (${cmd.wantX},${cmd.wantY}) を持っていないので提案できない。`);
+      return;
+    }
+    if (hasCityAt(w, cmd.wantX, cmd.wantY)) {
+      w.log.push(`${p.id} は ${cmd.to} の都市があるマスは要求できない。`);
+      return;
+    }
+    offer = {
+      id, from: p.id, to: cmd.to, x: cmd.x, y: cmd.y,
+      wantX: cmd.wantX, wantY: cmd.wantY,
+      proposedAt: w.turn, status: "proposed",
+    };
+    wantDesc = `土地 (${cmd.wantX},${cmd.wantY})`;
+  } else if (cmd.wantResource !== undefined && cmd.wantAmount !== undefined) {
+    offer = {
+      id, from: p.id, to: cmd.to, x: cmd.x, y: cmd.y,
+      wantResource: cmd.wantResource, wantAmount: cmd.wantAmount,
+      proposedAt: w.turn, status: "proposed",
+    };
+    wantDesc = `${RESOURCE_JA[cmd.wantResource]}${cmd.wantAmount}`;
+  } else {
+    return;
+  }
+
   w.landOffers.push(offer);
   w.log.push(
-    `${p.id} が ${cmd.to} に土地 (${cmd.x},${cmd.y}) を提案 [\`${id}\`]: 代わりに ${RESOURCE_JA[cmd.wantResource]}${cmd.wantAmount}。`,
+    `${p.id} が ${cmd.to} に土地 (${cmd.x},${cmd.y}) を提案 [\`${id}\`]: 代わりに ${wantDesc}。`,
   );
 }
 
@@ -1155,20 +1176,48 @@ function doAcceptLand(w: World, p: Player, landOfferId: string) {
     );
     return;
   }
-  if (p.stock[lo.wantResource] < lo.wantAmount) {
-    lo.status = "invalid";
-    w.log.push(`${p.id} は ${RESOURCE_JA[lo.wantResource]}が足りず、土地の取引を成立させられなかった。`);
+
+  if (lo.wantX !== undefined && lo.wantY !== undefined) {
+    // 土地と土地の交換
+    const wantTile = tileAt(w.tiles, w.width, lo.wantX, lo.wantY);
+    if (!wantTile || wantTile.owner !== p.id) {
+      lo.status = "invalid";
+      w.log.push(`${p.id} はもう (${lo.wantX},${lo.wantY}) を持っておらず、土地の交換を成立させられなかった。`);
+      return;
+    }
+    if (hasCityAt(w, lo.wantX, lo.wantY)) {
+      lo.status = "invalid";
+      w.log.push(`${p.id} の都市があるマスは渡せず、土地の交換を成立させられなかった。`);
+      return;
+    }
+    tile.owner = p.id;
+    wantTile.owner = proposer.id;
+    lo.status = "accepted";
+    p.stats!.landOffersAccepted += 1;
+    proposer.stats!.landOffersGiven += 1;
+    w.log.push(
+      `${p.id} が ${lo.from} と土地を交換した：(${lo.x},${lo.y}) を受け取り、代わりに (${lo.wantX},${lo.wantY}) を渡した。`,
+    );
     return;
   }
 
-  p.stock[lo.wantResource] -= lo.wantAmount;
-  proposer.stock[lo.wantResource] += lo.wantAmount;
+  // 資源との交換
+  const wantResource = lo.wantResource!;
+  const wantAmount = lo.wantAmount!;
+  if (p.stock[wantResource] < wantAmount) {
+    lo.status = "invalid";
+    w.log.push(`${p.id} は ${RESOURCE_JA[wantResource]}が足りず、土地の取引を成立させられなかった。`);
+    return;
+  }
+
+  p.stock[wantResource] -= wantAmount;
+  proposer.stock[wantResource] += wantAmount;
   tile.owner = p.id;
   lo.status = "accepted";
   p.stats!.landOffersAccepted += 1;
   proposer.stats!.landOffersGiven += 1;
   w.log.push(
-    `${p.id} が ${lo.from} から土地 (${lo.x},${lo.y}) を受け取った（${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を支払い）。`,
+    `${p.id} が ${lo.from} から土地 (${lo.x},${lo.y}) を受け取った（${RESOURCE_JA[wantResource]}${wantAmount}を支払い）。`,
   );
 }
 

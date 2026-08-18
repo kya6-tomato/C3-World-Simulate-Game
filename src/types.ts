@@ -143,8 +143,12 @@ export interface LandOffer {
   to: string;
   x: number;
   y: number;
-  wantResource: Resource;
-  wantAmount: number;
+  /** 見返りが資源のときに使う（wantX/wantYと同時には使わない）。 */
+  wantResource?: Resource;
+  wantAmount?: number;
+  /** 見返りが土地（相手の持つ別のマス）のときに使う。 */
+  wantX?: number;
+  wantY?: number;
   proposedAt: number;
   status: LandOfferStatus;
 }
@@ -273,14 +277,20 @@ export type Command =
   | { type: "break"; player: string; contractId: string }
   | { type: "reject"; player: string; contractId: string }
   | {
-      /** 自分が持つ (x,y) のマスを、相手に資源と引き換えに譲る提案。手番は消費しない。 */
+      /**
+       * 自分が持つ (x,y) のマスを、相手に譲る提案。手番は消費しない。
+       * 見返りは、資源（wantResource/wantAmount）か、相手の持つ別のマス
+       * （wantX/wantY、土地と土地の交換）のどちらか一方を指定する。
+       */
       type: "offerLand";
       player: string;
       to: string;
       x: number;
       y: number;
-      wantResource: Resource;
-      wantAmount: number;
+      wantResource?: Resource;
+      wantAmount?: number;
+      wantX?: number;
+      wantY?: number;
     }
   | { type: "acceptLand"; player: string; landOfferId: string }
   | { type: "rejectLand"; player: string; landOfferId: string }

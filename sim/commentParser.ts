@@ -50,7 +50,9 @@ const USAGE: Record<string, string> = {
   承諾: "承諾 契約ID（例: 承諾 C5-p00-3）",
   破棄: "破棄 契約ID（例: 破棄 C5-p00-3）",
   拒否: "拒否 契約ID（例: 拒否 C5-p00-3）。自分宛ての、まだ返事をしていない提案だけ断れます",
-  土地提案: "土地提案 相手のID x y もらう 資源名 数（例: 土地提案 p05 12 7 もらう 知識 30）",
+  土地提案:
+    "土地提案 相手のID x y もらう 資源名 数（例: 土地提案 p05 12 7 もらう 知識 30） / " +
+    "土地提案 相手のID x y もらう 相手の土地のx y（例: 土地提案 p05 12 7 もらう 20 8、土地と土地の交換）",
   土地承諾: "土地承諾 提案ID（例: 土地承諾 L3-p05-1）",
   土地拒否: "土地拒否 提案ID（例: 土地拒否 L3-p05-1）。自分宛ての、まだ返事をしていない土地提案だけ断れます",
   奪う: "奪う x y（例: 奪う 12 7）。最後に資源名を書くと、それを優先して使う（例: 奪う 12 7 資材）",
@@ -317,25 +319,36 @@ export function parseComment(player: string, rawText: string): ParseResult {
   }
 
   if (kind === "offerLand") {
+    const usage = `書き方: ${USAGE[word]}`;
     const to = tokens[1];
     const x = Number(tokens[2]);
     const y = Number(tokens[3]);
     const takeIdx = tokens.indexOf("もらう");
-    const wantResource = takeIdx >= 0 ? RESOURCE_JA_TO_EN[tokens[takeIdx + 1]] : undefined;
-    const wantAmount = takeIdx >= 0 ? Number(tokens[takeIdx + 2]) : NaN;
 
-    if (
-      !to ||
-      !Number.isInteger(x) ||
-      !Number.isInteger(y) ||
-      !wantResource ||
-      !Number.isInteger(wantAmount) ||
-      wantAmount <= 0
-    ) {
-      return { command: null, error: `書き方: ${USAGE[word]}` };
+    if (!to || !Number.isInteger(x) || !Number.isInteger(y) || takeIdx < 0) {
+      return { command: null, error: usage };
+    }
+
+    // 「もらう」の次が資源名なら資源との交換、数字が2つ並んでいれば土地との交換。
+    const wantResource = RESOURCE_JA_TO_EN[tokens[takeIdx + 1]];
+    if (wantResource) {
+      const wantAmount = Number(tokens[takeIdx + 2]);
+      if (!Number.isInteger(wantAmount) || wantAmount <= 0) {
+        return { command: null, error: usage };
+      }
+      return {
+        command: { type: "offerLand", player, to, x, y, wantResource, wantAmount },
+        error: null,
+      };
+    }
+
+    const wantX = Number(tokens[takeIdx + 1]);
+    const wantY = Number(tokens[takeIdx + 2]);
+    if (!Number.isInteger(wantX) || !Number.isInteger(wantY)) {
+      return { command: null, error: usage };
     }
     return {
-      command: { type: "offerLand", player, to, x, y, wantResource, wantAmount },
+      command: { type: "offerLand", player, to, x, y, wantX, wantY },
       error: null,
     };
   }

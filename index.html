@@ -746,9 +746,12 @@
       landEl.innerHTML = '<li class="empty-note">今のところありません</li>';
     } else {
       landEl.innerHTML = landOffers.map(function (l) {
+        var price = (l.wantX !== undefined && l.wantY !== undefined)
+          ? "土地 (" + l.wantX + "," + l.wantY + ")"
+          : RESOURCE_JA[l.wantResource] + l.wantAmount;
         return '<li class="contract"><span class="dot" style="background:' + colorOf(l.from) + '"></span>' + esc(l.from) +
           '<span class="arrow">→</span><span class="dot" style="background:' + colorOf(l.to) + '"></span>' + esc(l.to) +
-          '<span class="terms">(' + l.x + "," + l.y + ") の代わりに " + RESOURCE_JA[l.wantResource] + l.wantAmount + "</span>" +
+          '<span class="terms">(' + l.x + "," + l.y + ") の代わりに " + price + "</span>" +
           '<span class="pill">提案中</span></li>';
       }).join("");
     }

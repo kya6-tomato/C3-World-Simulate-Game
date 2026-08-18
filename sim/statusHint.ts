@@ -305,9 +305,13 @@ export function pendingOffersHint(w: World, playerId: string): string[] {
   for (const lo of w.landOffers) {
     if (lo.status !== "proposed" || lo.to !== playerId) continue;
     const left = CONFIG.offerExpiryTurns - (w.turn - lo.proposedAt);
+    const price =
+      lo.wantX !== undefined && lo.wantY !== undefined
+        ? `土地 (${lo.wantX},${lo.wantY})`
+        : `${RESOURCE_JA[lo.wantResource!]}${lo.wantAmount}`;
     lines.push(
       `${lo.from} からの土地提案（あと${left}ターンで失効）: 承諾すると (${lo.x},${lo.y}) がもらえる代わりに、` +
-        `${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を渡すことになります。` +
+        `${price}を渡すことになります。` +
         `承諾するには \`土地承諾 ${lo.id}\`、断るには \`土地拒否 ${lo.id}\` をそのままコピペ。`,
     );
   }
