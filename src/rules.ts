@@ -281,7 +281,7 @@ function triggerDisasters(w: World, rng: Rng) {
       if (owned.length === 0) continue;
       const lossCount = Math.max(1, Math.round(owned.length * severity));
       const targets = rng.shuffle(owned).slice(0, Math.min(lossCount, owned.length));
-      for (const t of targets) t.owner = null;
+      for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; }
       w.log.push(
         `【災害】${p.id} の土地で災害が発生し、${targets.length}マスを失った` +
           `（被害${Math.round(severity * 100)}%）。援助 ${p.id} 資源名 数 で誰でも助けられます。`,
@@ -368,7 +368,7 @@ function applyThreatDamage(w: World, p: Player, severity: number, rng: Rng): str
     if (owned.length === 0) return doResourceDamage();
     const lossCount = Math.max(1, Math.round(owned.length * severity));
     const targets = rng.shuffle(owned).slice(0, Math.min(lossCount, owned.length));
-    for (const t of targets) t.owner = null;
+    for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; }
     return `${targets.length}マスを失った`;
   } else {
     const lost = Math.round(severity * 40);
@@ -881,9 +881,11 @@ function doExpand(
   // （自動選択の候補集めにも、指定マスの隣接チェックにも使う）。
   // 荒地は資源こそ採れないが、保管上限や災害対策になるので開拓の対象にできる。
   // 川だけは橋を架けない限り越えられない。
+  // 取引（土地提案の承諾）で手に入れたマスは、開拓の起点として使えない
+  // （自分で開拓・橋・着工などで育てた領土からしか広げられない）。
   const candidates: Tile[] = [];
   for (const t of w.tiles) {
-    if (t.owner !== p.id) continue;
+    if (t.owner !== p.id || t.acquiredViaTrade) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
       const nt = tileAt(w.tiles, w.width, n.x, n.y);
       if (nt && nt.owner === null && nt.kind !== "river")
@@ -907,7 +909,18 @@ function doExpand(
       return false;
     }
     if (!candidates.includes(t)) {
-      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が自分の土地に隣接していないので開拓できなかった。`);
+      const adjacentToTradedOnly = neighbors(t.x, t.y, w.width, w.height).some((n) => {
+        const nt = tileAt(w.tiles, w.width, n.x, n.y);
+        return nt && nt.owner === p.id && nt.acquiredViaTrade;
+      });
+      if (adjacentToTradedOnly) {
+        w.log.push(
+          `${p.id} は (${manualTarget.x},${manualTarget.y}) の隣は取引で手に入れた土地だけなので開拓できなかった` +
+            `（開拓は、自分で開拓・橋・着工などで広げた土地からしかできません）。`,
+        );
+      } else {
+        w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が自分の土地に隣接していないので開拓できなかった。`);
+      }
       return false;
     }
     target = t;
@@ -944,6 +957,7 @@ function doExpand(
   }
 
   target.owner = p.id;
+  target.acquiredViaTrade = false;
   const kindLabel = target.kind === "waste" ? "荒地" : RESOURCE_JA[target.kind as Resource];
 
   // 劣勢なプレイヤーほど、開拓したマスが「豊かな土地」になる確率が上がる
@@ -1191,7 +1205,9 @@ function doAcceptLand(w: World, p: Player, landOfferId: string) {
       return;
     }
     tile.owner = p.id;
+    tile.acquiredViaTrade = true;
     wantTile.owner = proposer.id;
+    wantTile.acquiredViaTrade = true;
     lo.status = "accepted";
     p.stats!.landOffersAccepted += 1;
     proposer.stats!.landOffersGiven += 1;
@@ -1213,6 +1229,7 @@ function doAcceptLand(w: World, p: Player, landOfferId: string) {
   p.stock[wantResource] -= wantAmount;
   proposer.stock[wantResource] += wantAmount;
   tile.owner = p.id;
+  tile.acquiredViaTrade = true;
   lo.status = "accepted";
   p.stats!.landOffersAccepted += 1;
   proposer.stats!.landOffersGiven += 1;
@@ -1249,12 +1266,15 @@ function doSeize(
     w.log.push(`${p.id} は都市のあるマスは奪えない。`);
     return;
   }
+  // 開拓と同じく、取引で手に入れた土地は奪う対象を選ぶ起点にはできない
+  // （そうしないと、取引で得た土地を足がかりに奪う→そこから開拓、という
+  // 抜け道ができてしまうため）。
   const adjacent = neighbors(cmd.x, cmd.y, w.width, w.height).some((n) => {
     const nt = tileAt(w.tiles, w.width, n.x, n.y);
-    return nt && nt.owner === p.id;
+    return nt && nt.owner === p.id && !nt.acquiredViaTrade;
   });
   if (!adjacent) {
-    w.log.push(`${p.id} は自分の領土に隣接していない土地は奪えない。`);
+    w.log.push(`${p.id} は自分の領土（取引で手に入れた土地を除く）に隣接していない土地は奪えない。`);
     return;
   }
 
@@ -1267,6 +1287,7 @@ function doSeize(
 
   payAny(p.stock, cost, cmd.preferResource);
   target.owner = p.id;
+  target.acquiredViaTrade = false;
   p.stats!.seizesDone += 1;
   victim.stats!.seizedByOthers += 1;
   w.log.push(
@@ -1355,12 +1376,13 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
     w.log.push(`${p.id} は (${x},${y}) が川ではないので橋を架けられなかった。`);
     return;
   }
+  // 開拓・奪うと同じく、取引で手に入れた土地は起点にできない。
   const adjacent = neighbors(x, y, w.width, w.height).some((n) => {
     const nt = tileAt(w.tiles, w.width, n.x, n.y);
-    return nt && nt.owner === p.id;
+    return nt && nt.owner === p.id && !nt.acquiredViaTrade;
   });
   if (!adjacent) {
-    w.log.push(`${p.id} は自分の領土に隣接していない川には橋を架けられなかった。`);
+    w.log.push(`${p.id} は自分の領土（取引で手に入れた土地を除く）に隣接していない川には橋を架けられなかった。`);
     return;
   }
 
@@ -1383,6 +1405,7 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
   for (const t of path) {
     if (t.kind === "river") t.kind = rng.pick(RESOURCES);
     t.owner = p.id;
+    t.acquiredViaTrade = false;
   }
   p.hasBridged = true;
   p.stats!.bridgesBuilt += 1;
@@ -1520,7 +1543,10 @@ function doCommence(w: World, p: Player): boolean {
   }
 
   const site = tileAt(w.tiles, w.width, project.x, project.y);
-  if (site) site.owner = p.id;
+  if (site) {
+    site.owner = p.id;
+    site.acquiredViaTrade = false;
+  }
   p.stats!.projectsBuilt += 1;
 
   for (const other of Object.values(w.players)) {

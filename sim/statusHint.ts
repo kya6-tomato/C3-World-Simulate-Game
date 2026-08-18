@@ -26,11 +26,14 @@ function hasCityAt(w: World, x: number, y: number): boolean {
   );
 }
 
-/** 自分の領土に隣接している、まだ誰のものでもない土地（重複なし）。 */
+/**
+ * 自分の領土に隣接している、まだ誰のものでもない土地（重複なし）。
+ * 取引で手に入れた土地は開拓の起点にできないので、その隣は含めない。
+ */
 function adjacentUnowned(w: World, playerId: string): Tile[] {
   const found = new Map<string, Tile>();
   for (const t of w.tiles) {
-    if (t.owner !== playerId) continue;
+    if (t.owner !== playerId || t.acquiredViaTrade) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
       const nt = tileAt(w.tiles, w.width, n.x, n.y);
       if (nt && nt.owner === null && nt.kind !== "waste" && nt.kind !== "river") {
@@ -45,7 +48,7 @@ function adjacentUnowned(w: World, playerId: string): Tile[] {
 function seizableNeighbors(w: World, playerId: string): Tile[] {
   const found = new Map<string, Tile>();
   for (const t of w.tiles) {
-    if (t.owner !== playerId) continue;
+    if (t.owner !== playerId || t.acquiredViaTrade) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
       const nt = tileAt(w.tiles, w.width, n.x, n.y);
       if (!nt || !nt.owner || nt.owner === playerId) continue;
