@@ -216,7 +216,16 @@
     font-size: 12.5px; padding: 7px 10px; border-radius: 6px; background: var(--paper-sunken);
     border-left: 2px solid var(--accent-soft);
   }
+  ul.log-lines li.log-event {
+    font-weight: 600; border-left: 3px solid var(--warn);
+    background: color-mix(in srgb, var(--warn) 12%, var(--paper-sunken));
+  }
   .log-id { font-family: ui-monospace, monospace; font-weight: 700; }
+  .log-event-tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; color: #fff;
+    background: var(--warn); border-radius: 100px; padding: 1px 7px; margin-right: 6px;
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; white-space: nowrap;
+  }
 
   .roster-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
   .roster-head h3 { margin: 0; }
@@ -470,6 +479,18 @@
     return esc(line).replace(pattern, function (id) {
       return '<span class="log-id" style="color:' + colorOf(id) + '">' + id + "</span>";
     });
+  }
+
+  // 【○○】から始まるログは、通常の行動結果ではなく世界のイベント
+  // （災害・脅威・称号など）を示す特別な行なので、目立たせて表示する。
+  function renderLogLine(line, ids) {
+    var m = line.match(/^【([^】]+)】/);
+    if (!m) {
+      return { html: highlightIds(line, ids), isEvent: false };
+    }
+    var rest = line.slice(m[0].length);
+    var html = '<span class="log-event-tag">' + esc(m[1]) + "</span>" + highlightIds(rest, ids);
+    return { html: html, isEvent: true };
   }
 
   async function main() {
@@ -766,7 +787,10 @@
     var logFeed = document.getElementById("log-feed");
     logFeed.innerHTML = history.slice().reverse().map(function (t) {
       var lines = t.log.length
-        ? t.log.map(function (l) { return "<li>" + highlightIds(l, ids) + "</li>"; }).join("")
+        ? t.log.map(function (l) {
+            var r = renderLogLine(l, ids);
+            return '<li class="' + (r.isEvent ? "log-event" : "") + '">' + r.html + "</li>";
+          }).join("")
         : '<li class="empty-note">（動きなし）</li>';
       return '<div class="log-turn"><div class="log-turn-head">ターン ' + t.turn + '</div><ul class="log-lines">' + lines + "</ul></div>";
     }).join("");
