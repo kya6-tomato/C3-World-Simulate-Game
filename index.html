@@ -652,7 +652,8 @@
     };
     var currentGoalType = GOAL_TYPES[state.worldGoalType] || GOAL_TYPES.cityLevel;
     var goalCurrent = currentGoalType.metric(state);
-    var goalThreshold = state.worldGoalNextThreshold || (goalCurrent + currentGoalType.step);
+    var goalThreshold = state.worldGoalNextThreshold ||
+      (Math.floor(goalCurrent / currentGoalType.step) + 1) * currentGoalType.step;
     var goalPct = Math.min(100, Math.round((goalCurrent / goalThreshold) * 100));
     var goalRemaining = Math.max(0, goalThreshold - goalCurrent);
     document.getElementById("goal-body").innerHTML =

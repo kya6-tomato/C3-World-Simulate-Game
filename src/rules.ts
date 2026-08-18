@@ -470,16 +470,27 @@ function currentWorldGoalType(w: World) {
 }
 
 /**
+ * その種類の「到達幅」の、値のすぐ上にある倍数を返す（例: 到達幅40で値が15なら40、
+ * 値が40ちょうどなら80）。ルールブックに書いてある到達幅の数字が、そのまま
+ * 到達ラインとして表示されるようにするための固定の節目。「今の値＋到達幅」の
+ * ような、切り替わったタイミング次第で変わる半端な数字にはしない。
+ */
+function nextGoalMultiple(value: number, step: number): number {
+  return (Math.floor(value / step) + 1) * step;
+}
+
+/**
  * 現在の世界目標の状態（表示用）: ラベル・現在値・次の到達ライン。
  * 世界目標は種類が複数あって達成のたびに切り替わるので、表示側で
  * 種類を知らなくてもこの1関数を呼べば正しい内容が取れるようにしてある。
  */
 export function worldGoalProgress(w: World): { label: string; current: number; threshold: number } {
   const type = currentWorldGoalType(w);
+  const current = type.metric(w);
   return {
     label: type.label,
-    current: type.metric(w),
-    threshold: w.worldGoalNextThreshold ?? type.metric(w) + type.step,
+    current,
+    threshold: w.worldGoalNextThreshold ?? nextGoalMultiple(current, type.step),
   };
 }
 
@@ -492,7 +503,7 @@ function resolveWorldGoal(w: World, rng: Rng) {
   if (!w.worldGoalType) w.worldGoalType = WORLD_GOAL_TYPES[0].key;
   let type = currentWorldGoalType(w);
   if (w.worldGoalNextThreshold === undefined) {
-    w.worldGoalNextThreshold = type.metric(w) + type.step;
+    w.worldGoalNextThreshold = nextGoalMultiple(type.metric(w), type.step);
   }
 
   while (type.metric(w) >= (w.worldGoalNextThreshold ?? type.step)) {
@@ -506,7 +517,7 @@ function resolveWorldGoal(w: World, rng: Rng) {
     // 次の世界目標は、種類ごとランダムに選び直す（同じ種類が続くこともある）。
     type = rng.pick(WORLD_GOAL_TYPES);
     w.worldGoalType = type.key;
-    w.worldGoalNextThreshold = type.metric(w) + type.step;
+    w.worldGoalNextThreshold = nextGoalMultiple(type.metric(w), type.step);
   }
 }
 

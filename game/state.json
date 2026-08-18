@@ -5880,5 +5880,5 @@
   "project": null,
   "faction": null,
   "worldGoalType": "cityLevel",
-  "worldGoalNextThreshold": 55
+  "worldGoalNextThreshold": 40
 }
