@@ -152,6 +152,29 @@
   .tile-info b { color: var(--ink); font-family: ui-monospace, monospace; }
   .tile-info .dot { margin-right: 2px; }
 
+  details.fold-section { margin: 0; }
+  details.fold-section > summary {
+    cursor: pointer; list-style: none; user-select: none;
+    background: var(--paper-raised); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 22px; box-shadow: var(--shadow);
+    font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 8px;
+  }
+  details.fold-section > summary::-webkit-details-marker { display: none; }
+  details.fold-section > summary::before {
+    content: ""; width: 3px; height: 13px; background: var(--accent); border-radius: 2px; display: inline-block;
+  }
+  details.fold-section > summary .fold-count {
+    font-family: ui-monospace, monospace; font-weight: 700; color: var(--ink);
+    background: var(--paper-sunken); border-radius: 100px; padding: 1px 8px; font-size: 10.5px;
+  }
+  details.fold-section > summary::after {
+    content: "開く ▸"; margin-left: auto; color: var(--ink-soft); font-size: 11px; font-weight: 600;
+    text-transform: none; letter-spacing: 0;
+  }
+  details.fold-section[open] > summary::after { content: "閉じる ▾"; }
+  details.fold-section .contracts-row { margin-top: 14px; }
+
   .contract-group { margin-bottom: 16px; }
   .contract-group:last-child { margin-bottom: 0; }
   .contract-group-head {
@@ -292,21 +315,6 @@
       </div>
     </main>
 
-    <div class="contracts-row">
-      <div class="panel">
-        <h3>進行中の交渉</h3>
-        <div id="contracts-list"></div>
-      </div>
-      <div class="panel">
-        <h3>土地のやり取り</h3>
-        <ul class="contracts" id="land-offers-list"></ul>
-      </div>
-      <div class="panel">
-        <h3>掲示板</h3>
-        <ul class="board-posts" id="board-posts-list"></ul>
-      </div>
-    </div>
-
     <div class="board-lower">
       <section class="panel">
         <div class="roster-head">
@@ -338,6 +346,24 @@
         <div class="log-feed" id="log-feed"></div>
       </section>
     </div>
+
+    <details class="fold-section" id="contracts-fold">
+      <summary>交渉・土地のやり取り・掲示板<span class="fold-count" id="contracts-fold-count">0件</span></summary>
+      <div class="contracts-row">
+        <div class="panel">
+          <h3>進行中の交渉</h3>
+          <div id="contracts-list"></div>
+        </div>
+        <div class="panel">
+          <h3>土地のやり取り</h3>
+          <ul class="contracts" id="land-offers-list"></ul>
+        </div>
+        <div class="panel">
+          <h3>掲示板</h3>
+          <ul class="board-posts" id="board-posts-list"></ul>
+        </div>
+      </div>
+    </details>
 
     <footer>
       <span>盤面ビューア — C3-World-Simulate-Game</span>
@@ -726,6 +752,10 @@
           '<span class="pill">提案中</span></li>';
       }).join("");
     }
+
+    // 交渉・土地・掲示板の折りたたみパネルに、中身の件数バッジを付ける
+    var foldCount = proposedContracts.length + activeContracts.length + landOffers.length + boardPosts.length;
+    document.getElementById("contracts-fold-count").textContent = foldCount + "件";
 
     // ターンのログ
     var logFeed = document.getElementById("log-feed");
