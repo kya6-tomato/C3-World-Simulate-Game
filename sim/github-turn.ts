@@ -8,6 +8,7 @@ import { resolveTurn, totalScore, aidContributionScore, threatContributionScore,
 import { renderMapSvg } from "../src/render.ts";
 import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
+import { postNote } from "./misskey.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
 import { statusHint, riskHint, resourceLedger, pendingOffersHint, activeContractsHint, distanceHint, achievementSummaryLine, activeEffectsHint, worldEventsHint } from "./statusHint.ts";
@@ -137,6 +138,35 @@ async function main() {
       l.includes("【掲示板】") ||
       ids.filter((pid) => l.includes(pid)).length >= 2,
   );
+
+  // Misskeyに、このターンで起きた注目イベントをまとめて投稿する。
+  // botのアクセストークンが設定されていない（.envにもActionsのSecretsにも無い）
+  // ときは、何もせず静かにスキップする。投稿に失敗しても、本体のターン処理
+  // （各参加者への返信）は止めずに続ける。
+  if (process.env.MISSKEY_TOKEN) {
+    const highlightLines = next.log.filter(
+      (l) =>
+        l.includes("【災害】") ||
+        l.includes("【称号】") ||
+        l.includes("【脅威】") ||
+        l.includes("【事業】") ||
+        l.includes("【世界目標】") ||
+        l.includes("【陣営戦】") ||
+        l.includes("【掲示板】"),
+    );
+    const body =
+      `🌍 C3 World Simulate Game: 第${next.turn}ターン\n\n` +
+      (highlightLines.length > 0
+        ? highlightLines.slice(0, 8).map((l) => `・${l}`).join("\n")
+        : "特に大きな動きはありませんでした。") +
+      `\n\n盤面: https://kya6-tomato.github.io/C3-World-Simulate-Game/`;
+    try {
+      await postNote(body);
+      console.log("Misskeyに投稿しました。");
+    } catch (e) {
+      console.error("Misskeyへの投稿に失敗しました:", e);
+    }
+  }
 
   // 各参加者に、自分に関係する出来事・全体の出来事・今の状況・次の目安を返信する。
   for (const id of ids) {

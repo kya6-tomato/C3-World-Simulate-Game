@@ -36,6 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GAME_DIR: game
+          MISSKEY_TOKEN: ${{ secrets.MISSKEY_TOKEN }}
         run: node sim/github-turn.ts
 
       - name: 進行状況を保存する
