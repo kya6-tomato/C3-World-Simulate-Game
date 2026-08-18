@@ -10,7 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
-import { statusHint, riskHint, resourceLedger, pendingOffersHint, distanceHint, achievementSummaryLine, worldEventsHint } from "./statusHint.ts";
+import { statusHint, riskHint, resourceLedger, pendingOffersHint, distanceHint, achievementSummaryLine, activeEffectsHint, worldEventsHint } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -191,6 +191,11 @@ async function main() {
         `食料 ${p.stock.food} ・ 資材 ${p.stock.material} ・ 知識 ${p.stock.knowledge}`,
         ...(achLine ? [achLine] : []),
       );
+    }
+
+    const effects = activeEffectsHint(next, id);
+    if (effects.length > 0) {
+      lines.push("", "**あなたの効果**", ...effects.map((e) => `- ${e}`));
     }
 
     const ledger = resourceLedger(world, next, id);

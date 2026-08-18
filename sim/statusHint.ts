@@ -13,6 +13,7 @@ import {
   totalCityLevel,
   totalStock,
   underdogCostDiscount,
+  underdogDeficitRatio,
   underdogTier,
   worldGoalProgress,
 } from "../src/rules.ts";
@@ -285,8 +286,8 @@ export function resourceLedger(before: World, after: World, playerId: string): s
 
 /**
  * 自分宛てに来ている、まだ返事をしていない提案・土地提案を一覧にする。
- * 承諾するためのコマンドをそのままコピペできる形で添えるので、
- * 提案されたことに気づきさえすれば、迷わず承諾できる。
+ * 承諾する・断るための両方のコマンドをそのままコピペできる形で添えるので、
+ * 提案されたことに気づきさえすれば、どちらの返事でも迷わず送れる。
  */
 export function pendingOffersHint(w: World, playerId: string): string[] {
   const lines: string[] = [];
@@ -297,7 +298,7 @@ export function pendingOffersHint(w: World, playerId: string): string[] {
     lines.push(
       `${c.from} からの提案（あと${left}ターンで失効）: 承諾すると ${RESOURCE_JA[c.give]}${c.giveAmount}をもらい、` +
         `${RESOURCE_JA[c.take]}${c.takeAmount}を渡す（毎ターン・${c.turnsLeft}ターン間）ことになります。` +
-        `承諾するには次のコメントをそのままコピペ: \`承諾 ${c.id}\``,
+        `承諾するには \`承諾 ${c.id}\`、断るには \`拒否 ${c.id}\` をそのままコピペ。`,
     );
   }
 
@@ -307,7 +308,7 @@ export function pendingOffersHint(w: World, playerId: string): string[] {
     lines.push(
       `${lo.from} からの土地提案（あと${left}ターンで失効）: 承諾すると (${lo.x},${lo.y}) がもらえる代わりに、` +
         `${RESOURCE_JA[lo.wantResource]}${lo.wantAmount}を渡すことになります。` +
-        `承諾するには次のコメントをそのままコピペ: \`土地承諾 ${lo.id}\``,
+        `承諾するには \`土地承諾 ${lo.id}\`、断るには \`土地拒否 ${lo.id}\` をそのままコピペ。`,
     );
   }
 
@@ -323,6 +324,57 @@ export function achievementSummaryLine(w: World, playerId: string): string | nul
   const p = w.players[playerId];
   if (!p || !p.achievements || p.achievements.length === 0) return null;
   return `称号 ${p.achievements.length}/${ACHIEVEMENTS.length}個 獲得済み。`;
+}
+
+/**
+ * 今の自分に乗っている効果（都市レベル・称号による永続効果、劣勢優遇など）を
+ * まとめて一覧にする。コストや被害の計算にはすでに反映されているが、
+ * 何がどれだけ効いているかは他の欄からは見えにくいので、ここで一覧にする。
+ */
+export function activeEffectsHint(w: World, playerId: string): string[] {
+  const p = w.players[playerId];
+  if (!p) return [];
+  const lines: string[] = [];
+
+  const level = totalCityLevel(p);
+  if (level > 0) {
+    const rangeBonus = level * CONFIG.cityLevelTradeRangeBonus;
+    const expandDiscount = Math.floor(level / CONFIG.cityLevelExpandDiscountEvery) * CONFIG.cityLevelExpandDiscountAmount;
+    const trustBonus = Math.round(level * CONFIG.cityLevelTrustRecoverBonus * 100) / 100;
+    const seizeDefense = Math.round(level * CONFIG.citySeizeDefenseRate * 100);
+    const harvestBonus = level * CONFIG.cityLevelHarvestBonus;
+    const parts = [`取引可能距離+${rangeBonus}`];
+    if (expandDiscount > 0) parts.push(`開拓コスト-${expandDiscount}`);
+    parts.push(`信用回復+${trustBonus}/ターン`, `奪われにくさ+${seizeDefense}%`, `回収量+${harvestBonus}`);
+    lines.push(`都市レベル合計${level}による効果: ${parts.join("、")}`);
+  }
+
+  const ab = p.achievementBonus;
+  if (ab) {
+    const parts: string[] = [];
+    if (ab.storage > 0) parts.push(`保管上限+${ab.storage}`);
+    if (ab.tradeRange > 0) parts.push(`取引可能距離+${ab.tradeRange}`);
+    if (ab.disasterMitigation > 0) parts.push(`災害の被害軽減+${Math.round(ab.disasterMitigation * 100)}%`);
+    if (ab.harvestBonus > 0) parts.push(`回収量+${ab.harvestBonus}`);
+    if (parts.length > 0) lines.push(`称号による永続効果: ${parts.join("、")}`);
+  }
+
+  const tier = underdogTier(w, playerId);
+  if (tier >= 1) {
+    const label = tier === 2 ? "危機的" : "劣勢";
+    const discount = Math.round(underdogCostDiscount(w, playerId) * 100);
+    const richChance = Math.round(underdogDeficitRatio(w, playerId) * CONFIG.richTileChanceMax * 100);
+    lines.push(
+      `${label}による優遇: 開拓・建設・奪うのコスト-${discount}%、災害の対象外、` +
+        `開拓で「豊かな土地」（産出量${CONFIG.richTileYieldMultiplier}倍）が出る確率${richChance}%`,
+    );
+  }
+
+  if (p.hasBridged) {
+    lines.push("このシーズンはすでに橋を使用済み（次シーズンまでもう使えません）。");
+  }
+
+  return lines;
 }
 
 /**
