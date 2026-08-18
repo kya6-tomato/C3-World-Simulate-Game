@@ -2013,6 +2013,44 @@ export const ACHIEVEMENTS: Achievement[] = [
     condition: (_w, p) => p.stats!.tradeExecutions >= 100,
     reward: (p) => { p.trust += 10; p.achievementBonus!.tradeRange += 5; },
   },
+  // ---- ここから「伝説級」：達成が難しい代わりに報酬も破格の称号 ----
+  {
+    id: "score_500",
+    title: "伝説の統治者",
+    desc: "得点が500に到達する",
+    rewardDesc: "信用+20、保管上限+50（永続）、取引可能距離+3（永続）、資源を各+30",
+    condition: (w, p) => totalScore(w, p.id) >= 500,
+    reward: (p) => {
+      p.trust += 20;
+      p.achievementBonus!.storage += 50;
+      p.achievementBonus!.tradeRange += 3;
+      for (const r of RESOURCES) p.stock[r] += 30;
+    },
+  },
+  {
+    id: "diverse_trader_10",
+    title: "全方位外交官",
+    desc: "同時に10人以上の異なる相手と取引している",
+    rewardDesc: "取引可能距離+5（永続）、資源を各+25",
+    condition: (w, p) => {
+      const partners = new Set<string>();
+      for (const c of w.contracts) {
+        if (c.status !== "active") continue;
+        if (c.from === p.id) partners.add(c.to);
+        else if (c.to === p.id) partners.add(c.from);
+      }
+      return partners.size >= 10;
+    },
+    reward: (p) => { p.achievementBonus!.tradeRange += 5; for (const r of RESOURCES) p.stock[r] += 25; },
+  },
+  {
+    id: "threat_legend",
+    title: "不滅の英雄",
+    desc: "「世界の脅威」の撃退に、5回貢献する",
+    rewardDesc: "災害の被害軽減+10%（永続）、信用+15",
+    condition: (_w, p) => p.stats!.threatsRepelled >= 5,
+    reward: (p) => { p.achievementBonus!.disasterMitigation += 0.1; p.trust += 15; },
+  },
 ];
 
 function checkAchievements(w: World) {
