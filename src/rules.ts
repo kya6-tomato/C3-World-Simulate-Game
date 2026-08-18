@@ -1441,6 +1441,10 @@ function doAid(
     w.log.push(`${p.id} は ${cmd.to} に援助しようとしたが、相手が見つからなかった。`);
     return;
   }
+  if (cmd.amount % CONFIG.aidMinUnit !== 0) {
+    w.log.push(`${p.id} は援助する数が${CONFIG.aidMinUnit}の倍数でないため、援助できなかった。`);
+    return;
+  }
   if (p.stock[cmd.resource] < cmd.amount) {
     w.log.push(`${p.id} は資源が足りず ${cmd.to} を援助できなかった。`);
     return;
@@ -1665,9 +1669,9 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "trade_first",
     title: "商いの一歩",
     desc: "取引を初めて成立させる",
-    rewardDesc: "信用+8",
+    rewardDesc: "信用+5、資源を各+8",
     condition: (_w, p) => p.stats!.tradeExecutions >= 1,
-    reward: (p) => { p.trust += 8; },
+    reward: (p) => { p.trust += 5; for (const r of RESOURCES) p.stock[r] += 8; },
   },
   {
     id: "trade_10",
@@ -1705,9 +1709,9 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "city_level_5",
     title: "若き指導者",
     desc: "都市レベルの合計が5に到達する",
-    rewardDesc: "信用+8",
+    rewardDesc: "信用+5、保管上限+10（永続）",
     condition: (_w, p) => totalCityLevel(p) >= 5,
-    reward: (p) => { p.trust += 8; },
+    reward: (p) => { p.trust += 5; p.achievementBonus!.storage += 10; },
   },
   {
     id: "city_level_15",
@@ -1745,16 +1749,16 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "aid_first",
     title: "情け深い者",
     desc: "誰かに援助を初めて送る",
-    rewardDesc: "信用+5",
+    rewardDesc: "信用+3、資源を各+6",
     condition: (_w, p) => p.stats!.aidsSent >= 1,
-    reward: (p) => { p.trust += 5; },
+    reward: (p) => { p.trust += 3; for (const r of RESOURCES) p.stock[r] += 6; },
   },
   {
     id: "aid_10",
     title: "聖人",
-    desc: "援助を10回送る",
+    desc: "援助の合計量が100に到達する",
     rewardDesc: "信用+15、資源を各+18",
-    condition: (_w, p) => p.stats!.aidsSent >= 10,
+    condition: (_w, p) => p.stats!.totalAidGiven >= 100,
     reward: (p) => { p.trust += 15; for (const r of RESOURCES) p.stock[r] += 18; },
   },
   {
@@ -1791,17 +1795,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "pass_10",
     title: "待機の達人",
     desc: "「待機」を10回選ぶ",
-    rewardDesc: "信用+4",
+    rewardDesc: "資源を各+10",
     condition: (_w, p) => p.stats!.passCount >= 10,
-    reward: (p) => { p.trust += 4; },
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 10; },
   },
   {
     id: "score_100",
     title: "覇者",
     desc: "得点が100に到達する",
-    rewardDesc: "信用+20",
+    rewardDesc: "信用+10、取引可能距離+2（永続）",
     condition: (w, p) => totalScore(w, p.id) >= 100,
-    reward: (p) => { p.trust += 20; },
+    reward: (p) => { p.trust += 10; p.achievementBonus!.tradeRange += 2; },
   },
   {
     id: "land_gift_received",
@@ -1815,9 +1819,9 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "land_gift_given",
     title: "気前の良い隣人",
     desc: "誰かに土地を初めて譲る（土地提案が承諾される）",
-    rewardDesc: "信用+5",
+    rewardDesc: "信用+3、資源を各+8",
     condition: (_w, p) => p.stats!.landOffersGiven >= 1,
-    reward: (p) => { p.trust += 5; },
+    reward: (p) => { p.trust += 3; for (const r of RESOURCES) p.stock[r] += 8; },
   },
   {
     id: "network_3",
@@ -1831,17 +1835,17 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "clean_record_30",
     title: "誠実な統治者",
     desc: "一度も契約を自分から破棄せずに30ターンを迎える",
-    rewardDesc: "信用+12",
+    rewardDesc: "信用+8、資源を各+10",
     condition: (w, p) => w.turn >= 30 && p.stats!.breaksDone === 0,
-    reward: (p) => { p.trust += 12; },
+    reward: (p) => { p.trust += 8; for (const r of RESOURCES) p.stock[r] += 10; },
   },
   {
     id: "comeback",
     title: "第二の人生",
     desc: "信用が55未満まで落ち込んだあと、90まで立て直す",
-    rewardDesc: "信用+8",
+    rewardDesc: "信用+5、資源を各+10",
     condition: (_w, p) => p.stats!.minTrustEver < CONFIG.seizeBelowTrust && p.trust >= 90,
-    reward: (p) => { p.trust += 8; },
+    reward: (p) => { p.trust += 5; for (const r of RESOURCES) p.stock[r] += 10; },
   },
   {
     id: "full_set",
@@ -1907,9 +1911,9 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: "threat_hero",
     title: "災厄の英雄",
     desc: "「世界の脅威」の撃退に、初めて貢献する",
-    rewardDesc: "信用+10",
+    rewardDesc: "信用+5、資源を各+10",
     condition: (_w, p) => p.stats!.threatsRepelled >= 1,
-    reward: (p) => { p.trust += 10; },
+    reward: (p) => { p.trust += 5; for (const r of RESOURCES) p.stock[r] += 10; },
   },
   {
     id: "threat_guardian",
@@ -1926,6 +1930,54 @@ export const ACHIEVEMENTS: Achievement[] = [
     rewardDesc: "資源を各+15",
     condition: (_w, p) => p.stats!.projectsBuilt >= 1,
     reward: (p) => { for (const r of RESOURCES) p.stock[r] += 15; },
+  },
+  {
+    id: "faction_win_first",
+    title: "陣営の立役者",
+    desc: "「陣営戦」で勝った陣営の一員として、初めて報酬を受け取る",
+    rewardDesc: "資源を各+12",
+    condition: (_w, p) => p.stats!.factionBattlesWon >= 1,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 12; },
+  },
+  {
+    id: "faction_win_3",
+    title: "常勝の陣営",
+    desc: "「陣営戦」で勝った陣営の一員に、3回なる",
+    rewardDesc: "信用+8、取引可能距離+2（永続）",
+    condition: (_w, p) => p.stats!.factionBattlesWon >= 3,
+    reward: (p) => { p.trust += 8; p.achievementBonus!.tradeRange += 2; },
+  },
+  {
+    id: "rich_tile_first",
+    title: "幸運の掘り当て人",
+    desc: "「豊かな土地」を1マス以上所有する",
+    rewardDesc: "資源を各+15",
+    condition: (w, p) => w.tiles.some((t) => t.owner === p.id && t.rich),
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 15; },
+  },
+  {
+    id: "diverse_trader_5",
+    title: "顔の広い商人",
+    desc: "同時に5人以上の異なる相手と取引している",
+    rewardDesc: "取引可能距離+2（永続）",
+    condition: (w, p) => {
+      const partners = new Set<string>();
+      for (const c of w.contracts) {
+        if (c.status !== "active") continue;
+        if (c.from === p.id) partners.add(c.to);
+        else if (c.to === p.id) partners.add(c.from);
+      }
+      return partners.size >= 5;
+    },
+    reward: (p) => { p.achievementBonus!.tradeRange += 2; },
+  },
+  {
+    id: "score_200",
+    title: "不動の帝王",
+    desc: "得点が200に到達する",
+    rewardDesc: "信用+10、保管上限+30（永続）",
+    condition: (w, p) => totalScore(w, p.id) >= 200,
+    reward: (p) => { p.trust += 10; p.achievementBonus!.storage += 30; },
   },
 ];
 

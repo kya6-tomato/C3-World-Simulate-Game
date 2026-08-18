@@ -374,7 +374,7 @@
       <tr><td>土地を譲る提案をする</td><td><code>土地提案 p05 12 7 もらう 知識 30</code>（相手の土地が欲しいときは <code>土地提案 p05 12 7 もらう 20 8</code> のように座標を指定）</td></tr>
       <tr><td>土地の提案を受け入れる</td><td><code>土地承諾 L3-p05-1</code></td></tr>
       <tr><td>土地の提案を断る</td><td><code>土地拒否 L3-p05-1</code></td></tr>
-      <tr><td>誰かに資源を無償で送る</td><td><code>援助 p05 資材 20</code>（距離・信用に関係なく送れる。送った側は少し信用が上がる）</td></tr>
+      <tr><td>誰かに資源を無償で送る</td><td><code>援助 p05 資材 20</code>（距離・信用に関係なく送れる。数は5の倍数のみ。送った側は少し信用が上がる）</td></tr>
       <tr><td>世界の脅威に貢献する</td><td><code>貢献 資材 20</code>（世界の脅威が発生している間だけ使えます）</td></tr>
       <tr><td>共同事業に資源を送る</td><td><code>輸出 資材 20</code>（共同事業が進行している間だけ使えます。どこにいても送れます）</td></tr>
       <tr><td>陣営戦に資源を投入する</td><td><code>賭ける 資材 20</code>（陣営戦が発生している間だけ使えます。投入した資源は勝敗に関わらず戻りません）</td></tr>
@@ -651,6 +651,7 @@
     <h3>援助する</h3>
     <p>誰かに資源を無償で送ります（例: <code>援助 p05 資材 20</code>）。</p>
     <ul>
+      <li>1回あたりの数は<strong>5の倍数</strong>にしてください（5、10、15…）。1ずつ何十回も送って回数だけを稼ぐ、といったことを防ぐためです</li>
       <li>距離・信用に関係なく、誰にでも送れます</li>
       <li>何度でもでき、本番の行動を消費しません</li>
       <li>送った側は少し信用が上がります（送った量に応じて、最大+5まで）</li>
@@ -787,7 +788,7 @@
 
   <section class="part" id="rule-achievements">
     <h2 class="chapter"><span class="n">09</span>称号</h2>
-    <p>特定の条件を初めて満たした瞬間に、実績として称号がもらえます。一度取ったら二度と消えません。何かコマンドを打つ必要はなく、条件を満たした次のターン処理で自動的に付与されます。獲得すると、その回の返信に<strong>全員へ</strong>共有され、報酬（信用アップ・資源・永続的な小さいバフなど）がもらえます。「永続」と付く報酬は以後ずっと効き続けます。自分の獲得数は、毎ターンの返信の「今の状況」に表示されます。</p>
+    <p>特定の条件を初めて満たした瞬間に、実績として称号がもらえます。一度取ったら二度と消えません。何かコマンドを打つ必要はなく、条件を満たした次のターン処理で自動的に付与されます。獲得すると、その回の返信に<strong>全員へ</strong>共有され、報酬（資源・永続的な小さいバフ・信用アップなど）がもらえます。「永続」と付く報酬は以後ずっと効き続けます。自分の獲得数は、毎ターンの返信の「今の状況」に表示されます。</p>
 
     <div class="ach-cats">
       <div>
@@ -802,13 +803,14 @@
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-trade)">Trade</span><h4>取引・援助にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>商いの一歩</h5><p class="cond">取引を初めて成立させる</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>商いの一歩</h5><p class="cond">取引を初めて成立させる</p><span class="reward"><b>報酬</b> 信用+5、資源を各+8</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>名うての商人</h5><p class="cond">取引を10回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>伝説の商人</h5><p class="cond">取引を50回成立させる</p><span class="reward"><b>報酬</b> 取引可能距離+4（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>情け深い者</h5><p class="cond">誰かに援助を初めて送る</p><span class="reward"><b>報酬</b> 信用+5</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>聖人</h5><p class="cond">援助を10回送る</p><span class="reward"><b>報酬</b> 信用+15、資源を各+18</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>情け深い者</h5><p class="cond">誰かに援助を初めて送る</p><span class="reward"><b>報酬</b> 信用+3、資源を各+6</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>聖人</h5><p class="cond">援助の合計量が100に到達する</p><span class="reward"><b>報酬</b> 信用+15、資源を各+18</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>交易網</h5><p class="cond">同時に3件以上の契約を進行させる</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>誠実な統治者</h5><p class="cond">一度も契約を自分から破棄せずに30ターンを迎える</p><span class="reward"><b>報酬</b> 信用+12</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>誠実な統治者</h5><p class="cond">一度も契約を自分から破棄せずに30ターンを迎える</p><span class="reward"><b>報酬</b> 信用+8、資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-trade)"></div><h5>顔の広い商人</h5><p class="cond">同時に5人以上の異なる相手と取引している</p><span class="reward"><b>報酬</b> 取引可能距離+2（永続）</span></div>
         </div>
       </div>
 
@@ -821,15 +823,16 @@
           <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>荒野の開拓者</h5><p class="cond">荒地を5マス所有する</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>三拍子そろい踏み</h5><p class="cond">食料・資材・知識をそれぞれ5マス以上所有する</p><span class="reward"><b>報酬</b> 取引可能距離+3（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>土地の絆</h5><p class="cond">誰かから土地の提案を初めて受け取る</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>気前の良い隣人</h5><p class="cond">誰かに土地を初めて譲る</p><span class="reward"><b>報酬</b> 信用+5</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>気前の良い隣人</h5><p class="cond">誰かに土地を初めて譲る</p><span class="reward"><b>報酬</b> 信用+3、資源を各+8</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>コンプリート主義者</h5><p class="cond">食料・資材・知識・荒地のすべてを1マス以上所有する</p><span class="reward"><b>報酬</b> 保管上限+10（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-territory)"></div><h5>幸運の掘り当て人</h5><p class="cond">「豊かな土地」を1マス以上所有する</p><span class="reward"><b>報酬</b> 資源を各+15</span></div>
         </div>
       </div>
 
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-city)">City &amp; Crisis</span><h4>都市・災害にまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>若き指導者</h5><p class="cond">都市レベルの合計が5に到達する</p><span class="reward"><b>報酬</b> 信用+8</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>若き指導者</h5><p class="cond">都市レベルの合計が5に到達する</p><span class="reward"><b>報酬</b> 信用+5、保管上限+10（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>大都市の主</h5><p class="cond">都市レベルの合計が15に到達する</p><span class="reward"><b>報酬</b> 保管上限+35（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>不屈の精神</h5><p class="cond">災害を1回生き延びる</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-city)"></div><h5>季節を生き抜いた者</h5><p class="cond">1シーズン（112ターン）を、領土を保ったまま乗り切る</p><span class="reward"><b>報酬</b> 信用+15、保管上限+20（永続）</span></div>
@@ -840,9 +843,11 @@
       <div>
         <div class="ach-cat-head"><span class="ach-tag" style="background:var(--cat-world)">World</span><h4>世界のイベントにまつわる称号</h4></div>
         <div class="ach-grid">
-          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>災厄の英雄</h5><p class="cond">「世界の脅威」の撃退に、初めて貢献する</p><span class="reward"><b>報酬</b> 信用+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>災厄の英雄</h5><p class="cond">「世界の脅威」の撃退に、初めて貢献する</p><span class="reward"><b>報酬</b> 信用+5、資源を各+10</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>守護者</h5><p class="cond">「世界の脅威」の撃退に、3回貢献する</p><span class="reward"><b>報酬</b> 災害の被害軽減+5%（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>灯台守</h5><p class="cond">「共同事業」を、自分の隣接地で着工して完成させる</p><span class="reward"><b>報酬</b> 資源を各+15</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>陣営の立役者</h5><p class="cond">「陣営戦」で勝った陣営の一員として、初めて報酬を受け取る</p><span class="reward"><b>報酬</b> 資源を各+12</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-world)"></div><h5>常勝の陣営</h5><p class="cond">「陣営戦」で勝った陣営の一員に、3回なる</p><span class="reward"><b>報酬</b> 信用+8、取引可能距離+2（永続）</span></div>
         </div>
       </div>
 
@@ -851,10 +856,11 @@
         <div class="ach-grid">
           <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>海賊</h5><p class="cond">土地を3回、力ずくで奪う</p><span class="reward"><b>報酬</b> 回収量+3（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>資源の匠</h5><p class="cond">領土10マス以上のうち、8割以上を単一資源で占める</p><span class="reward"><b>報酬</b> 回収量+3（永続）</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>待機の達人</h5><p class="cond">「待機」を10回選ぶ</p><span class="reward"><b>報酬</b> 信用+4</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>覇者</h5><p class="cond">得点が100に到達する</p><span class="reward"><b>報酬</b> 信用+20</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>第二の人生</h5><p class="cond">信用が55未満まで落ち込んだあと、90まで立て直す</p><span class="reward"><b>報酬</b> 信用+8</span></div>
-          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>下剋上</h5><p class="cond">危機的（平均基礎点の40%未満）まで沈んだことがありながら、劣勢でなくなるまで這い上がる</p><span class="reward"><b>報酬</b> 信用+15、保管上限+25</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>待機の達人</h5><p class="cond">「待機」を10回選ぶ</p><span class="reward"><b>報酬</b> 資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>覇者</h5><p class="cond">得点が100に到達する</p><span class="reward"><b>報酬</b> 信用+10、取引可能距離+2（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>不動の帝王</h5><p class="cond">得点が200に到達する</p><span class="reward"><b>報酬</b> 信用+10、保管上限+30（永続）</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>第二の人生</h5><p class="cond">信用が55未満まで落ち込んだあと、90まで立て直す</p><span class="reward"><b>報酬</b> 信用+5、資源を各+10</span></div>
+          <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>下剋上</h5><p class="cond">危機的（平均基礎点の40%未満）まで沈んだことがありながら、劣勢でなくなるまで這い上がる</p><span class="reward"><b>報酬</b> 信用+15、保管上限+25（永続）</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>追い風</h5><p class="cond">一度でも劣勢（平均基礎点の75%未満）になったことがありながら、劣勢でなくなる</p><span class="reward"><b>報酬</b> 資源を各+12</span></div>
           <div class="ach-card"><div class="bar" style="background:var(--cat-flavor)"></div><h5>健闘賞</h5><p class="cond">劣勢の状態のまま、称号を5個以上獲得する</p><span class="reward"><b>報酬</b> 保管上限+15</span></div>
         </div>

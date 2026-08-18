@@ -58,7 +58,7 @@ const USAGE: Record<string, string> = {
   奪う: "奪う x y（例: 奪う 12 7）。最後に資源名を書くと、それを優先して使う（例: 奪う 12 7 資材）",
   回収: "回収 資源名（例: 回収 資材）。自分がその資源のマスを持っている必要があります",
   橋: "橋 x y（例: 橋 12 7）。自分の土地に隣接する川のマスだけ指定できます。1シーズンに1回だけ",
-  援助: "援助 相手のID 資源名 数（例: 援助 p05 資材 20）",
+  援助: "援助 相手のID 資源名 数（例: 援助 p05 資材 20）。数は5の倍数にしてください",
   貢献: "貢献 資源名 数（例: 貢献 資材 20）。世界の脅威が発生している間だけ使えます",
   輸出: "輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます",
   着工: "着工（引数なし）。共同事業の資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます",
@@ -224,6 +224,12 @@ export function parseComment(player: string, rawText: string): ParseResult {
     const amount = Number(tokens[3]);
     if (!Number.isInteger(amount) || amount <= 0) {
       return { command: null, error: `一番最後に、渡す数を半角数字で書いてください。${usage}` };
+    }
+    if (amount % CONFIG.aidMinUnit !== 0) {
+      return {
+        command: null,
+        error: `援助する数は${CONFIG.aidMinUnit}の倍数にしてください（例: ${CONFIG.aidMinUnit}、${CONFIG.aidMinUnit * 2}）。${usage}`,
+      };
     }
     return { command: { type: "aid", player, to, resource, amount }, error: null };
   }
