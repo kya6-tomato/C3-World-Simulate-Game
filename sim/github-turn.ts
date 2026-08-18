@@ -259,7 +259,26 @@ async function main() {
       "",
       `次の命令をこのIssueにコメントしてください（次のターンは ${CONFIG.turnTimesJst.map((t) => `${t}時`).join("・")} のいずれか）。何も書かなければ、いつもの行動が自動で続きます。`,
     );
-    await postSystemComment(issueNumber, lines.join("\n"));
+
+    // 1つのコメントに何行も命令を詰め込まれた場合など、めったに無いが
+    // 返信本文がGitHubの上限（1コメント65536文字）を超えることがありうる。
+    // 超えたまま投稿すると失敗し、その例外で以降の参加者への返信が
+    // まとめて止まってしまうため、あらかじめ安全に切り詰める。
+    let body = lines.join("\n");
+    const GITHUB_COMMENT_MAX_LENGTH = 65536;
+    if (body.length > GITHUB_COMMENT_MAX_LENGTH) {
+      const notice = "\n\n（出来事が多すぎたため、一部を省略しました）";
+      body = body.slice(0, GITHUB_COMMENT_MAX_LENGTH - notice.length) + notice;
+    }
+
+    // 1人への返信投稿が何らかの理由で失敗しても、それ以降の参加者への
+    // 返信が止まってしまわないよう、ここで失敗を吸収して次に進む
+    // （ゲーム自体の状態は既に保存済みなので、返信だけが欠けても実害は小さい）。
+    try {
+      await postSystemComment(issueNumber, body);
+    } catch (e) {
+      console.error(`${id} への返信投稿に失敗しました:`, e);
+    }
   }
   console.log("各参加者のIssueに結果を返信しました。");
 }

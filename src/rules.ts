@@ -282,7 +282,7 @@ function triggerDisasters(w: World, rng: Rng) {
       if (owned.length === 0) continue;
       const lossCount = Math.max(1, Math.round(owned.length * severity));
       const targets = rng.shuffle(owned).slice(0, Math.min(lossCount, owned.length));
-      for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; }
+      for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; t.rich = false; }
       w.log.push(
         `【災害】${p.id} の土地で災害が発生し、${targets.length}マスを失った` +
           `（被害${Math.round(severity * 100)}%）。援助 ${p.id} 資源名 数 で誰でも助けられます。`,
@@ -369,7 +369,7 @@ function applyThreatDamage(w: World, p: Player, severity: number, rng: Rng): str
     if (owned.length === 0) return doResourceDamage();
     const lossCount = Math.max(1, Math.round(owned.length * severity));
     const targets = rng.shuffle(owned).slice(0, Math.min(lossCount, owned.length));
-    for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; }
+    for (const t of targets) { t.owner = null; t.acquiredViaTrade = false; t.rich = false; }
     return `${targets.length}マスを失った`;
   } else {
     const lost = Math.round(severity * 40);
@@ -970,6 +970,9 @@ function doExpand(
 
   target.owner = p.id;
   target.acquiredViaTrade = false;
+  // 前の持ち主が災害等で失った土地の「豊かな土地」フラグが、抽選もせず
+  // そのまま次の開拓者に引き継がれてしまわないよう、いったんリセットする。
+  target.rich = false;
   const kindLabel = target.kind === "waste" ? "荒地" : RESOURCE_JA[target.kind as Resource];
 
   // 劣勢なプレイヤーほど、開拓したマスが「豊かな土地」になる確率が上がる
@@ -1030,6 +1033,17 @@ function doOffer(
   const range = effectiveTradeRange(w, p.id, cmd.to);
   if (d === null || d > range) {
     w.log.push(`${p.id} は ${cmd.to} まで遠すぎて交渉できない（距離${d}、範囲${range}）。`);
+    return;
+  }
+  // 1ずつの取引を積み重ねて回数だけを稼ぐ抜け道を防ぐための下限（援助と同じ考え方）。
+  if (cmd.giveAmount % CONFIG.minTransferUnit !== 0 || cmd.takeAmount % CONFIG.minTransferUnit !== 0) {
+    w.log.push(`${p.id} は提案する数が${CONFIG.minTransferUnit}の倍数でないため、提案できなかった。`);
+    return;
+  }
+  // 極端に長い期間の契約を1つ結ぶだけで、以後は何もしなくても毎ターン自動で
+  // 「取引成立」の回数だけが積み上がる抜け道を防ぐための上限。
+  if (cmd.turns > CONFIG.offerMaxTurns) {
+    w.log.push(`${p.id} は提案する期間が長すぎる（最大${CONFIG.offerMaxTurns}ターン）ため、提案できなかった。`);
     return;
   }
   const id = `C${w.turn}-${p.id}-${w.contracts.length}`;
@@ -1418,6 +1432,10 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
     if (t.kind === "river") t.kind = rng.pick(RESOURCES);
     t.owner = p.id;
     t.acquiredViaTrade = false;
+    // 橋では「豊かな土地」の抽選をしない。対岸の陸地マスが、前の持ち主が
+    // 災害等で失った際の rich フラグを残したままだと、抽選なしでタダで
+    // 引き継がれてしまうため、明示的にリセットする。
+    t.rich = false;
   }
   p.hasBridged = true;
   p.stats!.bridgesBuilt += 1;
@@ -1473,6 +1491,10 @@ function doContribute(w: World, p: Player, cmd: Extract<Command, { type: "contri
     w.log.push(`${p.id} は貢献しようとしたが、今は世界の脅威が発生していない。`);
     return;
   }
+  if (cmd.amount % CONFIG.minTransferUnit !== 0) {
+    w.log.push(`${p.id} は貢献する数が${CONFIG.minTransferUnit}の倍数でないため、貢献できなかった。`);
+    return;
+  }
   if (p.stock[cmd.resource] < cmd.amount) {
     w.log.push(`${p.id} は資源が足りず貢献できなかった。`);
     return;
@@ -1511,6 +1533,10 @@ function doContribute(w: World, p: Player, cmd: Extract<Command, { type: "contri
 function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>) {
   if (!w.project) {
     w.log.push(`${p.id} は輸出しようとしたが、今は共同事業が進行していない。`);
+    return;
+  }
+  if (cmd.amount % CONFIG.minTransferUnit !== 0) {
+    w.log.push(`${p.id} は輸出する数が${CONFIG.minTransferUnit}の倍数でないため、輸出できなかった。`);
     return;
   }
   if (p.stock[cmd.resource] < cmd.amount) {
@@ -1603,6 +1629,10 @@ function doWager(w: World, p: Player, cmd: Extract<Command, { type: "wager" }>) 
   const label = battle.members[p.id];
   if (!label) {
     w.log.push(`${p.id} は陣営戦に賭けようとしたが、どちらの陣営にも属していない。`);
+    return;
+  }
+  if (cmd.amount % CONFIG.minTransferUnit !== 0) {
+    w.log.push(`${p.id} は投入する数が${CONFIG.minTransferUnit}の倍数でないため、投入できなかった。`);
     return;
   }
   if (p.stock[cmd.resource] < cmd.amount) {
