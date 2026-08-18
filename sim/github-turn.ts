@@ -155,11 +155,13 @@ async function main() {
         l.includes("【掲示板】"),
     );
     const body =
-      `🌍 C3 World Simulate Game: 第${next.turn}ターン\n\n` +
+      `C3-World-Simulate-Game参加者の皆さん！\n\n` +
+      `🌍 **UPDATE — 第${next.turn}ターン**\n\n` +
+      `**⚡ 起きたこと**\n` +
       (highlightLines.length > 0
         ? highlightLines.slice(0, 8).map((l) => `・${l}`).join("\n")
-        : "特に大きな動きはありませんでした。") +
-      `\n\n盤面: https://kya6-tomato.github.io/C3-World-Simulate-Game/`;
+        : "・特に大きな動きはありませんでした。") +
+      `\n\n**🗺 盤面を見る**\nhttps://kya6-tomato.github.io/C3-World-Simulate-Game/`;
     try {
       await postNote(body);
       console.log("Misskeyに投稿しました。");
