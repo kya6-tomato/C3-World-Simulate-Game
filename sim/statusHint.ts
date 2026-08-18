@@ -271,7 +271,10 @@ export function resourceLedger(before: World, after: World, playerId: string): s
     const net = ap.stock[r] - bp.stock[r];
     const prod = Math.round(production[r]);
     const other = net - prod;
-    if (prod === 0 && net === 0) continue; // 何も動いていない資源は表示しない
+    // 生産も無く、差し引きの増減も無い（＝取引などで動いていても相殺されてゼロになった
+    // だけの場合を含む）ときは、今その資源を持っていなければ表示しない。持っているなら、
+    // 動きがゼロでも「今いくら持っているか」を見せる意味があるので表示する。
+    if (prod === 0 && net === 0 && ap.stock[r] === 0) continue;
     const fmt = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
     lines.push(
       `${RESOURCE_JA[r]}: 生産${fmt(prod)} ・ その他${fmt(other)} ・ 合計${fmt(net)}（今 ${ap.stock[r]}）`,
