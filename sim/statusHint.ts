@@ -323,6 +323,30 @@ export function pendingOffersHint(w: World, playerId: string): string[] {
 }
 
 /**
+ * 今、自分が関わっている進行中の契約（毎ターン自動で資源が動いているもの）を
+ * 一覧にする。自分視点（渡す方・もらう方）に揃えて表示する。
+ */
+export function activeContractsHint(w: World, playerId: string): string[] {
+  const lines: string[] = [];
+  for (const c of w.contracts) {
+    if (c.status !== "active") continue;
+    if (c.from !== playerId && c.to !== playerId) continue;
+
+    const partner = c.from === playerId ? c.to : c.from;
+    const give = c.from === playerId ? c.give : c.take;
+    const giveAmount = c.from === playerId ? c.giveAmount : c.takeAmount;
+    const take = c.from === playerId ? c.take : c.give;
+    const takeAmount = c.from === playerId ? c.takeAmount : c.giveAmount;
+
+    lines.push(
+      `${partner} と: 毎ターン ${RESOURCE_JA[give]}${giveAmount}を渡し、${RESOURCE_JA[take]}${takeAmount}をもらう` +
+        `（残り${c.turnsLeft}ターン、契約ID \`${c.id}\`。やめるには \`破棄 ${c.id}\`）`,
+    );
+  }
+  return lines;
+}
+
+/**
  * これまでに獲得した称号（実績）の数を、返信の「今の状況」に添えるための1行。
  * 新規獲得そのものは resolveTurn の中でログ（【称号】〜）として出るので、
  * ここでは「今何個持っているか」の要約だけを返す。

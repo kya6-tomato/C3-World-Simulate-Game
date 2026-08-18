@@ -10,7 +10,7 @@ import { CONFIG } from "../src/config.ts";
 import { listComments, isSystemReply, postSystemComment } from "./github.ts";
 import { parseComment } from "./commentParser.ts";
 import { bootstrapWorld } from "./worldBootstrap.ts";
-import { statusHint, riskHint, resourceLedger, pendingOffersHint, distanceHint, achievementSummaryLine, activeEffectsHint, worldEventsHint } from "./statusHint.ts";
+import { statusHint, riskHint, resourceLedger, pendingOffersHint, activeContractsHint, distanceHint, achievementSummaryLine, activeEffectsHint, worldEventsHint } from "./statusHint.ts";
 import type { World, Command } from "../src/types.ts";
 
 /**
@@ -169,6 +169,11 @@ async function main() {
     const pending = pendingOffersHint(next, id);
     if (pending.length > 0) {
       lines.push("", "**あなたへの提案（未返答）**", ...pending.map((l) => `- ${l}`));
+    }
+
+    const activeContracts = activeContractsHint(next, id);
+    if (activeContracts.length > 0) {
+      lines.push("", "**あなたの取引状況（進行中）**", ...activeContracts.map((l) => `- ${l}`));
     }
 
     const p = next.players[id];
