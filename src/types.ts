@@ -72,6 +72,8 @@ export interface PlayerStats {
   totalFactionWon: number;
   /** 自分が所属した陣営が勝利した「陣営戦」の数（投入していた場合のみ）。 */
   factionBattlesWon: number;
+  /** 掲示板に投稿した回数。 */
+  postsCount: number;
 }
 
 /** 称号を獲得すると付く、永続的な小さいバフの合計。 */

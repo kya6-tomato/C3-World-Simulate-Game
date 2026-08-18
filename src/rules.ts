@@ -83,6 +83,7 @@ function ensurePlayerDefaults(w: World) {
     s.totalFactionWagered ??= 0;
     s.totalFactionWon ??= 0;
     s.factionBattlesWon ??= 0;
+    s.postsCount ??= 0;
 
     if (!p.achievements) p.achievements = [];
     if (!p.achievementBonus) {
@@ -1583,6 +1584,7 @@ function doCommence(w: World, p: Player): boolean {
 
 /** 掲示板に短いメッセージを投稿する。全員に共有される。手番は消費しない。 */
 function doPost(w: World, p: Player, cmd: Extract<Command, { type: "post" }>) {
+  p.stats!.postsCount += 1;
   w.log.push(`【掲示板】${p.id}: ${cmd.message}`);
 }
 
@@ -1978,6 +1980,38 @@ export const ACHIEVEMENTS: Achievement[] = [
     rewardDesc: "信用+10、保管上限+30（永続）",
     condition: (w, p) => totalScore(w, p.id) >= 200,
     reward: (p) => { p.trust += 10; p.achievementBonus!.storage += 30; },
+  },
+  {
+    id: "post_first",
+    title: "掲示板デビュー",
+    desc: "掲示板に初めて投稿する",
+    rewardDesc: "信用+3、資源を各+5",
+    condition: (_w, p) => p.stats!.postsCount >= 1,
+    reward: (p) => { p.trust += 3; for (const r of RESOURCES) p.stock[r] += 5; },
+  },
+  {
+    id: "faction_participant",
+    title: "勝負師",
+    desc: "「陣営戦」に初めて参加する（資源を投入する）",
+    rewardDesc: "資源を各+8",
+    condition: (_w, p) => p.stats!.totalFactionWagered >= 1,
+    reward: (p) => { for (const r of RESOURCES) p.stock[r] += 8; },
+  },
+  {
+    id: "collector_20",
+    title: "収集家",
+    desc: "称号を20個以上獲得する",
+    rewardDesc: "保管上限+20（永続）、資源を各+15",
+    condition: (_w, p) => p.achievements!.length >= 20,
+    reward: (p) => { p.achievementBonus!.storage += 20; for (const r of RESOURCES) p.stock[r] += 15; },
+  },
+  {
+    id: "trade_100",
+    title: "豪商",
+    desc: "取引を100回成立させる",
+    rewardDesc: "信用+10、取引可能距離+5（永続）",
+    condition: (_w, p) => p.stats!.tradeExecutions >= 100,
+    reward: (p) => { p.trust += 10; p.achievementBonus!.tradeRange += 5; },
   },
 ];
 
