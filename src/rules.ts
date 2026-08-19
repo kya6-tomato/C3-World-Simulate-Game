@@ -265,6 +265,10 @@ export function dominantResourceOf(w: World, playerId: string): Resource | null 
  * （github-turn.ts 側で【災害】ログを特別扱いして全員に配信している）。
  */
 function triggerDisasters(w: World, rng: Rng) {
+  // ゲーム開始からしばらくは、劣勢判定に関係なく全員が災害の対象外
+  // （序盤の事故は、そもそも起こさない）。
+  if (w.turn < CONFIG.disasterGraceTurns) return;
+
   for (const p of Object.values(w.players)) {
     // 劣勢・危機的なプレイヤーは、災害そのものが起きない（追い上げの一環）。
     if (isUnderdog(w, p.id)) continue;
