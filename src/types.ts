@@ -23,6 +23,11 @@ export interface Tile {
    * マスは常にfalseになる。
    */
   acquiredViaTrade?: boolean;
+  /**
+   * 「妨害」によって、このターン番号未満の間は誰も開拓・橋で取得できない
+   * （所有者がいるマスには意味を持たない）。過ぎればただのundefined同然に扱う。
+   */
+  blockedUntilTurn?: number;
 }
 
 /** 手持ちの資源。 */
@@ -100,6 +105,8 @@ export interface Player {
   standingResource?: Resource;
   /** このシーズン中に「橋」を使ったか（1シーズンに1回だけの制限に使う）。 */
   hasBridged?: boolean;
+  /** 「強襲」を使った回数（上限回数の制限に使う）。 */
+  raidsUsed?: number;
   /** 称号の達成条件判定に使う累積カウンター。古いセーブデータには無いことがある。 */
   stats?: PlayerStats;
   /** 獲得済みの称号ID一覧。 */
@@ -364,6 +371,28 @@ export type Command =
       player: string;
       resource: Resource;
       amount: number;
+    }
+  | {
+      /**
+       * 独走しているプレイヤーの領土に隣接する空き地を、一時的に誰も
+       * 取得できなくする（自分も取得できない、純粋な妨害）。手番を消費する。
+       * 劣勢・危機的なプレイヤーだけが使える、追い上げ専用の行動。
+       */
+      type: "block";
+      player: string;
+      x: number;
+      y: number;
+    }
+  | {
+      /**
+       * 独走しているプレイヤーが持つマスを、隣接していなくても遠隔で
+       * 無所属に戻す（自分の土地にはならない）。手番を消費する。
+       * 劣勢・危機的なプレイヤーだけが、1ゲームにつき限られた回数だけ使える。
+       */
+      type: "raid";
+      player: string;
+      x: number;
+      y: number;
     };
 
 export const RESOURCES: Resource[] = ["food", "material", "knowledge"];

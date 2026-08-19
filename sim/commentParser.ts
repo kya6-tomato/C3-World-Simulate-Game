@@ -32,6 +32,8 @@ const TYPE_JA: Record<string, Command["type"]> = {
   着工: "commence",
   掲示: "post",
   賭ける: "wager",
+  妨害: "block",
+  強襲: "raid",
 };
 
 const RESOURCE_JA_TO_EN: Record<string, Resource> = {
@@ -69,6 +71,12 @@ const USAGE: Record<string, string> = {
   開拓:
     "開拓（自動選択） / 開拓 資源名（その資源を優先） / 開拓 x y（マスを指定） / " +
     "開拓 x y 食料 数 資材 数 知識 数（マスと支払いを両方指定。例: 開拓 10 8 食料 2 資材 8 知識 10）",
+  妨害:
+    "妨害 x y（例: 妨害 12 7）。独走しているプレイヤーの領土に隣接する空き地だけを指定できます。" +
+    "劣勢・危機的なプレイヤーだけが使えます",
+  強襲:
+    "強襲 x y（例: 強襲 12 7）。独走しているプレイヤーが持つマスなら、隣接していなくても指定できます。" +
+    `劣勢・危機的なプレイヤーだけが、1ゲームにつき${CONFIG.raidUsesMax}回まで使えます`,
 };
 
 /**
@@ -123,7 +131,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
   if (!kind) {
     return {
       command: null,
-      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助/貢献/輸出/着工/掲示/賭ける のどれかを先頭に書いてください）。`,
+      error: `「${word}」という命令はありません（建設/開拓/待機/提案/承諾/破棄/拒否/土地提案/土地承諾/土地拒否/奪う/回収/橋/援助/貢献/輸出/着工/掲示/賭ける/妨害/強襲 のどれかを先頭に書いてください）。`,
     };
   }
 
@@ -211,6 +219,15 @@ export function parseComment(player: string, rawText: string): ParseResult {
       return { command: null, error: `書き方: ${USAGE[word]}` };
     }
     return { command: { type: "bridge", player, x, y }, error: null };
+  }
+
+  if (kind === "block" || kind === "raid") {
+    const x = Number(tokens[1]);
+    const y = Number(tokens[2]);
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      return { command: null, error: `書き方: ${USAGE[word]}` };
+    }
+    return { command: { type: kind, player, x, y }, error: null };
   }
 
   if (kind === "aid") {

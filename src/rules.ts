@@ -84,6 +84,7 @@ function ensurePlayerDefaults(w: World) {
     s.totalFactionWon ??= 0;
     s.factionBattlesWon ??= 0;
     s.postsCount ??= 0;
+    p.raidsUsed ??= 0;
 
     if (!p.achievements) p.achievements = [];
     if (!p.achievementBonus) {
@@ -228,6 +229,16 @@ export function underdogDeficitRatio(w: World, playerId: string): number {
   if (avg <= 0) return 0;
   const score = baseScore(w, playerId);
   return Math.max(0, Math.min(1, 1 - score / avg));
+}
+
+/**
+ * 平均基礎点に対して、これだけ抜きん出ている（＝独走している）かどうか。
+ * 「妨害」「強襲」で狙える相手かどうかの判定に使う。
+ */
+export function isDominant(w: World, playerId: string): boolean {
+  const avg = averageBaseScore(w);
+  if (avg <= 0) return false;
+  return baseScore(w, playerId) >= avg * CONFIG.dominantScoreRatio;
 }
 
 /** そのプレイヤーが一番多く持っている資源（土地の種類ベース）。誰の土地も無ければ null。 */
@@ -787,7 +798,7 @@ function executeContracts(w: World) {
 // ------------------------------------------------------- 4. 命令の解決
 
 /** 手番を消費する命令（経済行動）。1ターンに1つだけ。 */
-const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest", "bridge", "commence"]);
+const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest", "bridge", "commence", "block", "raid"]);
 
 function applyCommands(w: World, commands: Command[], rng: Rng) {
   // 外交（提案・承諾・破棄）は手番を消費しない。何度でも行える。
@@ -864,6 +875,8 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "commence": doCommence(w, p); break;
       case "post": doPost(w, p, cmd); break;
       case "wager": doWager(w, p, cmd); break;
+      case "block": doBlock(w, p, cmd); break;
+      case "raid": doRaid(w, p, cmd); break;
       case "pass": p.stats!.passCount += 1; break;
     }
   }
@@ -895,12 +908,15 @@ function doExpand(
   // 川だけは橋を架けない限り越えられない。
   // 取引（土地提案の承諾）で手に入れたマスは、開拓の起点として使えない
   // （自分で開拓・橋・着工などで育てた領土からしか広げられない）。
+  // 「妨害」で一時的にブロックされているマスは、誰も（妨害した本人も）取得できない。
+  const isBlocked = (t: Tile) => (t.blockedUntilTurn ?? 0) > w.turn;
+
   const candidates: Tile[] = [];
   for (const t of w.tiles) {
     if (t.owner !== p.id || t.acquiredViaTrade) continue;
     for (const n of neighbors(t.x, t.y, w.width, w.height)) {
       const nt = tileAt(w.tiles, w.width, n.x, n.y);
-      if (nt && nt.owner === null && nt.kind !== "river")
+      if (nt && nt.owner === null && nt.kind !== "river" && !isBlocked(nt))
         candidates.push(nt);
     }
   }
@@ -918,6 +934,10 @@ function doExpand(
     }
     if (t.kind === "river") {
       w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) は川なので開拓できなかった（橋が必要）。`);
+      return false;
+    }
+    if (isBlocked(t)) {
+      w.log.push(`${p.id} は (${manualTarget.x},${manualTarget.y}) が「妨害」で一時的に取得できないため、開拓できなかった。`);
       return false;
     }
     if (!candidates.includes(t)) {
@@ -1322,6 +1342,92 @@ function doSeize(
 }
 
 /**
+ * 妨害。独走しているプレイヤーの領土に隣接する空き地を、一定ターンの間
+ * 誰も取得できなくする（自分も含む）。土地を奪う道具ではなく、追い上げ中の
+ * プレイヤーが独走相手の拡大だけを狙って止めるための道具。
+ * 劣勢・危機的なプレイヤーだけが使える。手番を消費する。
+ */
+function doBlock(w: World, p: Player, cmd: Extract<Command, { type: "block" }>) {
+  if (!isUnderdog(w, p.id)) {
+    w.log.push(`${p.id} は劣勢・危機的でないため、妨害できなかった。`);
+    return;
+  }
+  const target = tileAt(w.tiles, w.width, cmd.x, cmd.y);
+  if (!target || target.owner !== null || target.kind === "river") {
+    w.log.push(`${p.id} は (${cmd.x},${cmd.y}) が誰の物でもない土地ではないため、妨害できなかった。`);
+    return;
+  }
+  const adjacentDominant = neighbors(cmd.x, cmd.y, w.width, w.height).some((n) => {
+    const nt = tileAt(w.tiles, w.width, n.x, n.y);
+    return nt && nt.owner !== null && isDominant(w, nt.owner);
+  });
+  if (!adjacentDominant) {
+    w.log.push(`${p.id} は (${cmd.x},${cmd.y}) が独走しているプレイヤーの領土に隣接していないため、妨害できなかった。`);
+    return;
+  }
+  const owned = w.tiles.filter((t) => t.owner === p.id).length;
+  const cost = Math.round(
+    expandCostTotal(owned, totalCityLevel(p), underdogCostDiscount(w, p.id)) * CONFIG.blockCostRate,
+  );
+  if (totalStock(p.stock) < cost) {
+    w.log.push(`${p.id} は資源が足りず妨害できなかった（要 合計${cost}）。`);
+    return;
+  }
+  payAny(p.stock, cost);
+  target.blockedUntilTurn = w.turn + CONFIG.blockDurationTurns;
+  w.log.push(
+    `【妨害】${p.id} が独走しているプレイヤーの隣、(${cmd.x},${cmd.y}) を${CONFIG.blockDurationTurns}ターンの間、誰も取得できないようにした。`,
+  );
+}
+
+/**
+ * 強襲。独走しているプレイヤーが持つマスを、隣接していなくても遠隔で
+ * 無所属に戻す（自分の物にはならない）。劣勢・危機的なプレイヤーだけが、
+ * 1ゲームにつきごく限られた回数だけ使える。手番を消費する。
+ */
+function doRaid(w: World, p: Player, cmd: Extract<Command, { type: "raid" }>) {
+  if (!isUnderdog(w, p.id)) {
+    w.log.push(`${p.id} は劣勢・危機的でないため、強襲できなかった。`);
+    return;
+  }
+  if ((p.raidsUsed ?? 0) >= CONFIG.raidUsesMax) {
+    w.log.push(`${p.id} は強襲の使用回数（最大${CONFIG.raidUsesMax}回）を使い切っているため、強襲できなかった。`);
+    return;
+  }
+  const target = tileAt(w.tiles, w.width, cmd.x, cmd.y);
+  if (!target || !target.owner) {
+    w.log.push(`${p.id} は (${cmd.x},${cmd.y}) が誰かの土地ではないため、強襲できなかった。`);
+    return;
+  }
+  if (target.owner === p.id) {
+    w.log.push(`${p.id} は自分の土地は強襲できない。`);
+    return;
+  }
+  if (!isDominant(w, target.owner)) {
+    w.log.push(`${p.id} は ${target.owner} が独走していないため、強襲できなかった。`);
+    return;
+  }
+  if (hasCityAt(w, cmd.x, cmd.y)) {
+    w.log.push(`${p.id} は都市のあるマスは強襲できない。`);
+    return;
+  }
+  if (totalStock(p.stock) < CONFIG.raidCostTotal) {
+    w.log.push(`${p.id} は資源が足りず強襲できなかった（要 合計${CONFIG.raidCostTotal}）。`);
+    return;
+  }
+  payAny(p.stock, CONFIG.raidCostTotal);
+  const victimId = target.owner;
+  target.owner = null;
+  target.acquiredViaTrade = false;
+  target.rich = false;
+  p.raidsUsed = (p.raidsUsed ?? 0) + 1;
+  w.log.push(
+    `【強襲】${p.id} が独走している ${victimId} の (${cmd.x},${cmd.y}) を強襲し、無所属に戻した` +
+      `（残り使用回数 ${CONFIG.raidUsesMax - p.raidsUsed}回）。`,
+  );
+}
+
+/**
  * 所有マスから、指定した資源をまとめて回収する。
  * 毎ターン自動で入る yieldPerTile とは別枠のボーナスで、コストは掛からない
  * （その資源のマスを1つも持っていないと使えない）。
@@ -1417,6 +1523,11 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
     w.log.push(`${p.id} は (${x},${y}) から対岸へ抜ける道が見つからず、橋を架けられなかった（誰かの土地に阻まれているか、陸地に届きません）。`);
     return;
   }
+  const dest = path[path.length - 1];
+  if ((dest.blockedUntilTurn ?? 0) > w.turn) {
+    w.log.push(`${p.id} は対岸の (${dest.x},${dest.y}) が「妨害」で一時的に取得できないため、橋を架けられなかった。`);
+    return;
+  }
 
   const riverCount = path.length - 1; // 末尾の陸地マスを除いた、渡る川マスの数
   const cost = CONFIG.bridgeCostTotal * riverCount;
@@ -1439,7 +1550,6 @@ function doBridge(w: World, p: Player, x: number, y: number, rng: Rng) {
   }
   p.hasBridged = true;
   p.stats!.bridgesBuilt += 1;
-  const dest = path[path.length - 1];
   w.log.push(
     `【橋】${p.id} が (${x},${y}) から対岸の (${dest.x},${dest.y}) まで橋を架けた` +
       `（川${riverCount}マス分、合計${cost}払った）。このシーズン中はもう橋を架けられない。`,

@@ -247,6 +247,31 @@ export function renderMapSvg(w: World): string {
           `fill="none" stroke="${colorOf(t.owner)}" stroke-width="1.5" opacity="0.85"/>`,
       );
     }
+
+    // 「妨害」で一時的に取得できないマスは、赤い破線の枠で分かるようにする。
+    if (t.owner === null && (t.blockedUntilTurn ?? 0) > w.turn) {
+      parts.push(
+        `<rect x="${x + 1}" y="${y + 1}" width="${TILE - 2}" height="${TILE - 2}" rx="1" ` +
+          `fill="none" stroke="#C0392B" stroke-width="1.6" stroke-dasharray="3 2" opacity="0.85"/>`,
+      );
+    }
+
+    // 「豊かな土地」（産出量が数倍）は、金色のきらめきマークを右上に重ねて
+    // ひと目でわかるようにする（ゲーム上の効果に見た目の裏付けを与えるため）。
+    if (t.rich) {
+      const sx = x + TILE - 4.5;
+      const sy = y + 4.5;
+      const r = 4.2;
+      const sparkle =
+        `M ${sx} ${sy - r} Q ${sx + r * 0.22} ${sy - r * 0.22} ${sx + r} ${sy} ` +
+        `Q ${sx + r * 0.22} ${sy + r * 0.22} ${sx} ${sy + r} ` +
+        `Q ${sx - r * 0.22} ${sy + r * 0.22} ${sx - r} ${sy} ` +
+        `Q ${sx - r * 0.22} ${sy - r * 0.22} ${sx} ${sy - r} Z`;
+      parts.push(
+        `<circle cx="${sx}" cy="${sy}" r="6" fill="#FFE9A8" opacity="0.55"/>`,
+        `<path d="${sparkle}" fill="#F5B942" stroke="#8A5A00" stroke-width="0.5"/>`,
+      );
+    }
   }
 
   // ------------------------------------------------------- 座標の目盛り
@@ -358,6 +383,32 @@ export function renderMapSvg(w: World): string {
     parts.push(
       `<rect x="${lx}" y="${ly - 11}" width="14" height="14" fill="${FILL[kind]}" rx="3"/>`,
       `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">${label}</text>`,
+    );
+    ly += 24;
+  }
+  {
+    // 豊かな土地の凡例（マップ中のきらめきマークと対にする）
+    const lsx = lx + 7;
+    const lsy = ly - 6;
+    const lr = 4.2;
+    const lsparkle =
+      `M ${lsx} ${lsy - lr} Q ${lsx + lr * 0.22} ${lsy - lr * 0.22} ${lsx + lr} ${lsy} ` +
+      `Q ${lsx + lr * 0.22} ${lsy + lr * 0.22} ${lsx} ${lsy + lr} ` +
+      `Q ${lsx - lr * 0.22} ${lsy + lr * 0.22} ${lsx - lr} ${lsy} ` +
+      `Q ${lsx - lr * 0.22} ${lsy - lr * 0.22} ${lsx} ${lsy - lr} Z`;
+    parts.push(
+      `<circle cx="${lsx}" cy="${lsy}" r="6" fill="#FFE9A8" opacity="0.55"/>`,
+      `<path d="${lsparkle}" fill="#F5B942" stroke="#8A5A00" stroke-width="0.5"/>`,
+      `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">豊かな土地（産出3倍）</text>`,
+    );
+    ly += 24;
+  }
+  {
+    // 妨害中のマスの凡例
+    parts.push(
+      `<rect x="${lx + 1}" y="${ly - 11}" width="12" height="12" rx="1" fill="none" ` +
+        `stroke="#C0392B" stroke-width="1.6" stroke-dasharray="3 2"/>`,
+      `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">妨害で取得できないマス</text>`,
     );
     ly += 24;
   }

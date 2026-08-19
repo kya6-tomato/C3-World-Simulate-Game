@@ -399,6 +399,12 @@ export function activeEffectsHint(w: World, playerId: string): string[] {
       `${label}による優遇: 開拓・建設・奪うのコスト-${discount}%、災害の対象外、` +
         `開拓で「豊かな土地」（産出量${CONFIG.richTileYieldMultiplier}倍）が出る確率${richChance}%`,
     );
+    const raidsLeft = CONFIG.raidUsesMax - (p.raidsUsed ?? 0);
+    lines.push(
+      `独走しているプレイヤー（平均基礎点の${CONFIG.dominantScoreRatio}倍以上）に対してだけ、` +
+        `\`妨害 x y\`（隣接する空き地を${CONFIG.blockDurationTurns}ターン誰も取得できなくする）と` +
+        `\`強襲 x y\`（残り${raidsLeft}回、隣接なしで相手の土地を無所属に戻す）が使えます。`,
+    );
   }
 
   if (p.hasBridged) {
