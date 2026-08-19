@@ -47,8 +47,8 @@ export interface ParseResult {
 
 const USAGE: Record<string, string> = {
   提案:
-    `提案 相手のID わたす 資源名 数 もらう 資源名 数 期間ターン（例: 提案 p05 わたす 資材 9 もらう 知識 9 8ターン）。` +
-    `数はどちらも${CONFIG.minTransferUnit}の倍数、期間は${CONFIG.offerMaxTurns}ターンまで`,
+    `提案 相手のID わたす 資源名 数 もらう 資源名 数 期間ターン（例: 提案 p05 わたす 資材 9 もらう 知識 9 10ターン）。` +
+    `期間は${CONFIG.offerMinTurns}〜${CONFIG.offerMaxTurns}ターン`,
   承諾: "承諾 契約ID（例: 承諾 C5-p00-3）",
   破棄: "破棄 契約ID（例: 破棄 C5-p00-3）",
   拒否: "拒否 契約ID（例: 拒否 C5-p00-3）。自分宛ての、まだ返事をしていない提案だけ断れます",
@@ -302,12 +302,6 @@ export function parseComment(player: string, rawText: string): ParseResult {
         error: `「わたす ${tokens[giveIdx + 1]}」の次に、渡す数を半角数字で書いてください。${usage}`,
       };
     }
-    if (giveAmount % CONFIG.minTransferUnit !== 0) {
-      return {
-        command: null,
-        error: `渡す数は${CONFIG.minTransferUnit}の倍数にしてください（例: ${CONFIG.minTransferUnit}、${CONFIG.minTransferUnit * 2}）。${usage}`,
-      };
-    }
 
     const take = RESOURCE_JA_TO_EN[tokens[takeIdx + 1]];
     if (!take) {
@@ -323,12 +317,6 @@ export function parseComment(player: string, rawText: string): ParseResult {
         error: `「もらう ${tokens[takeIdx + 1]}」の次に、もらう数を半角数字で書いてください。${usage}`,
       };
     }
-    if (takeAmount % CONFIG.minTransferUnit !== 0) {
-      return {
-        command: null,
-        error: `もらう数は${CONFIG.minTransferUnit}の倍数にしてください（例: ${CONFIG.minTransferUnit}、${CONFIG.minTransferUnit * 2}）。${usage}`,
-      };
-    }
 
     const turns = extractTurns(tokens);
     if (!Number.isInteger(turns) || turns <= 0) {
@@ -337,10 +325,10 @@ export function parseComment(player: string, rawText: string): ParseResult {
         error: `一番最後に、続ける期間を「8ターン」のように書いてください。${usage}`,
       };
     }
-    if (turns > CONFIG.offerMaxTurns) {
+    if (turns < CONFIG.offerMinTurns || turns > CONFIG.offerMaxTurns) {
       return {
         command: null,
-        error: `続ける期間は${CONFIG.offerMaxTurns}ターンまでにしてください（今は${turns}ターン）。${usage}`,
+        error: `続ける期間は${CONFIG.offerMinTurns}〜${CONFIG.offerMaxTurns}ターンにしてください（今は${turns}ターン）。${usage}`,
       };
     }
 

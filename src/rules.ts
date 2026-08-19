@@ -1035,15 +1035,15 @@ function doOffer(
     w.log.push(`${p.id} は ${cmd.to} まで遠すぎて交渉できない（距離${d}、範囲${range}）。`);
     return;
   }
-  // 1ずつの取引を積み重ねて回数だけを稼ぐ抜け道を防ぐための下限（援助と同じ考え方）。
-  if (cmd.giveAmount % CONFIG.minTransferUnit !== 0 || cmd.takeAmount % CONFIG.minTransferUnit !== 0) {
-    w.log.push(`${p.id} は提案する数が${CONFIG.minTransferUnit}の倍数でないため、提案できなかった。`);
-    return;
-  }
-  // 極端に長い期間の契約を1つ結ぶだけで、以後は何もしなくても毎ターン自動で
-  // 「取引成立」の回数だけが積み上がる抜け道を防ぐための上限。
-  if (cmd.turns > CONFIG.offerMaxTurns) {
-    w.log.push(`${p.id} は提案する期間が長すぎる（最大${CONFIG.offerMaxTurns}ターン）ため、提案できなかった。`);
+  // 継続期間に下限・上限を設ける。下限が無いと、ごく少量・1ターンだけの
+  // 契約を大量の相手と結んで「取引相手の数」系の称号をノーリスクで
+  // 稼げてしまう。上限が無いと、1つ結ぶだけで以後は何もしなくても
+  // 毎ターン自動で「取引成立」の回数だけが積み上がってしまう。
+  // （金額そのものには下限を設けない。細かい金額の駆け引きを妨げないため）
+  if (cmd.turns < CONFIG.offerMinTurns || cmd.turns > CONFIG.offerMaxTurns) {
+    w.log.push(
+      `${p.id} は提案する期間が範囲外（${CONFIG.offerMinTurns}〜${CONFIG.offerMaxTurns}ターン）のため、提案できなかった。`,
+    );
     return;
   }
   const id = `C${w.turn}-${p.id}-${w.contracts.length}`;
