@@ -623,7 +623,7 @@
       projectBanners.innerHTML = projects.map(function (pr) {
         var prPct = Math.min(100, Math.round((pr.pooled / pr.requirement) * 100));
         var readyBadge = pr.ready ? '<span class="project-ready-badge">着工可能</span>' : "";
-        var exportCmd = "輸出 " + (projects.length > 1 ? (pr.x + " " + pr.y + " ") : "") + "資源名 数";
+        var exportCmd = "輸出 " + (projects.length > 1 ? (pr.name + " ") : "") + "資源名 数";
         return (
           '<div class="panel project-banner"><h3>共同事業</h3><div>' +
           '<div class="threat-top"><span class="threat-name">' + esc(pr.name) + " (" + pr.x + "," + pr.y + ")" + readyBadge + '</span>' +

@@ -1,5 +1,8 @@
 import type { Command, Resource } from "../src/types.ts";
 import { CONFIG } from "../src/config.ts";
+import { WORLD_PROJECT_TYPES } from "../src/rules.ts";
+
+const PROJECT_NAMES = new Set(WORLD_PROJECT_TYPES.map((t) => t.name));
 
 /**
  * GitHub Issueのコメント（スマホでも打てる一行形式）を Command に変換する。
@@ -66,7 +69,7 @@ const USAGE: Record<string, string> = {
   貢献: `貢献 資源名 数（例: 貢献 資材 20）。世界の脅威が発生している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください`,
   輸出:
     `輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください。` +
-    `共同事業が同時に2つ以上進行しているときは、輸出 x y 資源名 数（例: 輸出 12 7 資材 20）のように建設地の座標を先頭に付けて、どれに送るか指定してください`,
+    `共同事業が同時に2つ以上進行しているときは、輸出 名前 資源名 数（例: 輸出 灯台 資材 20）のように建設するものの名前を先頭に付けて、どれに送るか指定してください`,
   着工: "着工（引数なし）。共同事業の資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます",
   掲示: `掲示 メッセージ（例: 掲示 灯台まであと少し、資材ください）。${CONFIG.postMaxLength}文字まで`,
   賭ける: `賭ける 資源名 数（例: 賭ける 資材 20）。陣営戦が発生している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください`,
@@ -275,24 +278,21 @@ export function parseComment(player: string, rawText: string): ParseResult {
   }
 
   if (kind === "export") {
-    // 共同事業は同時に複数進行しうるので、「輸出 x y 資源名 数」のように
-    // 先頭に座標を付けてどれに送るか指定できる（省略時は1つしか進行して
-    // いなければそれに送られる。実際の判定は rules.ts 側で行う）。
+    // 共同事業は同時に複数進行しうるので、「輸出 名前 資源名 数」のように
+    // 先頭に建設するものの名前（灯台・見張り塔・大穀倉・共同工房）を付けて
+    // どれに送るか指定できる（省略時は1つしか進行していなければそれに
+    // 送られる。実際の判定は rules.ts 側で行う）。
     const usage = `書き方: ${USAGE[word]}`;
     let idx = 1;
-    let x: number | undefined;
-    let y: number | undefined;
-    const maybeX = Number(tokens[1]);
-    const maybeY = Number(tokens[2]);
-    if (Number.isInteger(maybeX) && Number.isInteger(maybeY)) {
-      x = maybeX;
-      y = maybeY;
-      idx = 3;
+    let projectName: string | undefined;
+    if (PROJECT_NAMES.has(tokens[1])) {
+      projectName = tokens[1];
+      idx = 2;
     }
 
     const resource = RESOURCE_JA_TO_EN[tokens[idx]];
     if (!resource) {
-      return { command: null, error: `「輸出」の次には（座標を指定する場合はその次に） 食料・資材・知識 のどれかを書いてください。${usage}` };
+      return { command: null, error: `「輸出」の次には（名前を指定する場合はその次に） 食料・資材・知識 のどれかを書いてください。${usage}` };
     }
     const amount = Number(tokens[idx + 1]);
     if (!Number.isInteger(amount) || amount <= 0) {
@@ -304,7 +304,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
         error: `出す数は${CONFIG.minTransferUnit}の倍数にしてください（例: ${CONFIG.minTransferUnit}、${CONFIG.minTransferUnit * 2}）。${usage}`,
       };
     }
-    return { command: { type: "export", player, resource, amount, x, y }, error: null };
+    return { command: { type: "export", player, resource, amount, projectName }, error: null };
   }
 
   if (kind === "post") {

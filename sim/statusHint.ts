@@ -432,7 +432,7 @@ export function threatHint(w: World): string | null {
 /**
  * 進行中の「共同事業」の状況を1行ずつにする（同時に複数進行しうるので配列）。
  * 自分がその隣接地を持っていて着工できる状態なら、その旨も添える。
- * 2つ以上同時に進行しているときは、輸出コマンドに座標を添える必要がある旨も示す。
+ * 2つ以上同時に進行しているときは、輸出コマンドに名前を添える必要がある旨も示す。
  */
 export function projectHint(w: World, playerId: string): string[] {
   const active = w.projects ?? [];
@@ -440,7 +440,7 @@ export function projectHint(w: World, playerId: string): string[] {
     if (!pr.ready) {
       return (
         `「${pr.name}」建設地 (${pr.x},${pr.y}): 拠出 ${pr.pooled}/${pr.requirement}。` +
-        `\`輸出${active.length > 1 ? ` ${pr.x} ${pr.y}` : ""} 資源名 数\` で協力できます。`
+        `\`輸出${active.length > 1 ? ` ${pr.name}` : ""} 資源名 数\` で協力できます。`
       );
     }
     const canCommence = neighbors(pr.x, pr.y, w.width, w.height).some((n) => {

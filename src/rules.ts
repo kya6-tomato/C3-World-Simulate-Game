@@ -545,8 +545,10 @@ function resolveWorldGoal(w: World, rng: Rng) {
 
 /**
  * 共同事業の種類。完成すると全員にどんな恩恵が入るかが種類によって変わる。
+ * 名前は、複数の共同事業が同時進行しているときに「輸出」でどれに送るかを
+ * 指定する識別子としても使う（コメントパーサー側でも参照するため export する）。
  */
-const WORLD_PROJECT_TYPES: {
+export const WORLD_PROJECT_TYPES: {
   name: string;
   rewardKind: "tradeRange" | "storage" | "disasterMitigation" | "harvestBonus";
   rewardAmount: number;
@@ -580,7 +582,11 @@ function resolveWorldProject(w: World, rng: Rng) {
   const site = rng.pick(pool);
   const playerCount = Object.keys(w.players).length;
   const requirement = playerCount * CONFIG.projectRequirementPerPlayer;
-  const type = rng.pick(WORLD_PROJECT_TYPES);
+  // 複数の共同事業が同時進行しているときは名前で見分けるので、既に進行中の
+  // 種類と名前が被らないものだけから選ぶ（種類数 > 同時上限なので必ず選べる）。
+  const activeNames = new Set(w.projects!.map((pr) => pr.name));
+  const availableTypes = WORLD_PROJECT_TYPES.filter((t) => !activeNames.has(t.name));
+  const type = rng.pick(availableTypes.length > 0 ? availableTypes : WORLD_PROJECT_TYPES);
   const project: WorldProject = {
     id: `P${w.turn}`,
     name: type.name,
@@ -1657,8 +1663,10 @@ function doContribute(w: World, p: Player, cmd: Extract<Command, { type: "contri
  * （実際の着工は doCommence 側、現地の人だけができる）。
  *
  * 共同事業は同時に複数進行しうるので、2つ以上が同時に進行中のときは
- * 建設地の座標（cmd.x, cmd.y）でどれに出すか指定してもらう。1つしか
- * 進行していなければ、指定しなくてもそれに送られる（従来通り）。
+ * 名前（cmd.projectName、例: 「灯台」）でどれに出すか指定してもらう。
+ * 同時進行中の共同事業どうしで名前が被ることは無いので、名前だけで
+ * 一意に決まる。1つしか進行していなければ、指定しなくてもそれに
+ * 送られる（従来通り）。
  */
 function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>) {
   const active = w.projects ?? [];
@@ -1668,20 +1676,20 @@ function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>
   }
 
   let project: WorldProject;
-  if (cmd.x !== undefined && cmd.y !== undefined) {
-    const found = active.find((pr) => pr.x === cmd.x && pr.y === cmd.y);
+  if (cmd.projectName !== undefined) {
+    const found = active.find((pr) => pr.name === cmd.projectName);
     if (!found) {
-      w.log.push(`${p.id} は (${cmd.x},${cmd.y}) に共同事業が見つからず、輸出できなかった。`);
+      w.log.push(`${p.id} は「${cmd.projectName}」という共同事業が見つからず、輸出できなかった。`);
       return;
     }
     project = found;
   } else if (active.length === 1) {
     project = active[0];
   } else {
-    const sites = active.map((pr) => `(${pr.x},${pr.y})「${pr.name}」`).join("、");
+    const names = active.map((pr) => `「${pr.name}」(${pr.x},${pr.y})`).join("、");
     w.log.push(
-      `${p.id} は共同事業が複数進行中のため、どれに輸出するか座標で指定する必要がある` +
-        `（\`輸出 x y 資源名 数\`）。進行中: ${sites}`,
+      `${p.id} は共同事業が複数進行中のため、どれに輸出するか名前で指定する必要がある` +
+        `（\`輸出 名前 資源名 数\`）。進行中: ${names}`,
     );
     return;
   }
