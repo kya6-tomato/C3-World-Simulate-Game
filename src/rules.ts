@@ -1694,6 +1694,15 @@ function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>
     return;
   }
 
+  // 必要量に達して「着工できる」状態になった共同事業は、それ以上資材を
+  // 必要としない。ここで止めないと、着工されずに放置されている間ずっと
+  // 輸出し続けられてしまい、事業の役には立たないのに輸出した分だけ
+  // 個人の貢献点（得点）だけが際限なく積み上がってしまう。
+  if (project.ready) {
+    w.log.push(`${p.id} は輸出しようとしたが、「${project.name}」はすでに資材が集まっている（着工待ち）。`);
+    return;
+  }
+
   if (cmd.amount % CONFIG.minTransferUnit !== 0) {
     w.log.push(`${p.id} は輸出する数が${CONFIG.minTransferUnit}の倍数でないため、輸出できなかった。`);
     return;
