@@ -1694,29 +1694,36 @@ function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>
     return;
   }
 
-  // 必要量に達して「着工できる」状態になった共同事業は、それ以上資材を
-  // 必要としない。ここで止めないと、着工されずに放置されている間ずっと
-  // 輸出し続けられてしまい、事業の役には立たないのに輸出した分だけ
-  // 個人の貢献点（得点）だけが際限なく積み上がってしまう。
-  if (project.ready) {
-    w.log.push(`${p.id} は輸出しようとしたが、「${project.name}」はすでに資材が集まっている（着工待ち）。`);
-    return;
-  }
-
   if (cmd.amount % CONFIG.minTransferUnit !== 0) {
     w.log.push(`${p.id} は輸出する数が${CONFIG.minTransferUnit}の倍数でないため、輸出できなかった。`);
     return;
   }
-  if (p.stock[cmd.resource] < cmd.amount) {
+
+  // 必要量を超えた分は受け取らない。「あと必要な量」までに切り詰める。
+  // project.pooled はここで毎回、その時点の最新値を読むので、同じターンに
+  // 複数人が輸出しても（内部では1件ずつ順番に処理されるため）、後から
+  // 処理された人ほど「あと必要な量」が正しく減っており、必要量に達した後の
+  // 人は自動的に0（＝もう足りている）になる。事業の役には立たないのに、
+  // 輸出した分だけ個人の貢献点（得点）だけが際限なく積み上がる、という
+  // 抜け道を防ぐための処置。
+  const remaining = project.requirement - project.pooled;
+  if (remaining <= 0) {
+    w.log.push(`${p.id} は輸出しようとしたが、「${project.name}」はすでに資材が集まっている（着工待ち）。`);
+    return;
+  }
+  const amount = Math.min(cmd.amount, remaining);
+
+  if (p.stock[cmd.resource] < amount) {
     w.log.push(`${p.id} は資源が足りず輸出できなかった。`);
     return;
   }
-  p.stock[cmd.resource] -= cmd.amount;
-  project.pooled += cmd.amount;
-  project.contributions[p.id] = (project.contributions[p.id] ?? 0) + cmd.amount;
-  p.stats!.totalExported += cmd.amount;
+  p.stock[cmd.resource] -= amount;
+  project.pooled += amount;
+  project.contributions[p.id] = (project.contributions[p.id] ?? 0) + amount;
+  p.stats!.totalExported += amount;
+  const clippedNote = amount < cmd.amount ? `（あと${amount}で足りたため、${amount}だけ受け取った）` : "";
   w.log.push(
-    `【事業】${p.id} が「${project.name}」の建設に ${RESOURCE_JA[cmd.resource]}を${cmd.amount}輸出した` +
+    `【事業】${p.id} が「${project.name}」の建設に ${RESOURCE_JA[cmd.resource]}を${amount}輸出した${clippedNote}` +
       `（進捗 ${project.pooled}/${project.requirement}）。`,
   );
 
