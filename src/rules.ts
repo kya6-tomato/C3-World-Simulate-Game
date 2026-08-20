@@ -41,9 +41,12 @@ export function resolveTurn(world: World, commands: Command[]): World {
   resolveFactionBattle(w, rng);
   upkeep(w);
   executeContracts(w);
+  clampTrust(w);
   applyCommands(w, commands, rng);
+  clampTrust(w);
   resolveWorldGoal(w, rng);
   checkAchievements(w);
+  clampTrust(w);
   recoverTrust(w);
   clampAllStocks(w);
 
@@ -2285,6 +2288,23 @@ function checkAchievements(w: World) {
 }
 
 // --------------------------------------------------------- 5. 信用の回復
+
+/**
+ * 信用を0〜100の範囲に丸める。
+ *
+ * 契約成立のたびに付く信用（trustOnFulfill）や称号の報酬など、信用が
+ * 増える処理の多くは、その場では上限（100）を超えないようにする処理を
+ * していない。同時に進行中の契約をたくさん持っている人が、その全部が
+ * 同じターンに成立して信用が100を大きく超えた状態になってから
+ * 「破棄」で-45を受けても、超えていた分がクッションになって実際の
+ * 下がり幅がずっと小さくなってしまう、という抜け道があった。
+ * 信用を動かす処理のたびにこれを呼んで、その都度100で頭打ちにする。
+ */
+function clampTrust(w: World) {
+  for (const p of Object.values(w.players)) {
+    p.trust = Math.max(CONFIG.trustMin, Math.min(CONFIG.trustMax, p.trust));
+  }
+}
 
 function recoverTrust(w: World) {
   for (const p of Object.values(w.players)) {
