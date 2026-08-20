@@ -430,28 +430,30 @@ export function threatHint(w: World): string | null {
 }
 
 /**
- * 進行中の「共同事業」の状況を1行にする。自分がその隣接地を持っていて
- * 着工できる状態なら、その旨も添える。発生していなければ null。
+ * 進行中の「共同事業」の状況を1行ずつにする（同時に複数進行しうるので配列）。
+ * 自分がその隣接地を持っていて着工できる状態なら、その旨も添える。
+ * 2つ以上同時に進行しているときは、輸出コマンドに座標を添える必要がある旨も示す。
  */
-export function projectHint(w: World, playerId: string): string | null {
-  if (!w.project) return null;
-  const pr = w.project;
-  if (!pr.ready) {
+export function projectHint(w: World, playerId: string): string[] {
+  const active = w.projects ?? [];
+  return active.map((pr) => {
+    if (!pr.ready) {
+      return (
+        `「${pr.name}」建設地 (${pr.x},${pr.y}): 拠出 ${pr.pooled}/${pr.requirement}。` +
+        `\`輸出${active.length > 1 ? ` ${pr.x} ${pr.y}` : ""} 資源名 数\` で協力できます。`
+      );
+    }
+    const canCommence = neighbors(pr.x, pr.y, w.width, w.height).some((n) => {
+      const nt = tileAt(w.tiles, w.width, n.x, n.y);
+      return nt && nt.owner === playerId;
+    });
     return (
-      `「${pr.name}」建設地 (${pr.x},${pr.y}): 拠出 ${pr.pooled}/${pr.requirement}。` +
-      `\`輸出 資源名 数\` で協力できます。`
+      `「${pr.name}」建設地 (${pr.x},${pr.y}): 資材が集まりました。` +
+      (canCommence
+        ? "あなたはこの隣接地を持っています。`着工` で完成させられます。"
+        : "隣接地を持つ人が `着工` すれば完成します。")
     );
-  }
-  const canCommence = neighbors(pr.x, pr.y, w.width, w.height).some((n) => {
-    const nt = tileAt(w.tiles, w.width, n.x, n.y);
-    return nt && nt.owner === playerId;
   });
-  return (
-    `「${pr.name}」建設地 (${pr.x},${pr.y}): 資材が集まりました。` +
-    (canCommence
-      ? "あなたはこの隣接地を持っています。`着工` で完成させられます。"
-      : "隣接地を持つ人が `着工` すれば完成します。")
-  );
 }
 
 /**
@@ -494,8 +496,7 @@ export function worldEventsHint(w: World, playerId: string): string[] {
   const lines: string[] = [];
   const threat = threatHint(w);
   if (threat) lines.push(`【世界の脅威】${threat}`);
-  const project = projectHint(w, playerId);
-  if (project) lines.push(`【共同事業】${project}`);
+  for (const line of projectHint(w, playerId)) lines.push(`【共同事業】${line}`);
   lines.push(`【世界目標】${worldGoalHint(w)}`);
   const faction = factionHint(w, playerId);
   if (faction) lines.push(`【陣営戦】${faction}`);

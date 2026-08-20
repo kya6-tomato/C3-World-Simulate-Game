@@ -8,6 +8,7 @@ import type {
   Resource,
   Stock,
   Tile,
+  WorldProject,
 } from "./types.ts";
 import { RESOURCE_JA, RESOURCES } from "./types.ts";
 import { Rng, turnSeed } from "./rng.ts";
@@ -56,7 +57,12 @@ export function resolveTurn(world: World, commands: Command[]): World {
  */
 function ensurePlayerDefaults(w: World) {
   if (w.threat === undefined) w.threat = null;
-  if (w.project === undefined) w.project = null;
+  if (!Array.isArray(w.projects)) {
+    // 古いセーブデータは単数形の project フィールドだった（同時に1つしか
+    // 進行できなかった頃の名残）。配列に移行し、進行中のものがあれば引き継ぐ。
+    const legacy = (w as unknown as { project?: WorldProject | null }).project;
+    w.projects = legacy ? [legacy] : [];
+  }
   if (w.faction === undefined) w.faction = null;
   // 世界目標の初期化は resolveWorldGoal 側で行う（種類ごとに現在値を見て決めるため）。
   for (const p of Object.values(w.players)) {
@@ -558,19 +564,24 @@ const WORLD_PROJECT_TYPES: {
  * `輸出` で誰でも送れるが、実際に着工できるのは現地（隣接地）を持つ人だけ。
  */
 function resolveWorldProject(w: World, rng: Rng) {
-  if (w.project) return; // 進行中は新しく現れない
+  // 世界の脅威・陣営戦と違い、共同事業は同時に複数進行できる。
+  // ただし際限なく積み上がらないよう、同時進行数に上限を設ける。
+  if (w.projects!.length >= CONFIG.projectMaxConcurrent) return;
 
   if (rng.next() >= CONFIG.projectChancePerTurn) return;
 
-  const wasteCandidates = w.tiles.filter((t) => t.owner === null && t.kind === "waste");
-  const pool = wasteCandidates.length > 0 ? wasteCandidates : w.tiles.filter((t) => t.owner === null);
+  // 既に他の共同事業の建設地になっているマスは、候補から除く。
+  const usedSites = new Set(w.projects!.map((pr) => `${pr.x},${pr.y}`));
+  const isFree = (t: Tile) => t.owner === null && !usedSites.has(`${t.x},${t.y}`);
+  const wasteCandidates = w.tiles.filter((t) => t.kind === "waste" && isFree(t));
+  const pool = wasteCandidates.length > 0 ? wasteCandidates : w.tiles.filter(isFree);
   if (pool.length === 0) return; // 空き地が無ければ発生させない
 
   const site = rng.pick(pool);
   const playerCount = Object.keys(w.players).length;
   const requirement = playerCount * CONFIG.projectRequirementPerPlayer;
   const type = rng.pick(WORLD_PROJECT_TYPES);
-  w.project = {
+  const project: WorldProject = {
     id: `P${w.turn}`,
     name: type.name,
     rewardKind: type.rewardKind,
@@ -584,6 +595,7 @@ function resolveWorldProject(w: World, rng: Rng) {
     contributions: {},
     ready: false,
   };
+  w.projects!.push(project);
   w.log.push(
     `【事業】(${site.x},${site.y}) で「${type.name}」の建設地が見つかった！（完成すると全員に${type.rewardDesc}） ` +
       `合計${requirement}の資源が集まれば、現地（隣接地）を持つ人が着工できる。\`輸出 資源名 数\` で誰でも資源を送って協力できる。`,
@@ -1643,12 +1655,37 @@ function doContribute(w: World, p: Player, cmd: Extract<Command, { type: "contri
  * 「共同事業」に資源を出す。どこにいても送れる。手番は消費しない
  * （援助・貢献と同じ枠）。必要量に達すると「着工できる」状態になる
  * （実際の着工は doCommence 側、現地の人だけができる）。
+ *
+ * 共同事業は同時に複数進行しうるので、2つ以上が同時に進行中のときは
+ * 建設地の座標（cmd.x, cmd.y）でどれに出すか指定してもらう。1つしか
+ * 進行していなければ、指定しなくてもそれに送られる（従来通り）。
  */
 function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>) {
-  if (!w.project) {
+  const active = w.projects ?? [];
+  if (active.length === 0) {
     w.log.push(`${p.id} は輸出しようとしたが、今は共同事業が進行していない。`);
     return;
   }
+
+  let project: WorldProject;
+  if (cmd.x !== undefined && cmd.y !== undefined) {
+    const found = active.find((pr) => pr.x === cmd.x && pr.y === cmd.y);
+    if (!found) {
+      w.log.push(`${p.id} は (${cmd.x},${cmd.y}) に共同事業が見つからず、輸出できなかった。`);
+      return;
+    }
+    project = found;
+  } else if (active.length === 1) {
+    project = active[0];
+  } else {
+    const sites = active.map((pr) => `(${pr.x},${pr.y})「${pr.name}」`).join("、");
+    w.log.push(
+      `${p.id} は共同事業が複数進行中のため、どれに輸出するか座標で指定する必要がある` +
+        `（\`輸出 x y 資源名 数\`）。進行中: ${sites}`,
+    );
+    return;
+  }
+
   if (cmd.amount % CONFIG.minTransferUnit !== 0) {
     w.log.push(`${p.id} は輸出する数が${CONFIG.minTransferUnit}の倍数でないため、輸出できなかった。`);
     return;
@@ -1658,7 +1695,6 @@ function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>
     return;
   }
   p.stock[cmd.resource] -= cmd.amount;
-  const project = w.project;
   project.pooled += cmd.amount;
   project.contributions[p.id] = (project.contributions[p.id] ?? 0) + cmd.amount;
   p.stats!.totalExported += cmd.amount;
@@ -1680,21 +1716,27 @@ function doExport(w: World, p: Player, cmd: Extract<Command, { type: "export" }>
  * 資材が集まった「共同事業」を、現地（隣接地）で着工して完成させる。
  * 本番の行動を1つ消費する（建設・開拓と同じ枠）。完成すると、拠出した
  * 人・していない人にかかわらず全員に恒久的な恩恵が入る。
+ *
+ * 共同事業は同時に複数進行しうるが、着工は隣接地を持つ現地の人にしか
+ * できないので、自分が隣接していて準備が整っているものを自動で選ぶ
+ * （複数の候補に同時に隣接することは通常ほぼ無い）。
  */
 function doCommence(w: World, p: Player): boolean {
-  const project = w.project;
-  if (!project || !project.ready) {
-    w.log.push(`${p.id} は着工しようとしたが、まだ準備が整った共同事業がない。`);
-    return false;
-  }
-  const adjacent = neighbors(project.x, project.y, w.width, w.height).some((n) => {
-    const nt = tileAt(w.tiles, w.width, n.x, n.y);
-    return nt && nt.owner === p.id;
-  });
-  if (!adjacent) {
-    w.log.push(
-      `${p.id} は (${project.x},${project.y}) に隣接する土地を持っていないので着工できなかった。`,
-    );
+  const active = w.projects ?? [];
+  const isAdjacent = (pr: WorldProject) =>
+    neighbors(pr.x, pr.y, w.width, w.height).some((n) => {
+      const nt = tileAt(w.tiles, w.width, n.x, n.y);
+      return nt && nt.owner === p.id;
+    });
+
+  const project = active.find((pr) => pr.ready && isAdjacent(pr));
+  if (!project) {
+    const readyElsewhere = active.some((pr) => pr.ready && !isAdjacent(pr));
+    if (readyElsewhere) {
+      w.log.push(`${p.id} は着工しようとしたが、準備が整った共同事業に隣接する土地を持っていない。`);
+    } else {
+      w.log.push(`${p.id} は着工しようとしたが、まだ準備が整った共同事業がない。`);
+    }
     return false;
   }
 
@@ -1718,7 +1760,7 @@ function doCommence(w: World, p: Player): boolean {
       `全員に永続的に${project.rewardDesc}された。` +
       `資源を出して手伝った人: ${contributorIds.length > 0 ? contributorIds.join("、") : "（いなかった）"}。`,
   );
-  w.project = null;
+  w.projects = active.filter((pr) => pr !== project);
   return true;
 }
 

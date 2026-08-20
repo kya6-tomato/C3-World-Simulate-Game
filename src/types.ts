@@ -252,10 +252,17 @@ export interface World {
   players: Record<string, Player>;
   contracts: Contract[];
   landOffers: LandOffer[];
-  /** 現在発生中の「世界の脅威」。無ければ null。 */
+  /**
+   * 現在発生中の「世界の脅威」。無ければ null。
+   * 世界の脅威・陣営戦は、同じ種類のイベントが同時に複数発生することはない
+   * （共同事業とは違い、単数のまま）。
+   */
   threat?: WorldThreat | null;
-  /** 現在進行中の「共同事業」。無ければ null。 */
-  project?: WorldProject | null;
+  /**
+   * 現在進行中の「共同事業」。配列で、同時に複数進行できる
+   * （世界の脅威・陣営戦とは違い、共同事業だけは複数同時発生を許可している）。
+   */
+  projects?: WorldProject[];
   /** 現在進行中の「陣営戦」。無ければ null。 */
   faction?: WorldFactionBattle | null;
   /** 現在の世界目標の種類（例: "land"）。達成すると別の種類にランダムで切り替わる。 */
@@ -348,11 +355,18 @@ export type Command =
       amount: number;
     }
   | {
-      /** 「共同事業」に資源を出す。どこにいても送れる。手番を消費しない。 */
+      /**
+       * 「共同事業」に資源を出す。どこにいても送れる。手番を消費しない。
+       * 共同事業は同時に複数進行しうるので、2つ以上が同時に進行中のときは
+       * 建設地の座標（x, y）でどれに出すかを指定する必要がある
+       * （1つしか進行していなければ省略できる）。
+       */
       type: "export";
       player: string;
       resource: Resource;
       amount: number;
+      x?: number;
+      y?: number;
     }
   | {
       /** 資源が集まった「共同事業」を、現地（隣接地）で着工して完成させる。手番を消費する。 */

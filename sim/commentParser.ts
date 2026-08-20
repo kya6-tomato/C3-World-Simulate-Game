@@ -64,7 +64,9 @@ const USAGE: Record<string, string> = {
   橋: "橋 x y（例: 橋 12 7）。自分の土地に隣接する川のマスだけ指定できます。1シーズンに1回だけ",
   援助: "援助 相手のID 資源名 数（例: 援助 p05 資材 20）。数は5の倍数にしてください",
   貢献: `貢献 資源名 数（例: 貢献 資材 20）。世界の脅威が発生している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください`,
-  輸出: `輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください`,
+  輸出:
+    `輸出 資源名 数（例: 輸出 資材 20）。共同事業が進行している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください。` +
+    `共同事業が同時に2つ以上進行しているときは、輸出 x y 資源名 数（例: 輸出 12 7 資材 20）のように建設地の座標を先頭に付けて、どれに送るか指定してください`,
   着工: "着工（引数なし）。共同事業の資材が集まっていて、かつ自分がその隣接地を持っているときだけ使えます",
   掲示: `掲示 メッセージ（例: 掲示 灯台まであと少し、資材ください）。${CONFIG.postMaxLength}文字まで`,
   賭ける: `賭ける 資源名 数（例: 賭ける 資材 20）。陣営戦が発生している間だけ使えます。数は${CONFIG.minTransferUnit}の倍数にしてください`,
@@ -253,7 +255,7 @@ export function parseComment(player: string, rawText: string): ParseResult {
     return { command: { type: "aid", player, to, resource, amount }, error: null };
   }
 
-  if (kind === "contribute" || kind === "export" || kind === "wager") {
+  if (kind === "contribute" || kind === "wager") {
     const usage = `書き方: ${USAGE[word]}`;
     const resource = RESOURCE_JA_TO_EN[tokens[1]];
     if (!resource) {
@@ -270,6 +272,39 @@ export function parseComment(player: string, rawText: string): ParseResult {
       };
     }
     return { command: { type: kind, player, resource, amount }, error: null };
+  }
+
+  if (kind === "export") {
+    // 共同事業は同時に複数進行しうるので、「輸出 x y 資源名 数」のように
+    // 先頭に座標を付けてどれに送るか指定できる（省略時は1つしか進行して
+    // いなければそれに送られる。実際の判定は rules.ts 側で行う）。
+    const usage = `書き方: ${USAGE[word]}`;
+    let idx = 1;
+    let x: number | undefined;
+    let y: number | undefined;
+    const maybeX = Number(tokens[1]);
+    const maybeY = Number(tokens[2]);
+    if (Number.isInteger(maybeX) && Number.isInteger(maybeY)) {
+      x = maybeX;
+      y = maybeY;
+      idx = 3;
+    }
+
+    const resource = RESOURCE_JA_TO_EN[tokens[idx]];
+    if (!resource) {
+      return { command: null, error: `「輸出」の次には（座標を指定する場合はその次に） 食料・資材・知識 のどれかを書いてください。${usage}` };
+    }
+    const amount = Number(tokens[idx + 1]);
+    if (!Number.isInteger(amount) || amount <= 0) {
+      return { command: null, error: `一番最後に、出す数を半角数字で書いてください。${usage}` };
+    }
+    if (amount % CONFIG.minTransferUnit !== 0) {
+      return {
+        command: null,
+        error: `出す数は${CONFIG.minTransferUnit}の倍数にしてください（例: ${CONFIG.minTransferUnit}、${CONFIG.minTransferUnit * 2}）。${usage}`,
+      };
+    }
+    return { command: { type: "export", player, resource, amount, x, y }, error: null };
   }
 
   if (kind === "post") {

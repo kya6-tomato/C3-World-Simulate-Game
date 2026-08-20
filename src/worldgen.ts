@@ -212,7 +212,7 @@ export function createWorld(playerIds: string[], seed: number): World {
     contracts: [],
     landOffers: [],
     threat: null,
-    project: null,
+    projects: [],
     log: ["世界が生成された。"],
   };
 }

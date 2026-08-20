@@ -101,6 +101,8 @@
   .threat-hint { margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); }
   .threat-hint code { background: var(--paper-sunken); padding: 1px 6px; border-radius: 4px; }
 
+  #project-banners { display: none; flex-direction: column; gap: 26px; }
+  #project-banners.has-projects { display: flex; }
   .project-banner { border-color: var(--active); }
   .project-banner h3::before { background: var(--active); }
   .project-banner .threat-deadline { color: var(--active); }
@@ -293,10 +295,7 @@
       <div id="threat-body"></div>
     </div>
 
-    <div class="panel project-banner" id="project-banner" style="display:none;">
-      <h3>共同事業</h3>
-      <div id="project-body"></div>
-    </div>
+    <div id="project-banners"></div>
 
     <div class="panel goal-banner" id="goal-banner">
       <h3>世界目標</h3>
@@ -616,22 +615,29 @@
       threatBanner.style.display = "none";
     }
 
-    // 共同事業（発生中なら、進捗バーと着工可否を表示する）
-    var projectBanner = document.getElementById("project-banner");
-    if (state.project) {
-      var pr = state.project;
-      var prPct = Math.min(100, Math.round((pr.pooled / pr.requirement) * 100));
-      var readyBadge = pr.ready ? '<span class="project-ready-badge">着工可能</span>' : "";
-      document.getElementById("project-body").innerHTML =
-        '<div class="threat-top"><span class="threat-name">' + esc(pr.name) + " (" + pr.x + "," + pr.y + ")" + readyBadge + '</span>' +
-          '<span class="threat-deadline">' + (pr.ready ? "資材が集まりました" : "資材を募集中") + '</span></div>' +
-        '<div class="threat-bar-track"><div class="threat-bar-fill" style="width:' + prPct + '%"></div></div>' +
-        '<div class="threat-progress-label">拠出 ' + pr.pooled + ' / ' + pr.requirement + '（' + prPct + '%）</div>' +
-        '<div class="threat-hint">みんなで資材を出し合う建設プロジェクトです。誰でも <code>輸出 資源名 数</code> で協力できます。' +
-          (pr.ready ? " 完成させられるのは、この建設地に隣接する土地を持つ人だけです（<code>着工</code>）。" : "") + '</div>';
-      projectBanner.style.display = "";
+    // 共同事業（同時に複数進行しうるので、1つずつパネルを並べる）
+    var projectBanners = document.getElementById("project-banners");
+    var projects = state.projects || (state.project ? [state.project] : []);
+    if (projects.length > 0) {
+      projectBanners.className = "has-projects";
+      projectBanners.innerHTML = projects.map(function (pr) {
+        var prPct = Math.min(100, Math.round((pr.pooled / pr.requirement) * 100));
+        var readyBadge = pr.ready ? '<span class="project-ready-badge">着工可能</span>' : "";
+        var exportCmd = "輸出 " + (projects.length > 1 ? (pr.x + " " + pr.y + " ") : "") + "資源名 数";
+        return (
+          '<div class="panel project-banner"><h3>共同事業</h3><div>' +
+          '<div class="threat-top"><span class="threat-name">' + esc(pr.name) + " (" + pr.x + "," + pr.y + ")" + readyBadge + '</span>' +
+            '<span class="threat-deadline">' + (pr.ready ? "資材が集まりました" : "資材を募集中") + '</span></div>' +
+          '<div class="threat-bar-track"><div class="threat-bar-fill" style="width:' + prPct + '%"></div></div>' +
+          '<div class="threat-progress-label">拠出 ' + pr.pooled + ' / ' + pr.requirement + '（' + prPct + '%）</div>' +
+          '<div class="threat-hint">みんなで資材を出し合う建設プロジェクトです。誰でも <code>' + exportCmd + '</code> で協力できます。' +
+            (pr.ready ? " 完成させられるのは、この建設地に隣接する土地を持つ人だけです（<code>着工</code>）。" : "") + '</div>' +
+          '</div></div>'
+        );
+      }).join("");
     } else {
-      projectBanner.style.display = "none";
+      projectBanners.className = "";
+      projectBanners.innerHTML = "";
     }
 
     // 世界目標（罰の無いプラスの目標。種類は複数あって達成のたびに切り替わる。
