@@ -369,6 +369,33 @@ export function renderMapSvg(w: World): string {
     }
   }
 
+  // ---------------------------------------------------------- 共同事業の建設地
+  // リボン（旗）のような形にして、都市ピンと見分けがつくようにする。
+  // 資材が集まって着工できる状態なら、内側にチェックマークを入れる。
+  const PROJECT_COLOR = "#1D9E75";
+  for (const pr of w.projects ?? []) {
+    const cx = mapLeft + pr.x * TILE + TILE / 2;
+    const cy = mapTop + pr.y * TILE + TILE / 2;
+    parts.push(`<g filter="url(#cityShadow)">`);
+    parts.push(
+      `<path d="M ${cx - 6} ${cy - 11} L ${cx + 6} ${cy - 11} L ${cx + 6} ${cy - 1} ` +
+        `L ${cx} ${cy + 4} L ${cx - 6} ${cy - 1} Z" fill="${PROJECT_COLOR}" stroke="#FBFAF7" stroke-width="1.4"/>`,
+    );
+    if (pr.ready) {
+      parts.push(
+        `<path d="M ${cx - 3} ${cy - 6.3} L ${cx - 0.8} ${cy - 4.1} L ${cx + 3.2} ${cy - 8.3}" ` +
+          `stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      );
+    } else {
+      parts.push(`<circle cx="${cx}" cy="${cy - 6.3}" r="1.6" fill="#FFFFFF"/>`);
+    }
+    parts.push(`</g>`);
+    parts.push(
+      `<rect x="${cx - 20}" y="${cy + 6}" width="40" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>`,
+      `<text x="${cx}" y="${cy + 14}" font-size="7.5" font-weight="700" fill="${PROJECT_COLOR}" text-anchor="middle">${pr.name}</text>`,
+    );
+  }
+
   // ------------------------------------------------------------ 凡例
   const lx = mapLeft + mapW + 24;
   let ly = mapTop + 14;
@@ -409,6 +436,17 @@ export function renderMapSvg(w: World): string {
       `<rect x="${lx + 1}" y="${ly - 11}" width="12" height="12" rx="1" fill="none" ` +
         `stroke="#C0392B" stroke-width="1.6" stroke-dasharray="3 2"/>`,
       `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">妨害で取得できないマス</text>`,
+    );
+    ly += 24;
+  }
+  {
+    // 共同事業の建設地の凡例
+    const lpx = lx + 7;
+    const lpy = ly - 5;
+    parts.push(
+      `<path d="M ${lpx - 6} ${lpy - 6} L ${lpx + 6} ${lpy - 6} L ${lpx + 6} ${lpy + 2} ` +
+        `L ${lpx} ${lpy + 6} L ${lpx - 6} ${lpy + 2} Z" fill="#1D9E75" stroke="#FBFAF7" stroke-width="1"/>`,
+      `<text x="${lx + 22}" y="${ly}" font-size="13" fill="#3D3D3A">共同事業の建設地</text>`,
     );
     ly += 24;
   }

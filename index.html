@@ -25,6 +25,12 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  html {
+    /* 地図など、あえて中身より横幅を大きくしてスクロールさせている要素があるので、
+       ページ全体が横スクロールしてしまわないよう明示的に止めておく
+       （各要素の内側のスクロールは overflow-x:auto 側に任せる）。 */
+    overflow-x: hidden;
+  }
   body {
     background:
       radial-gradient(ellipse 80% 50% at 50% -8%, rgba(216,90,48,0.08), transparent),
@@ -32,6 +38,7 @@
     color: var(--ink);
     font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
     line-height: 1.7; padding: clamp(16px, 4vw, 48px);
+    overflow-x: hidden;
   }
   .serif { font-family: "Iowan Old Style", "Palatino Linotype", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; }
   .mono { font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace; font-variant-numeric: tabular-nums; }
@@ -78,11 +85,21 @@
   main.board { display: flex; flex-direction: column; gap: 22px; }
   .contracts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px 22px; }
   .board-lower { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr); gap: 22px; align-items: start; }
-  @media (max-width: 860px) { .board-lower { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) {
+    /* `1fr` だけだとトラックの自動最小幅が中身（表など）の最小幅まで
+       広がってしまい、ページ全体が横スクロールする原因になる。
+       `minmax(0, 1fr)` にして、内側の overflow-x:auto に横スクロールを
+       任せるようにする。 */
+    .board-lower { grid-template-columns: minmax(0, 1fr); }
+  }
 
   .panel {
     background: var(--paper-raised); border: 1px solid var(--line); border-radius: 12px;
     padding: 20px 22px; box-shadow: var(--shadow);
+    /* flex/gridの子として使われる場所が多いので、中身（表やSVGなど）の
+       最小幅にひっぱられてページが横スクロールしないよう明示しておく。
+       実際の横スクロールは各要素内側の overflow-x:auto に任せる。 */
+    min-width: 0;
   }
   .panel h3 {
     font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
@@ -141,8 +158,14 @@
   ul.board-posts .board-author { font-family: ui-monospace, monospace; font-weight: 700; color: var(--accent); margin-right: 6px; }
 
   .map-caption { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 12px; }
-  .map-svg-wrap { overflow-x: auto; border-radius: 8px; }
+  .map-svg-wrap { overflow-x: auto; border-radius: 8px; -webkit-overflow-scrolling: touch; }
   .map-svg-wrap svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 700px) {
+    /* 幅いっぱいに縮小すると、資源アイコンやマスが小さすぎてタップも
+       判読もできなくなる。スマホでは原寸のまま描画し、横にスクロール
+       して見てもらう（ピンチズームも効く）。 */
+    .map-svg-wrap svg { width: auto; max-width: none; }
+  }
   .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--ink-soft); }
   .legend-row span { display: inline-flex; align-items: center; gap: 6px; }
   .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
@@ -232,7 +255,7 @@
   .roster-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
   .roster-head h3 { margin: 0; }
   .roster-note { font-size: 12px; color: var(--ink-soft); }
-  .table-scroll { overflow-x: auto; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table.roster { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
   table.roster th {
     text-align: left; font-size: 11px; font-weight: 700; color: var(--ink-soft);
