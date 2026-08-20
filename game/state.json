@@ -5076,8 +5076,8 @@
         }
       ],
       "stock": {
-        "food": 33,
-        "material": 60,
+        "food": 53,
+        "material": 80,
         "knowledge": 48
       },
       "trust": 100,
@@ -5099,7 +5099,7 @@
         "worstScoreRatioEver": 0.8490566037735848,
         "totalThreatContribution": 0,
         "threatsRepelled": 0,
-        "totalExported": 120,
+        "totalExported": 80,
         "projectsBuilt": 0,
         "totalFactionWagered": 0,
         "totalFactionWon": 0,
@@ -6270,9 +6270,9 @@
       "y": 18,
       "spawnedAt": 8,
       "requirement": 180,
-      "pooled": 235,
+      "pooled": 195,
       "contributions": {
-        "Zomba": 120,
+        "Zomba": 80,
         "getey": 30,
         "kya6": 20,
         "CoffeeDa": 5,
