@@ -826,6 +826,11 @@ function executeContracts(w: World) {
 const ECONOMIC = new Set(["expand", "build", "seize", "pass", "harvest", "bridge", "commence", "block", "raid"]);
 
 function applyCommands(w: World, commands: Command[], rng: Rng) {
+  // 同じ相手に同じターン内で何度も援助しても、称号判定に使う「援助した回数」
+  // （aidsSent）は1回分としてしか数えない（1ずつ何回も送って回数だけを
+  // 稼ぐ、という抜け道を防ぐため）。資源のやり取り自体は毎回きちんと行われる。
+  const aidCountedThisTurn = new Set<string>();
+
   // 外交（提案・承諾・破棄）は手番を消費しない。何度でも行える。
   //
   // ここは重要な設計判断。交渉に手番を使わせると、
@@ -894,7 +899,7 @@ function applyCommands(w: World, commands: Command[], rng: Rng) {
       case "seize": doSeize(w, p, cmd); break;
       case "harvest": doHarvest(w, p, cmd.resource); break;
       case "bridge": doBridge(w, p, cmd.x, cmd.y, rng); break;
-      case "aid": doAid(w, p, cmd); break;
+      case "aid": doAid(w, p, cmd, aidCountedThisTurn); break;
       case "contribute": doContribute(w, p, cmd); break;
       case "export": doExport(w, p, cmd); break;
       case "commence": doCommence(w, p); break;
@@ -1589,6 +1594,7 @@ function doAid(
   w: World,
   p: Player,
   cmd: Extract<Command, { type: "aid" }>,
+  aidCountedThisTurn: Set<string>,
 ) {
   const recipient = w.players[cmd.to];
   if (!recipient || cmd.to === p.id) {
@@ -1609,7 +1615,11 @@ function doAid(
     Math.min(CONFIG.aidTrustBonusCap, cmd.amount * CONFIG.aidTrustBonusRate),
   );
   p.trust += trustGain;
-  p.stats!.aidsSent += 1;
+  const aidKey = `${p.id}→${cmd.to}`;
+  if (!aidCountedThisTurn.has(aidKey)) {
+    aidCountedThisTurn.add(aidKey);
+    p.stats!.aidsSent += 1;
+  }
   p.stats!.totalAidGiven += cmd.amount;
   w.log.push(
     `${p.id} が ${cmd.to} に ${RESOURCE_JA[cmd.resource]}を${cmd.amount}援助した` +
