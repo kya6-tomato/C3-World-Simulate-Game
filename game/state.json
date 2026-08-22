@@ -1,5 +1,5 @@
 {
-  "turn": 23,
+  "turn": 24,
   "width": 34,
   "height": 24,
   "tiles": [
@@ -1484,7 +1484,9 @@
       "x": 30,
       "y": 6,
       "kind": "knowledge",
-      "owner": null
+      "owner": "たにゅ",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 31,
@@ -1514,7 +1516,9 @@
       "x": 1,
       "y": 7,
       "kind": "material",
-      "owner": null
+      "owner": "keitan",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 2,
@@ -2115,7 +2119,9 @@
       "x": 24,
       "y": 9,
       "kind": "waste",
-      "owner": null
+      "owner": "zama",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 25,
@@ -2446,7 +2452,9 @@
       "x": 8,
       "y": 11,
       "kind": "material",
-      "owner": null
+      "owner": "鍵原∀原鍵",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 9,
@@ -2799,7 +2807,9 @@
       "x": 30,
       "y": 12,
       "kind": "knowledge",
-      "owner": null
+      "owner": "shinya",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 31,
@@ -4235,7 +4245,9 @@
       "x": 28,
       "y": 19,
       "kind": "food",
-      "owner": null
+      "owner": "saku",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 29,
@@ -4376,7 +4388,9 @@
       "x": 16,
       "y": 20,
       "kind": "knowledge",
-      "owner": null
+      "owner": "CoffeeDa",
+      "acquiredViaTrade": false,
+      "rich": false
     },
     {
       "x": 17,
@@ -5150,14 +5164,14 @@
         }
       ],
       "stock": {
-        "food": 72,
-        "material": 71,
-        "knowledge": 53
+        "food": 93,
+        "material": 45,
+        "knowledge": 64
       },
       "trust": 100,
       "standing": "expand",
       "stats": {
-        "tradeExecutions": 33,
+        "tradeExecutions": 35,
         "aidsSent": 2,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
@@ -5209,15 +5223,15 @@
         }
       ],
       "stock": {
-        "food": 80,
-        "material": 130,
-        "knowledge": 66
+        "food": 82,
+        "material": 102,
+        "knowledge": 100
       },
       "trust": 100,
       "standing": "build",
       "stats": {
-        "tradeExecutions": 83,
-        "aidsSent": 11,
+        "tradeExecutions": 89,
+        "aidsSent": 22,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
         "seizesDone": 0,
@@ -5226,9 +5240,9 @@
         "breaksDone": 0,
         "landOffersAccepted": 0,
         "landOffersGiven": 0,
-        "harvestsDone": 5,
+        "harvestsDone": 6,
         "minTrustEver": 100,
-        "totalAidGiven": 30,
+        "totalAidGiven": 140,
         "worstScoreRatioEver": 0.8490566037735848,
         "totalThreatContribution": 0,
         "threatsRepelled": 0,
@@ -5250,11 +5264,12 @@
         "post_first",
         "diverse_trader_5",
         "trade_50",
-        "city_level_5"
+        "city_level_5",
+        "score_100"
       ],
       "achievementBonus": {
         "storage": 10,
-        "tradeRange": 11,
+        "tradeRange": 13,
         "disasterMitigation": 0,
         "harvestBonus": 3
       },
@@ -5270,14 +5285,14 @@
         }
       ],
       "stock": {
-        "food": 36,
-        "material": 53,
-        "knowledge": 135
+        "food": 42,
+        "material": 79,
+        "knowledge": 97
       },
       "trust": 100,
       "standing": "build",
       "stats": {
-        "tradeExecutions": 19,
+        "tradeExecutions": 21,
         "aidsSent": 0,
         "disastersSurvived": 1,
         "bridgesBuilt": 0,
@@ -5307,10 +5322,11 @@
         "specialist",
         "trade_10",
         "underdog_persistent",
-        "underdog_recovery"
+        "underdog_recovery",
+        "full_set"
       ],
       "achievementBonus": {
-        "storage": 15,
+        "storage": 25,
         "tradeRange": 3,
         "disasterMitigation": 0.05,
         "harvestBonus": 3
@@ -5323,18 +5339,18 @@
         {
           "x": 30,
           "y": 8,
-          "level": 3
+          "level": 4
         }
       ],
       "stock": {
-        "food": 49,
-        "material": 56,
-        "knowledge": 115
+        "food": 24,
+        "material": 42,
+        "knowledge": 86
       },
       "trust": 100,
       "standing": "build",
       "stats": {
-        "tradeExecutions": 45,
+        "tradeExecutions": 49,
         "aidsSent": 0,
         "disastersSurvived": 1,
         "bridgesBuilt": 0,
@@ -5385,14 +5401,14 @@
         }
       ],
       "stock": {
-        "food": 62,
-        "material": 29,
-        "knowledge": 31
+        "food": 85,
+        "material": 96,
+        "knowledge": 57
       },
       "trust": 100,
       "standing": "build",
       "stats": {
-        "tradeExecutions": 99,
+        "tradeExecutions": 105,
         "aidsSent": 1,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
@@ -5402,7 +5418,7 @@
         "breaksDone": 1,
         "landOffersAccepted": 0,
         "landOffersGiven": 1,
-        "harvestsDone": 7,
+        "harvestsDone": 8,
         "minTrustEver": 74,
         "totalAidGiven": 5,
         "worstScoreRatioEver": 0.8767123287671232,
@@ -5426,11 +5442,12 @@
         "post_first",
         "city_level_5",
         "specialist",
-        "land_gift_given"
+        "land_gift_given",
+        "trade_100"
       ],
       "achievementBonus": {
         "storage": 10,
-        "tradeRange": 11,
+        "tradeRange": 16,
         "disasterMitigation": 0,
         "harvestBonus": 3
       },
@@ -5446,14 +5463,14 @@
         }
       ],
       "stock": {
-        "food": 48,
-        "material": 0,
+        "food": 66,
+        "material": 19,
         "knowledge": 105
       },
-      "trust": 55.5,
+      "trust": 68,
       "standing": "expand",
       "stats": {
-        "tradeExecutions": 72,
+        "tradeExecutions": 76,
         "aidsSent": 0,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
@@ -5466,7 +5483,7 @@
         "harvestsDone": 9,
         "minTrustEver": 55,
         "totalAidGiven": 0,
-        "worstScoreRatioEver": 0.7431693989071039,
+        "worstScoreRatioEver": 0.7420494699646644,
         "totalThreatContribution": 0,
         "threatsRepelled": 0,
         "totalExported": 0,
@@ -5502,14 +5519,14 @@
         }
       ],
       "stock": {
-        "food": 115,
-        "material": 73,
-        "knowledge": 66
+        "food": 66,
+        "material": 115,
+        "knowledge": 87
       },
       "trust": 100,
       "standing": "expand",
       "stats": {
-        "tradeExecutions": 74,
+        "tradeExecutions": 78,
         "aidsSent": 1,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
@@ -5564,8 +5581,8 @@
       ],
       "stock": {
         "food": 1,
-        "material": 11,
-        "knowledge": 0
+        "material": 27,
+        "knowledge": 66
       },
       "trust": 100,
       "standing": "build",
@@ -5583,7 +5600,7 @@
         "harvestsDone": 0,
         "minTrustEver": 100,
         "totalAidGiven": 0,
-        "worstScoreRatioEver": 0.8087431693989071,
+        "worstScoreRatioEver": 0.784452296819788,
         "totalThreatContribution": 0,
         "threatsRepelled": 0,
         "totalExported": 0,
@@ -5616,7 +5633,7 @@
       ],
       "stock": {
         "food": 110,
-        "material": 60,
+        "material": 57,
         "knowledge": 67
       },
       "trust": 100,
@@ -5672,8 +5689,8 @@
         }
       ],
       "stock": {
-        "food": 1,
-        "material": 8,
+        "food": 5,
+        "material": 0,
         "knowledge": 0
       },
       "trust": 100,
@@ -5725,25 +5742,25 @@
         }
       ],
       "stock": {
-        "food": 55,
-        "material": 59,
-        "knowledge": 80
+        "food": 68,
+        "material": 69,
+        "knowledge": 37
       },
-      "trust": 100,
+      "trust": 55.5,
       "standing": "expand",
       "stats": {
-        "tradeExecutions": 18,
+        "tradeExecutions": 20,
         "aidsSent": 0,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
         "seizesDone": 0,
         "seizedByOthers": 0,
         "passCount": 10,
-        "breaksDone": 0,
+        "breaksDone": 1,
         "landOffersAccepted": 0,
         "landOffersGiven": 0,
         "harvestsDone": 1,
-        "minTrustEver": 100,
+        "minTrustEver": 55,
         "totalAidGiven": 0,
         "worstScoreRatioEver": 0.4808743169398907,
         "totalThreatContribution": 0,
@@ -5753,7 +5770,7 @@
         "totalFactionWagered": 0,
         "totalFactionWon": 0,
         "factionBattlesWon": 0,
-        "postsCount": 1
+        "postsCount": 2
       },
       "achievements": [
         "trade_first",
@@ -5782,15 +5799,15 @@
         }
       ],
       "stock": {
-        "food": 65,
-        "material": 93,
-        "knowledge": 2
+        "food": 91,
+        "material": 100,
+        "knowledge": 18
       },
       "trust": 100,
       "standing": "expand",
       "stats": {
-        "tradeExecutions": 59,
-        "aidsSent": 2,
+        "tradeExecutions": 61,
+        "aidsSent": 3,
         "disastersSurvived": 0,
         "bridgesBuilt": 0,
         "seizesDone": 0,
@@ -5799,9 +5816,9 @@
         "breaksDone": 0,
         "landOffersAccepted": 0,
         "landOffersGiven": 1,
-        "harvestsDone": 4,
+        "harvestsDone": 5,
         "minTrustEver": 100,
-        "totalAidGiven": 15,
+        "totalAidGiven": 65,
         "worstScoreRatioEver": 0.7542857142857142,
         "totalThreatContribution": 0,
         "threatsRepelled": 0,
@@ -5810,7 +5827,7 @@
         "totalFactionWagered": 0,
         "totalFactionWon": 0,
         "factionBattlesWon": 0,
-        "postsCount": 4
+        "postsCount": 5
       },
       "achievements": [
         "trade_first",
@@ -5889,7 +5906,7 @@
       "giveAmount": 5,
       "take": "food",
       "takeAmount": 5,
-      "turnsLeft": 31,
+      "turnsLeft": 30,
       "proposedAt": 2,
       "status": "active"
     },
@@ -5925,9 +5942,9 @@
       "giveAmount": 6,
       "take": "food",
       "takeAmount": 4,
-      "turnsLeft": 1,
+      "turnsLeft": 0,
       "proposedAt": 3,
-      "status": "active"
+      "status": "expired"
     },
     {
       "id": "C3-たにゅ-8",
@@ -6045,7 +6062,7 @@
       "giveAmount": 6,
       "take": "food",
       "takeAmount": 4,
-      "turnsLeft": 4,
+      "turnsLeft": 3,
       "proposedAt": 3,
       "status": "active"
     },
@@ -6177,7 +6194,7 @@
       "giveAmount": 5,
       "take": "knowledge",
       "takeAmount": 5,
-      "turnsLeft": 6,
+      "turnsLeft": 5,
       "proposedAt": 7,
       "status": "active"
     },
@@ -6201,7 +6218,7 @@
       "giveAmount": 5,
       "take": "knowledge",
       "takeAmount": 5,
-      "turnsLeft": 36,
+      "turnsLeft": 35,
       "proposedAt": 7,
       "status": "active"
     },
@@ -6213,7 +6230,7 @@
       "giveAmount": 10,
       "take": "food",
       "takeAmount": 10,
-      "turnsLeft": 3,
+      "turnsLeft": 2,
       "proposedAt": 8,
       "status": "active"
     },
@@ -6249,7 +6266,7 @@
       "giveAmount": 6,
       "take": "knowledge",
       "takeAmount": 6,
-      "turnsLeft": 2,
+      "turnsLeft": 1,
       "proposedAt": 10,
       "status": "active"
     },
@@ -6285,7 +6302,7 @@
       "giveAmount": 6,
       "take": "knowledge",
       "takeAmount": 6,
-      "turnsLeft": 3,
+      "turnsLeft": 2,
       "proposedAt": 12,
       "status": "active"
     },
@@ -6297,7 +6314,7 @@
       "giveAmount": 10,
       "take": "knowledge",
       "takeAmount": 10,
-      "turnsLeft": 17,
+      "turnsLeft": 16,
       "proposedAt": 13,
       "status": "active"
     },
@@ -6357,7 +6374,7 @@
       "giveAmount": 9,
       "take": "food",
       "takeAmount": 6,
-      "turnsLeft": 5,
+      "turnsLeft": 4,
       "proposedAt": 15,
       "status": "active"
     },
@@ -6381,7 +6398,7 @@
       "giveAmount": 10,
       "take": "knowledge",
       "takeAmount": 10,
-      "turnsLeft": 3,
+      "turnsLeft": 2,
       "proposedAt": 15,
       "status": "active"
     },
@@ -6405,7 +6422,7 @@
       "giveAmount": 4,
       "take": "material",
       "takeAmount": 4,
-      "turnsLeft": 4,
+      "turnsLeft": 3,
       "proposedAt": 16,
       "status": "active"
     },
@@ -6417,7 +6434,7 @@
       "giveAmount": 5,
       "take": "knowledge",
       "takeAmount": 5,
-      "turnsLeft": 4,
+      "turnsLeft": 3,
       "proposedAt": 16,
       "status": "active"
     },
@@ -6465,9 +6482,9 @@
       "giveAmount": 9,
       "take": "food",
       "takeAmount": 1,
-      "turnsLeft": 5,
+      "turnsLeft": 4,
       "proposedAt": 18,
-      "status": "active"
+      "status": "broken"
     },
     {
       "id": "C18-たにゅ-53",
@@ -6489,7 +6506,7 @@
       "giveAmount": 5,
       "take": "knowledge",
       "takeAmount": 5,
-      "turnsLeft": 17,
+      "turnsLeft": 16,
       "proposedAt": 19,
       "status": "active"
     },
@@ -6501,9 +6518,9 @@
       "giveAmount": 10,
       "take": "material",
       "takeAmount": 10,
-      "turnsLeft": 10,
+      "turnsLeft": 9,
       "proposedAt": 21,
-      "status": "proposed"
+      "status": "active"
     },
     {
       "id": "C21-kya6-56",
@@ -6539,6 +6556,30 @@
       "takeAmount": 6,
       "turnsLeft": 10,
       "proposedAt": 22,
+      "status": "proposed"
+    },
+    {
+      "id": "C23-kya6-59",
+      "from": "kya6",
+      "to": "zama",
+      "give": "material",
+      "giveAmount": 10,
+      "take": "knowledge",
+      "takeAmount": 10,
+      "turnsLeft": 10,
+      "proposedAt": 23,
+      "status": "proposed"
+    },
+    {
+      "id": "C23-kya6-60",
+      "from": "kya6",
+      "to": "CoffeeDa",
+      "give": "material",
+      "giveAmount": 10,
+      "take": "food",
+      "takeAmount": 10,
+      "turnsLeft": 10,
+      "proposedAt": 23,
       "status": "proposed"
     }
   ],
@@ -6578,29 +6619,53 @@
     }
   ],
   "log": [
-    "【格差ボーナス】鍵原∀原鍵 は平均より苦戦しているため、知識を10受け取った。",
-    "【格差ボーナス】zama は平均より苦戦しているため、食料を10受け取った。",
-    "【満了】getey と CoffeeDa の契約 C12-getey-35 が正常に完了した。",
-    "【満了】たにゅ と kya6 の契約 C12-たにゅ-36 が正常に完了した。",
-    "【破棄】たにゅ が kya6 との契約を一方的に破棄。違約金 資材10 を支払った。",
-    "getey が CoffeeDa に提案 [`C22-getey-58`]: 資材9を渡す代わりに、食料6をもらう（毎ターン・10ターン間）",
-    "【掲示板】CoffeeDa: keitan 援助助かる！灯台行きやす！",
+    "【格差ボーナス】たにゅ は平均より苦戦しているため、知識を10受け取った。",
+    "【格差ボーナス】鍵原∀原鍵 は平均より苦戦しているため、食料を10受け取った。",
+    "【脅威】世界に「地鳴り」が現れた！ 10ターン以内に、みんなで合計240の資源を集めて撃退しないと被害が出始める（撃退できるまで、被害は毎ターン少しずつ重くなる）。`貢献 資源名 数` で誰でも協力できる。",
+    "【満了】getey と Zomba の契約 C3-getey-7 が正常に完了した。",
+    "Zomba が saku に 資材を10援助した（Zombaの信用+1、援助の累計貢献点8/40）。",
+    "Zomba が buridaikon に 資材を10援助した（Zombaの信用+1、援助の累計貢献点10/40）。",
+    "【掲示板】kya6: CoffeeDaさん頑張って～",
+    "【破棄】zama が たにゅ との契約を一方的に破棄。違約金 知識36 を支払った。",
+    "Zomba が CoffeeDa に 資材を10援助した（Zombaの信用+1、援助の累計貢献点12/40）。",
+    "kya6 が CoffeeDa に 資材を50援助した（kya6の信用+5、援助の累計貢献点13/40）。",
+    "kya6 が たにゅ の契約 [`C21-たにゅ-55`] を承諾した。取引が始まる: kya6は知識10をもらい、資材10を渡す（毎ターン・10ターン間）。",
+    "Zomba が keitan に 食料を10援助した（Zombaの信用+1、援助の累計貢献点14/40）。",
+    "Zomba が shinya に 資材を10援助した（Zombaの信用+1、援助の累計貢献点16/40）。",
+    "kya6 が zama に提案 [`C23-kya6-59`]: 資材10を渡す代わりに、知識10をもらう（毎ターン・10ターン間）",
+    "Zomba が 鍵原∀原鍵 に 食料を10援助した（Zombaの信用+1、援助の累計貢献点18/40）。",
+    "Zomba が kya6 に 食料を10援助した（Zombaの信用+1、援助の累計貢献点20/40）。",
+    "kya6 が CoffeeDa に提案 [`C23-kya6-60`]: 資材10を渡す代わりに、食料10をもらう（毎ターン・10ターン間）",
+    "【掲示板】zama: 今度こそ信用度下がったかな？",
+    "Zomba が zama に 資材を10援助した（Zombaの信用+1、援助の累計貢献点22/40）。",
+    "Zomba が たにゅ に 食料を10援助した（Zombaの信用+1、援助の累計貢献点24/40）。",
+    "Zomba が getey に 食料を10援助した（Zombaの信用+1、援助の累計貢献点26/40）。",
+    "Zomba が SAN に 資材を10援助した（Zombaの信用+1、援助の累計貢献点28/40）。",
     "Zomba が土地から 食料 を36回収した（9マス分 + 都市レベル分6 + 称号ボーナス3）。",
-    "SAN が土地から 知識 を21回収した（6マス分 + 都市レベル分3）。",
-    "kya6 が (16,2) を開拓した [荒地]。",
-    "zama が (24,12) を開拓した [知識]。",
-    "鍵原∀原鍵 が (11,11) を開拓した [資材]。",
-    "keitan が (2,7) を開拓した [資材]。",
-    "たにゅ が土地から 知識 を32回収した（10マス分 + 都市レベル分2）。",
-    "getey が都市を Lv6 に発展させた。",
-    "saku が都市を Lv4 に発展させた。",
-    "shinya が (32,16) を開拓した [荒地]。",
-    "buridaikon が (21,11) を開拓した [荒地]。",
-    "CoffeeDa が (17,20) を開拓した [食料]。",
-    "【称号】たにゅ が称号「健闘賞」を獲得した（劣勢の状態のまま、称号を5個以上獲得する）。報酬: 保管上限+15（永続）。",
-    "【称号】buridaikon が称号「荒野の開拓者」を獲得した（荒地を5マス所有する）。報酬: 災害の被害軽減+5%（永続）。"
+    "keitan が (1,7) を開拓した [資材]。",
+    "buridaikon は資源が足りず開拓できなかった（要 合計99）。",
+    "shinya が (30,12) を開拓した [知識]。",
+    "kya6 が土地から 資材 を41回収した（13マス分 + 都市レベル分2）。",
+    "たにゅ が (30,6) を開拓した [知識]。",
+    "鍵原∀原鍵 が (8,11) を開拓した [資材]。",
+    "SAN が都市を Lv4 に発展させた。",
+    "getey が土地から 資材 を42回収した（11マス分 + 都市レベル分6 + 称号ボーナス3）。",
+    "saku が (28,19) を開拓した [食料]。",
+    "CoffeeDa が (16,20) を開拓した [知識]。",
+    "zama が (24,9) を開拓した [荒地]。",
+    "【称号】Zomba が称号「覇者」を獲得した（得点が100に到達する）。報酬: 信用+10、取引可能距離+2（永続）。",
+    "【称号】saku が称号「コンプリート主義者」を獲得した（食料・資材・知識・荒地のすべてを1マス以上所有する）。報酬: 保管上限+10（永続）。",
+    "【称号】getey が称号「豪商」を獲得した（取引を100回成立させる）。報酬: 信用+10、取引可能距離+5（永続）。"
   ],
-  "threat": null,
+  "threat": {
+    "id": "T23",
+    "name": "地鳴り",
+    "spawnedAt": 23,
+    "deadlineTurn": 33,
+    "requirement": 240,
+    "contributed": 0,
+    "contributions": {}
+  },
   "project": {
     "id": "P8",
     "name": "灯台",
