@@ -1096,6 +1096,28 @@ function doOffer(
     );
     return;
   }
+  // 同じ相手に対して、既にある契約（提案中・成立中）とちょうど正反対
+  // （渡す・もらうが入れ替わり、量も同じ）の提案は結べない。両方が
+  // 成立すると資源のやり取りが差し引きゼロになり、実質何も交換して
+  // いないのに「取引成立」の回数と信用回復だけが二重に積み上がって
+  // しまう、意味のない契約になるため。
+  const mirrorExists = w.contracts.some(
+    (c) =>
+      c.from === p.id &&
+      c.to === cmd.to &&
+      (c.status === "active" || c.status === "proposed") &&
+      c.give === cmd.take &&
+      c.take === cmd.give &&
+      c.giveAmount === cmd.takeAmount &&
+      c.takeAmount === cmd.giveAmount,
+  );
+  if (mirrorExists) {
+    w.log.push(
+      `${p.id} は ${cmd.to} との既存の契約とちょうど正反対の提案をしようとしたが、` +
+        `差し引きゼロの意味のない契約になるため提案できなかった。`,
+    );
+    return;
+  }
   const id = `C${w.turn}-${p.id}-${w.contracts.length}`;
   const contract: Contract = {
     id,
