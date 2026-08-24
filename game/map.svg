@@ -5,7 +5,7 @@
 <filter id="grain" x="0%" y="0%" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.22  0 0 0 0 0.18  0 0 0 0.05 0"/></filter>
 </defs>
 <rect width="904" height="518" fill="url(#bg)"/>
-<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 28</text>
+<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 29</text>
 <rect x="41.6" y="65.6" width="18.8" height="18.8" rx="1.5" fill="#ebb663"/>
 <path d="M 44.41608 78.2138 L 48.616080000000004 69.7138 L 51.01608 73.5138 L 53.41608 70.41380000000001 L 56.41608 78.2138 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 47.51608 71.7138 L 48.616080000000004 69.7138 L 49.71608 71.8138 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -121,6 +121,7 @@
 <path d="M 78 102 Q 87 104.39862 96 102" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="95.6" y="83.6" width="18.8" height="18.8" rx="1.5" fill="#eeb966"/>
 <path d="M 114 84 Q 115.28178 93 114 102" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="97.5" y="85.5" width="15" height="15" rx="1" fill="none" stroke="#b12f2f" stroke-width="1.5" opacity="0.85"/>
 <rect x="113.6" y="83.6" width="18.8" height="18.8" rx="1.5" fill="#dcd9d0"/>
 <path d="M 132 84 Q 130.9044 93 132 102" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 114 102 Q 123 104.1006 132 102" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
@@ -632,6 +633,7 @@
 <ellipse cx="518.788" cy="163.02364" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
 <path d="M 528 156 Q 526.22382 165 528 174" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 510 174 Q 519 174.21036 528 174" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="511.5" y="157.5" width="15" height="15" rx="1" fill="none" stroke="#cc3ea1" stroke-width="1.5" opacity="0.85"/>
 <rect x="527.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#b9b4e8"/>
 <rect x="532.7991999999999" y="163.1841" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 532.0992 163.1841 L 534.4992 158.3841 L 536.8992 163.1841 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -836,6 +838,7 @@
 <rect x="427.23394" y="200.46738000000002" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 426.53394000000003 200.46738000000002 L 428.93394 195.66738 L 431.33394 200.46738000000002 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <rect x="437.6" y="191.6" width="18.8" height="18.8" rx="1.5" fill="#b9b3e7"/>
+<rect x="439.5" y="193.5" width="15" height="15" rx="1" fill="none" stroke="#324b86" stroke-width="1.5" opacity="0.85"/>
 <rect x="455.6" y="191.6" width="18.8" height="18.8" rx="1.5" fill="#b9b3e7"/>
 <path d="M 474 192 Q 476.71848 201 474 210" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="457.5" y="193.5" width="15" height="15" rx="1" fill="none" stroke="#90bd4c" stroke-width="1.5" opacity="0.85"/>
@@ -1093,6 +1096,7 @@
 <rect x="601.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="617.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <path d="M 618 246 Q 627 244.7055 636 246" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="619.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <rect x="644.89432" y="235.17174" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 644.1943200000001 235.17174 L 646.59432 230.37174 L 648.99432 235.17174 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1150,6 +1154,7 @@
 <rect x="257.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#ebb764"/>
 <path d="M 261.48588 260.87696 L 265.68588 252.37696 L 268.08588000000003 256.17696 L 270.48588 253.07695999999999 L 273.48588 260.87696 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 264.58588000000003 254.37696 L 265.68588 252.37696 L 266.78588 254.47696 Z" fill="#FFFFFF" opacity="0.75"/>
+<rect x="259.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#863253" stroke-width="1.5" opacity="0.85"/>
 <rect x="275.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#e9b461"/>
 <path d="M 278.4738 260.68484 L 282.67379999999997 252.18484 L 285.0738 255.98484000000002 L 287.4738 252.88484 L 290.4738 260.68484 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 281.5738 254.18484 L 282.67379999999997 252.18484 L 283.7738 254.28484 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -1986,6 +1991,7 @@
 <ellipse cx="376.44382" cy="399.05566" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
 <path d="M 384 390 Q 386.60934 399 384 408" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 366 408 Q 375 408.21552 384 408" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="367.5" y="391.5" width="15" height="15" rx="1" fill="none" stroke="#328653" stroke-width="1.5" opacity="0.85"/>
 <rect x="383.6" y="389.6" width="18.8" height="18.8" rx="1.5" fill="#b3d28a"/>
 <path d="M 384 408 Q 393 410.75244 402 408" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="401.6" y="389.6" width="18.8" height="18.8" rx="1.5" fill="#b3d28a"/>
@@ -2133,6 +2139,7 @@
 <rect x="635.6" y="407.6" width="18.8" height="18.8" rx="1.5" fill="#c1bced"/>
 <rect x="644.4167199999999" y="413.35662" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 643.71672 413.35662 L 646.11672 408.55662 L 648.51672 413.35662 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
+<rect x="637.5" y="409.5" width="15" height="15" rx="1" fill="none" stroke="#3e3ecc" stroke-width="1.5" opacity="0.85"/>
 <rect x="41.6" y="425.6" width="18.8" height="18.8" rx="1.5" fill="#afd086"/>
 <path d="M 42 444 Q 51 444.31632 60 444" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="59.6" y="425.6" width="18.8" height="18.8" rx="1.5" fill="#afcf86"/>
@@ -2597,7 +2604,6 @@
 </g>
 <line x1="177" y1="75" x2="51" y2="399" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="645" y1="165" x2="213" y2="165" stroke="#E24B4A" stroke-width="1.4" stroke-dasharray="4 3" stroke-linecap="round" opacity="0.9"/>
-<line x1="213" y1="165" x2="591" y2="219" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="177" y1="75" x2="591" y2="219" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="213" y1="165" x2="645" y2="489" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="465" y1="273" x2="645" y2="165" stroke="#E24B4A" stroke-width="1.4" stroke-dasharray="4 3" stroke-linecap="round" opacity="0.9"/>
@@ -2607,6 +2613,8 @@
 <line x1="213" y1="165" x2="285" y2="489" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="267" y1="111" x2="285" y2="489" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <line x1="213" y1="165" x2="51" y2="399" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+<line x1="267" y1="111" x2="51" y2="399" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+<line x1="465" y1="273" x2="267" y2="111" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
 <g filter="url(#cityShadow)">
 <path d="M 172 69 L 182 69 L 177 75 Z" fill="#b12f2f"/>
 <circle cx="177" cy="69" r="7" fill="#b12f2f" stroke="#FBFAF7" stroke-width="1.6"/>
@@ -2620,7 +2628,7 @@
 <circle cx="51" cy="393" r="7" fill="#3ecc3e" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 45.5 387.5 L 51 382 L 56.5 387.5 Z" fill="#3ecc3e"/>
 </g>
-<text x="51" y="396" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="51" y="396" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">8</text>
 <rect x="39" y="401" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="51" y="409" font-size="7.5" font-weight="700" fill="#3ecc3e" text-anchor="middle">Zomba</text>
 <g filter="url(#cityShadow)">
@@ -2644,7 +2652,7 @@
 <circle cx="213" cy="159" r="7" fill="#b1972f" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 207.5 153.5 L 213 148 L 218.5 153.5 Z" fill="#b1972f"/>
 </g>
-<text x="213" y="162" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="213" y="162" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">8</text>
 <rect x="201" y="167" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="213" y="175" font-size="7.5" font-weight="700" fill="#b1972f" text-anchor="middle">getey</text>
 <g filter="url(#cityShadow)">
@@ -2700,15 +2708,9 @@
 <circle cx="267" cy="105" r="7" fill="#6d3286" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 261.5 99.5 L 267 94 L 272.5 99.5 Z" fill="#6d3286"/>
 </g>
-<text x="267" y="108" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="267" y="108" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">3</text>
 <rect x="255" y="113" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="267" y="121" font-size="7.5" font-weight="700" fill="#6d3286" text-anchor="middle">kya6</text>
-<g filter="url(#cityShadow)">
-<path d="M 369 388 L 381 388 L 381 398 L 375 403 L 369 398 Z" fill="#1D9E75" stroke="#FBFAF7" stroke-width="1.4"/>
-<path d="M 372 392.7 L 374.2 394.9 L 378.2 390.7" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<rect x="355" y="405" width="40" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
-<text x="375" y="413" font-size="7.5" font-weight="700" fill="#1D9E75" text-anchor="middle">灯台</text>
 <rect x="678" y="69" width="14" height="14" fill="#C0DD97" rx="3"/>
 <text x="700" y="80" font-size="13" fill="#3D3D3A">食料</text>
 <rect x="678" y="93" width="14" height="14" fill="#FAC775" rx="3"/>
@@ -2728,21 +2730,21 @@
 <text x="700" y="248" font-size="13" fill="#3D3D3A">共同事業の建設地</text>
 <text x="678" y="284" font-size="13" font-weight="500" fill="#3D3D3A">上位プレイヤー</text>
 <circle cx="684" cy="302" r="6" fill="#3ecc3e"/>
-<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv7 · 領土13 · 信用100</text>
+<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv8 · 領土13 · 信用100</text>
 <circle cx="684" cy="322" r="6" fill="#b12f2f"/>
-<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv6 · 領土18 · 信用100</text>
+<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv6 · 領土19 · 信用100</text>
 <circle cx="684" cy="342" r="6" fill="#b1972f"/>
-<text x="698" y="346" font-size="12" fill="#3D3D3A">getey · Lv7 · 領土13 · 信用100</text>
-<circle cx="684" cy="362" r="6" fill="#3e3ecc"/>
-<text x="698" y="366" font-size="12" fill="#3D3D3A">saku · Lv5 · 領土20 · 信用100</text>
-<circle cx="684" cy="382" r="6" fill="#6d3286"/>
-<text x="698" y="386" font-size="12" fill="#3D3D3A">kya6 · Lv2 · 領土23 · 信用100</text>
+<text x="698" y="346" font-size="12" fill="#3D3D3A">getey · Lv8 · 領土13 · 信用100</text>
+<circle cx="684" cy="362" r="6" fill="#6d3286"/>
+<text x="698" y="366" font-size="12" fill="#3D3D3A">kya6 · Lv3 · 領土23 · 信用100</text>
+<circle cx="684" cy="382" r="6" fill="#3e3ecc"/>
+<text x="698" y="386" font-size="12" fill="#3D3D3A">saku · Lv5 · 領土21 · 信用100</text>
 <circle cx="684" cy="402" r="6" fill="#865c32"/>
-<text x="698" y="406" font-size="12" fill="#3D3D3A">shinya · Lv4 · 領土21 · 信用100</text>
+<text x="698" y="406" font-size="12" fill="#3D3D3A">shinya · Lv4 · 領土22 · 信用100</text>
 <circle cx="684" cy="422" r="6" fill="#3eafcc"/>
 <text x="698" y="426" font-size="12" fill="#3D3D3A">SAN · Lv4 · 領土16 · 信用100</text>
 <circle cx="684" cy="442" r="6" fill="#324b86"/>
-<text x="698" y="446" font-size="12" fill="#3D3D3A">buridaikon · Lv3 · 領土20 · 信用100</text>
+<text x="698" y="446" font-size="12" fill="#3D3D3A">buridaikon · Lv3 · 領土21 · 信用100</text>
 <g>
 <rect class="tile-hit" data-x="0" data-y="0" x="42" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
 <rect class="tile-hit" data-x="1" data-y="0" x="60" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
