@@ -5,7 +5,7 @@
 <filter id="grain" x="0%" y="0%" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.22  0 0 0 0 0.18  0 0 0 0.05 0"/></filter>
 </defs>
 <rect width="904" height="518" fill="url(#bg)"/>
-<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 36</text>
+<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 37</text>
 <rect x="41.6" y="65.6" width="18.8" height="18.8" rx="1.5" fill="#ebb663"/>
 <path d="M 44.41608 78.2138 L 48.616080000000004 69.7138 L 51.01608 73.5138 L 53.41608 70.41380000000001 L 56.41608 78.2138 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 47.51608 71.7138 L 48.616080000000004 69.7138 L 49.71608 71.8138 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -625,6 +625,7 @@
 <path d="M 317.19702 169.69976 L 321.39702 161.19976 L 323.79702000000003 164.99976 L 326.19702 161.89976 L 329.19702 169.69976 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 320.29702000000003 163.19976 L 321.39702 161.19976 L 322.49702 163.29976 Z" fill="#FFFFFF" opacity="0.75"/>
 <rect x="329.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#eab562"/>
+<rect x="331.5" y="157.5" width="15" height="15" rx="1" fill="none" stroke="#cc3ea1" stroke-width="1.5" opacity="0.85"/>
 <rect x="347.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#e9b360"/>
 <path d="M 351.58368 167.75942 L 355.78368 159.25942 L 358.18368000000004 163.05942000000002 L 360.58368 159.95942 L 363.58368 167.75942 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 354.68368000000004 161.25942 L 355.78368 159.25942 L 356.88368 161.35942 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -1042,6 +1043,9 @@
 <path d="M 154.43872 236.52444 L 155.53871999999998 234.52444 L 156.63872 236.62444 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 168 228 Q 167.06196 237 168 246" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 150 246 Q 159 247.30722 168 246" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="151.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#863253" stroke-width="1.5" opacity="0.85"/>
+<circle cx="163.5" cy="232.5" r="6" fill="#FFE9A8" opacity="0.55"/>
+<path d="M 163.5 228.3 Q 164.424 231.576 167.7 232.5 Q 164.424 233.424 163.5 236.7 Q 162.576 233.424 159.3 232.5 Q 162.576 231.576 163.5 228.3 Z" fill="#F5B942" stroke="#8A5A00" stroke-width="0.5"/>
 <rect x="167.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#dddbd2"/>
 <ellipse cx="174.33188" cy="241.24702000000002" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="177.53188" cy="240.34702000000001" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
@@ -1216,6 +1220,7 @@
 <path d="M 369.33028 254.26494000000002 L 370.43028 252.26494000000002 L 371.53028 254.36494000000002 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 384 246 Q 383.80266 255 384 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 366 264 Q 375 262.33788 384 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="367.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#324b86" stroke-width="1.5" opacity="0.85"/>
 <rect x="383.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#c2beee"/>
 <rect x="390.26146" y="253.75302000000002" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 389.56146 253.75302000000002 L 391.96146 248.95302 L 394.36145999999997 253.75302000000002 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1229,6 +1234,7 @@
 <path d="M 426.85608 252.01266 L 429.25608 247.21266 L 431.65608 252.01266 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 438 246 Q 440.6112 255 438 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 420 264 Q 429 261.12522 438 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="421.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#90bd4c" stroke-width="1.5" opacity="0.85"/>
 <rect x="437.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#dad7ce"/>
 <path d="M 456 246 Q 455.80728 255 456 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 438 264 Q 447 266.46984 456 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
@@ -1368,6 +1374,7 @@
 <rect x="563.6" y="263.6" width="18.8" height="18.8" rx="1.5" fill="#dad8cf"/>
 <path d="M 582 264 Q 583.2234 273 582 282" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 564 282 Q 573 280.17096 582 282" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="565.5" y="265.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="581.6" y="263.6" width="18.8" height="18.8" rx="1.5" fill="#bdb8ea"/>
 <rect x="589.11484" y="272.81988" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 588.41484 272.81988 L 590.81484 268.01988 L 593.21484 272.81988 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -2683,7 +2690,7 @@
 <circle cx="177" cy="69" r="7" fill="#b12f2f" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 171.5 63.5 L 177 58 L 182.5 63.5 Z" fill="#b12f2f"/>
 </g>
-<text x="177" y="72" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="177" y="72" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">8</text>
 <rect x="165" y="77" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="177" y="85" font-size="7.5" font-weight="700" fill="#b12f2f" text-anchor="middle">keitan</text>
 <g filter="url(#cityShadow)">
@@ -2691,7 +2698,7 @@
 <circle cx="51" cy="393" r="7" fill="#3ecc3e" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 45.5 387.5 L 51 382 L 56.5 387.5 Z" fill="#3ecc3e"/>
 </g>
-<text x="51" y="396" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">9</text>
+<text x="51" y="396" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">10</text>
 <rect x="39" y="401" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="51" y="409" font-size="7.5" font-weight="700" fill="#3ecc3e" text-anchor="middle">Zomba</text>
 <g filter="url(#cityShadow)">
@@ -2707,7 +2714,7 @@
 <circle cx="591" cy="213" r="7" fill="#3eafcc" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 585.5 207.5 L 591 202 L 596.5 207.5 Z" fill="#3eafcc"/>
 </g>
-<text x="591" y="216" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="591" y="216" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">5</text>
 <rect x="579" y="221" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="591" y="229" font-size="7.5" font-weight="700" fill="#3eafcc" text-anchor="middle">SAN</text>
 <g filter="url(#cityShadow)">
@@ -2793,9 +2800,9 @@
 <text x="700" y="248" font-size="13" fill="#3D3D3A">共同事業の建設地</text>
 <text x="678" y="284" font-size="13" font-weight="500" fill="#3D3D3A">上位プレイヤー</text>
 <circle cx="684" cy="302" r="6" fill="#3ecc3e"/>
-<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv9 · 領土17 · 信用100</text>
+<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv10 · 領土17 · 信用100</text>
 <circle cx="684" cy="322" r="6" fill="#b12f2f"/>
-<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv7 · 領土24 · 信用100</text>
+<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv8 · 領土24 · 信用100</text>
 <circle cx="684" cy="342" r="6" fill="#6d3286"/>
 <text x="698" y="346" font-size="12" fill="#3D3D3A">kya6 · Lv7 · 領土25 · 信用100</text>
 <circle cx="684" cy="362" r="6" fill="#b1972f"/>
@@ -2805,9 +2812,9 @@
 <circle cx="684" cy="402" r="6" fill="#3e3ecc"/>
 <text x="698" y="406" font-size="12" fill="#3D3D3A">saku · Lv6 · 領土27 · 信用100</text>
 <circle cx="684" cy="422" r="6" fill="#865c32"/>
-<text x="698" y="426" font-size="12" fill="#3D3D3A">shinya · Lv5 · 領土28 · 信用100</text>
+<text x="698" y="426" font-size="12" fill="#3D3D3A">shinya · Lv5 · 領土29 · 信用100</text>
 <circle cx="684" cy="442" r="6" fill="#3eafcc"/>
-<text x="698" y="446" font-size="12" fill="#3D3D3A">SAN · Lv4 · 領土20 · 信用100</text>
+<text x="698" y="446" font-size="12" fill="#3D3D3A">SAN · Lv5 · 領土20 · 信用100</text>
 <g>
 <rect class="tile-hit" data-x="0" data-y="0" x="42" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
 <rect class="tile-hit" data-x="1" data-y="0" x="60" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
