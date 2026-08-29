@@ -5,7 +5,7 @@
 <filter id="grain" x="0%" y="0%" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.22  0 0 0 0 0.18  0 0 0 0.05 0"/></filter>
 </defs>
 <rect width="904" height="518" fill="url(#bg)"/>
-<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 44</text>
+<text x="20" y="34" font-size="15" font-weight="500" fill="#3D3D3A">Turn 45</text>
 <rect x="41.6" y="65.6" width="18.8" height="18.8" rx="1.5" fill="#ebb663"/>
 <path d="M 44.41608 78.2138 L 48.616080000000004 69.7138 L 51.01608 73.5138 L 53.41608 70.41380000000001 L 56.41608 78.2138 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 47.51608 71.7138 L 48.616080000000004 69.7138 L 49.71608 71.8138 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -356,6 +356,7 @@
 <rect x="205.5" y="121.5" width="15" height="15" rx="1" fill="none" stroke="#b1972f" stroke-width="1.5" opacity="0.85"/>
 <rect x="221.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#ebb764"/>
 <path d="M 240 120 Q 237.9753 129 240 138" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="223.5" y="121.5" width="15" height="15" rx="1" fill="none" stroke="#6d3286" stroke-width="1.5" opacity="0.85"/>
 <rect x="239.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#dbd8cf"/>
 <ellipse cx="248.6342" cy="131.40202000000002" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="251.83419999999998" cy="130.50202000000002" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
@@ -428,6 +429,7 @@
 <rect x="599.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#dddbd2"/>
 <ellipse cx="605.6196199999999" cy="130.02442000000002" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="608.81962" cy="129.12442000000001" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
+<rect x="601.5" y="121.5" width="15" height="15" rx="1" fill="none" stroke="#cc3ea1" stroke-width="1.5" opacity="0.85"/>
 <rect x="617.6" y="119.6" width="18.8" height="18.8" rx="1.5" fill="#dddbd3"/>
 <ellipse cx="627.64532" cy="129.93922" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="630.84532" cy="129.03922" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
@@ -597,6 +599,7 @@
 <path d="M 132 174 Q 141 174.36726 150 174" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="149.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#e9b461"/>
 <path d="M 168 156 Q 165.4263 165 168 174" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="151.5" y="157.5" width="15" height="15" rx="1" fill="none" stroke="#b1972f" stroke-width="1.5" opacity="0.85"/>
 <rect x="167.6" y="155.6" width="18.8" height="18.8" rx="1.5" fill="#dad7ce"/>
 <ellipse cx="173.2682" cy="166.7929" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="176.4682" cy="165.8929" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
@@ -935,6 +938,7 @@
 <path d="M 134.73984 219.76178 L 138.93983999999998 211.26178 L 141.33983999999998 215.06178 L 143.73984 211.96177999999998 L 146.73984 219.76178 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 137.83983999999998 213.26178 L 138.93983999999998 211.26178 L 140.03984 213.36177999999998 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 132 228 Q 141 228.4632 150 228" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="133.5" y="211.5" width="15" height="15" rx="1" fill="none" stroke="#863253" stroke-width="1.5" opacity="0.85"/>
 <rect x="149.6" y="209.6" width="18.8" height="18.8" rx="1.5" fill="#f1bc6a"/>
 <path d="M 150.44268 221.64314 L 154.64267999999998 213.14314 L 157.04268 216.94314 L 159.44268 213.84313999999998 L 162.44268 221.64314 Z" fill="#D9A24E" stroke="#8A6423" stroke-width="0.4" opacity="0.92"/>
 <path d="M 153.54268 215.14314 L 154.64267999999998 213.14314 L 155.74268 215.24313999999998 Z" fill="#FFFFFF" opacity="0.75"/>
@@ -1154,7 +1158,7 @@
 <rect x="601.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="617.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <path d="M 618 246 Q 627 244.7055 636 246" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
-<rect x="619.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
+<rect x="619.5" y="229.5" width="15" height="15" rx="1" fill="none" stroke="#3eafcc" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="227.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <rect x="644.89432" y="235.17174" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 644.1943200000001 235.17174 L 646.59432 230.37174 L 648.99432 235.17174 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1290,7 +1294,6 @@
 <rect x="617.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#dad8cf"/>
 <path d="M 636 246 Q 634.3476 255 636 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 618 264 Q 627 262.8666 636 264" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
-<rect x="619.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="245.6" width="18.8" height="18.8" rx="1.5" fill="#bdb7ea"/>
 <rect x="637.5" y="247.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="41.6" y="263.6" width="18.8" height="18.8" rx="1.5" fill="#a6c87d"/>
@@ -1503,7 +1506,6 @@
 <path d="M 546 300 Q 555 299.95626 564 300" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="563.6" y="281.6" width="18.8" height="18.8" rx="1.5" fill="#bbb6e9"/>
 <path d="M 564 300 Q 573 300.95238 582 300" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
-<rect x="565.5" y="283.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="581.6" y="281.6" width="18.8" height="18.8" rx="1.5" fill="#bcb7ea"/>
 <rect x="588.9639999999999" y="292.75794" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 588.264 292.75794 L 590.664 287.95794 L 593.064 292.75794 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1629,6 +1631,7 @@
 <path d="M 85.16058 324.09102 L 87.56058 319.29102 L 89.96058000000001 324.09102 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 96 318 Q 95.2119 327 96 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 78 336 Q 87 336.64506 96 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="79.5" y="319.5" width="15" height="15" rx="1" fill="none" stroke="#b12f2f" stroke-width="1.5" opacity="0.85"/>
 <rect x="95.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#dad8cf"/>
 <path d="M 114 318 Q 112.02468 327 114 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <rect x="113.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#aecf85"/>
@@ -1707,12 +1710,12 @@
 <path d="M 571.8857800000001 324.37068 L 572.9857800000001 322.37068 L 574.08578 324.47068 Z" fill="#FFFFFF" opacity="0.75"/>
 <path d="M 582 318 Q 581.65794 327 582 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 564 336 Q 573 335.92086 582 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="565.5" y="319.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="581.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#bcb6e9"/>
 <rect x="599.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#beb9eb"/>
 <rect x="601.5" y="319.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="617.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#bfbaeb"/>
 <path d="M 618 336 Q 627 336.33894 636 336" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
-<rect x="619.5" y="319.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="317.6" width="18.8" height="18.8" rx="1.5" fill="#beb9eb"/>
 <rect x="637.5" y="319.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="41.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#accd83"/>
@@ -1800,10 +1803,12 @@
 <rect x="509.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#e9b461"/>
 <path d="M 528 336 Q 529.77336 345 528 354" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 510 354 Q 519 353.76138 528 354" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="511.5" y="337.5" width="15" height="15" rx="1" fill="none" stroke="#90bd4c" stroke-width="1.5" opacity="0.85"/>
 <rect x="527.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#b8b2e7"/>
 <rect x="536.9988999999999" y="344.00190000000003" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 536.2989 344.00190000000003 L 538.6989 339.2019 L 541.0989 344.00190000000003 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <rect x="545.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#bab4e8"/>
+<rect x="547.5" y="337.5" width="15" height="15" rx="1" fill="none" stroke="#3e3ecc" stroke-width="1.5" opacity="0.85"/>
 <rect x="563.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#bcb6e9"/>
 <rect x="581.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#beb8eb"/>
 <rect x="587.63164" y="345.69384" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -1816,7 +1821,6 @@
 <ellipse cx="622.56824" cy="346.56508" rx="1.9" ry="1.2" fill="#C7C3B8" opacity="0.8"/>
 <ellipse cx="625.76824" cy="345.66508" rx="1.3" ry="0.9" fill="#C7C3B8" opacity="0.65"/>
 <path d="M 636 336 Q 638.63046 345 636 354" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
-<rect x="619.5" y="337.5" width="15" height="15" rx="1" fill="none" stroke="#865c32" stroke-width="1.5" opacity="0.85"/>
 <rect x="635.6" y="335.6" width="18.8" height="18.8" rx="1.5" fill="#bfbaec"/>
 <rect x="643.6324" y="345.23766" width="3.4" height="5.2" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
 <path d="M 642.9324 345.23766 L 645.3324 340.43766 L 647.7324 345.23766 Z" fill="#A79FDB" stroke="#6F5FA0" stroke-width="0.4" opacity="0.92"/>
@@ -2268,6 +2272,7 @@
 <circle cx="140.08542" cy="434.02777999999995" r="2.9" fill="#93B96A" stroke="#5B7A3F" stroke-width="0.4" opacity="0.92"/>
 <rect x="139.48542" y="435.62778" width="1.2" height="2.4" fill="#6B4B2E" opacity="0.85"/>
 <path d="M 150 426 Q 149.58516 435 150 444" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
+<rect x="133.5" y="427.5" width="15" height="15" rx="1" fill="none" stroke="#3ecc3e" stroke-width="1.5" opacity="0.85"/>
 <rect x="149.6" y="425.6" width="18.8" height="18.8" rx="1.5" fill="#dad8cf"/>
 <path d="M 168 426 Q 167.01186 435 168 444" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
 <path d="M 150 444 Q 159 441.50574 168 444" stroke="#3D3D3A" stroke-width="0.6" fill="none" opacity="0.2"/>
@@ -2788,7 +2793,7 @@
 <circle cx="285" cy="483" r="7" fill="#328653" stroke="#FBFAF7" stroke-width="1.6"/>
 <path d="M 279.5 477.5 L 285 472 L 290.5 477.5 Z" fill="#328653"/>
 </g>
-<text x="285" y="486" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">9</text>
+<text x="285" y="486" font-size="9" font-weight="500" fill="#FFFFFF" text-anchor="middle">10</text>
 <rect x="273" y="491" width="24" height="10" fill="#FBFAF7" opacity="0.9" rx="2"/>
 <text x="285" y="499" font-size="7.5" font-weight="700" fill="#328653" text-anchor="middle">CoffeeDa</text>
 <g filter="url(#cityShadow)">
@@ -2856,21 +2861,21 @@
 <text x="700" y="248" font-size="13" fill="#3D3D3A">共同事業の建設地</text>
 <text x="678" y="284" font-size="13" font-weight="500" fill="#3D3D3A">上位プレイヤー</text>
 <circle cx="684" cy="302" r="6" fill="#3ecc3e"/>
-<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv11 · 領土20 · 信用100</text>
+<text x="698" y="306" font-size="12" fill="#3D3D3A">Zomba · Lv11 · 領土21 · 信用100</text>
 <circle cx="684" cy="322" r="6" fill="#b12f2f"/>
-<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv8 · 領土18 · 信用100</text>
+<text x="698" y="326" font-size="12" fill="#3D3D3A">keitan · Lv8 · 領土19 · 信用100</text>
 <circle cx="684" cy="342" r="6" fill="#328653"/>
-<text x="698" y="346" font-size="12" fill="#3D3D3A">CoffeeDa · Lv9 · 領土28 · 信用100</text>
+<text x="698" y="346" font-size="12" fill="#3D3D3A">CoffeeDa · Lv10 · 領土28 · 信用100</text>
 <circle cx="684" cy="362" r="6" fill="#b1972f"/>
-<text x="698" y="366" font-size="12" fill="#3D3D3A">getey · Lv10 · 領土20 · 信用100</text>
+<text x="698" y="366" font-size="12" fill="#3D3D3A">getey · Lv10 · 領土21 · 信用100</text>
 <circle cx="684" cy="382" r="6" fill="#6d3286"/>
-<text x="698" y="386" font-size="12" fill="#3D3D3A">kya6 · Lv7 · 領土32 · 信用100</text>
+<text x="698" y="386" font-size="12" fill="#3D3D3A">kya6 · Lv7 · 領土33 · 信用100</text>
 <circle cx="684" cy="402" r="6" fill="#cc3ea1"/>
-<text x="698" y="406" font-size="12" fill="#3D3D3A">たにゅ · Lv2 · 領土35 · 信用100</text>
+<text x="698" y="406" font-size="12" fill="#3D3D3A">たにゅ · Lv2 · 領土36 · 信用100</text>
 <circle cx="684" cy="422" r="6" fill="#3e3ecc"/>
-<text x="698" y="426" font-size="12" fill="#3D3D3A">saku · Lv7 · 領土33 · 信用100</text>
-<circle cx="684" cy="442" r="6" fill="#865c32"/>
-<text x="698" y="446" font-size="12" fill="#3D3D3A">shinya · Lv5 · 領土35 · 信用100</text>
+<text x="698" y="426" font-size="12" fill="#3D3D3A">saku · Lv7 · 領土34 · 信用100</text>
+<circle cx="684" cy="442" r="6" fill="#3eafcc"/>
+<text x="698" y="446" font-size="12" fill="#3D3D3A">SAN · Lv6 · 領土24 · 信用100</text>
 <g>
 <rect class="tile-hit" data-x="0" data-y="0" x="42" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
 <rect class="tile-hit" data-x="1" data-y="0" x="60" y="66" width="18" height="18" fill="transparent" style="cursor:pointer"/>
